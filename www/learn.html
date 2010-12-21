@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>Flamingo documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+
+<center><h1>Advanced components for modern applications</h1></center>
+
+<hr>
+
+<img src="images/thumbs/learn/resizable-icon.png" width=270 height=300 border=0 style="margin-left: 40px; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; float: right;">
+
+<p style="font-size: x-large;" align="center">Resizable icons</p>
+		
+<p>The <font color="darkblue"><code>ResizableIcon</code></font>
+extends the core <font color="darkblue"><code>Icon</code></font>
+interface to allow scaling the icon visuals at runtime. This
+is especially relevant for controls that can be dynamically resized.
+This class is used extensively in Flamingo for such controls
+as ribbon buttons or file viewer panel, but can be used in 
+core and third-party cmponents as well.</p>
+	  
+<p>The core library provides helper classes to expose a variety
+of image formats as <font color="darkblue"><code>ResizableIcon</code></font>s,
+including SVG, SVGZ, ICO and all 
+<font color="darkblue"><code>ImageIO</code></font>-supported formats.
+Additional helper classes allow decorating, filtering and layering
+icons to create more advanced functionality.</p>
+	  
+<p>Want to learn more? Browse the following packages:</p>
+	  
+<ul>
+ 	<li><font color="darkblue"><code>org.pushingpixels.flamingo.common.icon</code></font></li>
+ 	<li><font color="darkblue"><code>org.pushingpixels.flamingo.svg</code></font></li>
+</ul>
+	  	
+<div style="clear: both;"></div>
+
+<hr>
+
+<img src="images/thumbs/learn/breadcrumb-bar.png" width=300 height=275 border=0 style="margin-left: 10px; margin-top: 10px; margin-right: 40px; margin-bottom: 10px; float: left;">
+
+<p style="font-size: x-large;" align="center">Breadcrumb bar</p>
+
+<p><font color="darkblue"><code>BreadcrumbBar</code></font>
+facilitates quick navigation of multi-level hierarchies,
+such as file systems or XML documents. This functionality is
+commonly found in many web sites and is the main navigation tool
+in the Windows Explorer application in Vista.</p>
+
+<p>The core library provides helper classes to expose a variety of
+navigation sources as breadcrumb bars, such as local and remote file systems,
+SVN repositories and tree models.</p>
+	  
+<p>Want to learn more? Browse the following packages:</p>
+	  
+<ul>
+ 	<li><font color="darkblue"><code>org.pushingpixels.flamingo.bcb</code></font></li>
+ 	<li><font color="darkblue"><code>org.pushingpixels.flamingo.bcb.core</code></font></li>
+</ul>
+
+<div style="clear: both;"></div>
+
+<hr>
+
+<img src="images/thumbs/learn/command-button.png" width=280 height=330 border=0 style="margin-left: 40px; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; float: right;">
+
+<p style="font-size: x-large;" align="center">Command buttons</p>
+
+<p>The <font color="darkblue"><code>JCommandButton</code></font>
+and <font color="darkblue"><code>JCommandToggleButton</code></font>
+provide a broad spectrum of functionality expected from modern
+UI button components. A short list of features available in Flamingo 
+command buttons includes:</p>
+
+<ul>
+	<li>Dynamic resizing, including scaling icons and 
+		text flow.</li>
+	<li>Support for popup buttons and split buttons.</li>
+	<li>Richer popup contents.</li>
+	<li>Auto-repeat mode for invoking the associated actions
+	as long as the button is pressed.</li>
+	<li>Action-on-rollover mode for invoking the associated actions
+		(one-time or auto-repeat) on rollover.</li>
+</ul>
+		
+<p>Want to learn more? Browse the test applications in the <font color="darkblue"><code>test.common</code></font>
+package.</p>
+
+<div style="clear: both;"></div>
+
+<hr>
+
+<img src="images/thumbs/learn/command-button-strip-panel.png" width=317 height=406 border=0 style="margin-left: 10px; margin-top: 10px; margin-right: 40px; margin-bottom: 10px; float: left;">
+
+<p style="font-size: x-large;" align="center">Command button strips and panels</p>
+
+<p><font color="darkblue"><code>JCommandButtonStrip</code></font>
+	allows hosting a number of command buttons in a single row
+	or column, providing continuous visuals for the buttons.</p>
+
+<p><font color="darkblue"><code>JCommandButtonPanel</code></font>
+allows hosting a number of command buttons in either row-fill
+or column-fill grid. Notable features include:</p>
+
+<ul>
+	<li>Button grouping with associated titles</li>
+	<li>Single selection mode when hosting toggle command buttons</li>
+	<li>Central change of icon size for all hosted buttons</li>
+</ul>
+
+<p><font color="darkblue"><code>AbstractFileViewPanel</code></font>
+extends the 
+<font color="darkblue"><code>JCommandButtonPanel</code></font> 
+functionality, targetting file browser applications. Notable 
+additional features include:</p>
+
+<ul>
+	<li>Filtering for visibility</li>
+	<li>Progress tracking and load cancellation</li>
+	<li>API integration with the breadcrumb bar component</li>
+</ul>
+
+<div style="clear: both;"></div>
+
+<hr>
+
+<img src="images/thumbs/learn/ribbon.png" width=300 height=210 border=0 style="margin-left: 40px; margin-top: 60px; margin-right: 10px; margin-bottom: 10px; float: right;">
+
+<p style="font-size: x-large;" align="center">Ribbon</p>
+
+<p><font color="darkblue"><code>JRibbon</code></font>
+provides the functionality of Microsoft Office 2007 
+Command Bar. A short list of features includes:</p>
+
+<ul>
+	<li>Ribbon tasks and ribbon task bands.</li>
+	<li>In-ribbon galleries.</li>
+	<li>Contextual ribbon task groups.</li>
+	<li>Taskbar components.</li>
+	<li>Dynamic adaptive resizing.</li>
+</ul>
+
+<p>Want to learn more? Browse the <font color="darkblue"><code>org.pushingpixels.flamingo.ribbon</code></font>
+package.</p>
+
+<div style="clear: both;"></div>
+
+<hr>
+
+</body>
+</html>
+

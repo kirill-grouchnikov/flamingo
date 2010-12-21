@@ -1,0 +1,323 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<META content=flamingo.dev.java.net name=AUTHOR>
+<META content="Copyright (c) 2005-2010 by Kirill Grouchnikov" name=COPYRIGHT>
+<META content="java, swing, ribbon, command button, split button, menu button, galleries, flamingo" name=KEYWORDS>
+<META content="Flamingo 5.0 release notes" name=DESCRIPTION>
+<title>Flamingo 5.0 release</title>
+</head>
+
+<body>
+
+<h1>General</h1>
+
+<ul>
+<li>Package rename. The published APIs now live under <em>org.pushingpixels.flamingo.api</em> 
+package. All you need to do is just change the imports. If your code uses any of the classes in 
+<em>org.pushingpixels.flamingo.internal</em> package, you will need to change it, or be prepared 
+to have that functionality disappear at any point in time.</li>
+<li>The flexi-slider component has been removed from the library.</li>
+<li>Compile time and run time dependency on 
+<a href="http://kenai.com/projects/trident/pages/Home">Trident animation library</a>.</li>
+</ul>
+
+<h1>Flamingo 5.0 <font color="darkblue">Imogene</font> - new features</h1>
+
+<table border="0" cellpadding="10" cellspacing="0" width="100%">
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>New scroller panel component</b></td>
+    <td width="80%" valign="top">
+
+    <p>Use <em>org.pushingpixels.flamingo.api.common.JScrollablePanel</em> class to
+    add horizontal or vertical scrolling around large content. You 
+    construct it by passing the view and the <em>ScrollType</em> - 
+    either <em>HORIZONTALLY</em> or <em>VERTICALLY</em> (the scroll type 
+    cannot be changed once the component has been constructed). When needed, 
+    the component will show the scroller buttons - just the same way as 
+    <em>JScrollPane</em> shows the scroll bars. Moving the mouse over a scroller 
+    button (when it's visible) starts auto-scrolling the view in the matching 
+    direction. To turn off the auto-scrolling and do the scrolling only on 
+    button press call <em>JScrollerPanel.setScrollOnRollover(false)</em> API.</p>
+    	
+    <p>The breadcrumb bar shows horizontal scrolling:</p>
+    <img src="breadcrumbbar.png" width="500" height="420">
+    	
+    <p>The popup menu shows vertical scrolling:</p>
+    <img src="button-popup-scrollable-top.png" width="167" height="255"> <img src="button-popup-scrollable-middle.png" width="164" height="256">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>New color selector popup</b></td>
+    <td width="80%" valign="top">
+
+    <p><em>org.pushingpixels.flamingo.api.common.popup.JScrollablePanel</em> is a 
+    flexible color selector popup that you can associate with the command buttons 
+    that control the color selection of elements in your application. Here is how a 
+    color selector popup looks like under left-to-right and right-to-left orientation:</p>
+    
+    <img src="color-selector-popup.png" width="375" height="281"></p>
+
+	<p>To associate a color selector popup with the specific command button 
+	(that has a popup area), return an instance of <em>JColorSelectorPopupMenu</em> from the 
+	<em>PopupPanelCallback</em>. This class extends the <em>JCommandPopupMenu</em> and 
+	allows adding command menu buttons, command toggle menu buttons and separators. 
+	The screenshot above shows two command menu buttons in the color selector popup - 
+	one at the top and another at the bottom.</p>
+
+	<p>In adition, the <em>JColorSelectorPopupMenu</em> provides the following APIs to add color selector sections:</p>
+	<ul>
+	<li><em>addColorSection</em> that gets 10 colors. The "Standard Colors" in the screenshot 
+	above is an example.</li>
+	<li><em>addColorSectionWithDerived</em> that gets 10 primary colors. Each primary color 
+	will show a column of 5 derived colors below it. The "Theme Colors" in the screenshot above is an example.</li>
+	<li><em>addRecentSection</em>. Shows the LRU list of the recently selected colors.</li>
+	</ul>
+	
+	<p>A <em>JColorSelectorPopupMenu</em> is created with an instance of 
+	<em>ColorSelectorCallback</em>. This interface has two methods:</p>
+	<ul>
+	<li><em>onColorRollover(Color)</em> - allows your application to show the live preview of 
+	the color under the mouse. When called with <em>null</em>, the application needs to
+	 unset the live preview.</li>
+	<li><em>onColorSelected(Color)</em> - called when the user selects one of the 
+	colors in the popup.</li>
+	</ul>
+	
+	<p>The selector sections added with the APIs above will be automatically wired to the 
+	color selector callback that you pass in the constructor. If your design requires displaying 
+	additional menu buttons to select color, these will need to be explicitly wired to the 
+	callback and the list of recently selected colors.</p>
+
+	<p>When a color is selected in both custom menu buttons, the list of recently selected 
+	colors can be updated - so that the user can quickly choose it again in the future. 
+	The relevant APIs in the <em>JColorSelectorPopupMenu</em> are:</p>
+	<ul>
+	<li>static <em>getRecentlyUsedColors()</em>. The last element in the list is the most 
+	recently selected.</li>
+	<li>static <em>addColorToRecentlyUsed()</em> adds the specified color to the list. If 
+	the color is already there, it is moved to the end of the list.</li>
+    </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Right to left (RTL) support</b></td>
+    <td width="80%" valign="top">
+
+    <p>Full support for RTL orientation for all components.</p>
+    	
+    <p>Ribbon with one of the buttons showing a rich tooltip:</p>
+    <img src="ribbon-rtl-button-tooltip.png" width="476" height="240">
+    	
+    <p>Command button in a ribbon showing a popup menu with embedded
+    scrollable command button panel:</p>
+    <img src="ribbon-rtl-button-richpopup-tooltip.png" width="451" height="405">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Toggle menu buttons</b></td>
+    <td width="80%" valign="top">
+
+    <p><em>org.pushingpixels.flamingo.api.common.JCommandToogleMenuButton</em> 
+    provides support for toggleable command buttons that can be placed in 
+    popup menus. Here is a sample popup menu with four toggle menu buttons that 
+    belong to the same toggle button group (single selection):</p>
+
+	<img src="toggle-menu-button-single-selection.png" width="177" height="120">
+
+	<p>Note that the second option is selected and has a selection visual painted 
+	behind its icon. And here is a similar popup menu, but this time with 
+	multi-selection group (where toggle menu buttons are not associated with any 
+	toggle button group):</p>
+
+	<img src="toggle-menu-button-multi-selection.png" width="207" height="123">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Dismissing command popup menus</b></td>
+    <td width="80%" valign="top">
+
+    <p>If a command popup menu contains a set of toggle buttons that control 
+    a set of boolean options / preferences, dismissing the menu after a single 
+    button has been clicked (selected toggled) is a bad user experience
+    if the user wanted to change multiple settings. Here is an example of
+    such a menu:</p>
+    
+    <img src="popup-menu-no-auto-dismiss.png" width="309" height="229">
+
+	<p>To prevent the auto-dismissal, call the new <em>JCommandPopupMenu.setToDismissOnChildClick(false)</em> 
+	API. This way the menu will stay up until the user clicks anywhere outside 
+	it or hits the Escape key.</p>
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Dock icon for ribbon frame on Mac</b></td>
+    <td width="80%" valign="top">
+
+    <p>The new <em>JRibbonFrame.setApplicationIcon(ResizableIcon)</em> API
+    supersedes the <em>setIconImages(List&lt;Image&gt;)</em> API. On the Mac
+    platform, in addition to setting the icon on the application menu
+    button, it also changes the dock icon image (with 
+    <a href="http://developer.apple.com/mac/library/documentation/Java/Reference/JavaSE6_AppleExtensionsRef/api/com/apple/eawt/Application.html#setDockIconImage%28java.awt.Image%29"><em>Application.setDockIconImage</em></a>).
+    This provides much better integration with the native Mac OS X application 
+    environment:</p>
+
+	<img src="apple-dock-icon.png" width="467" height="236">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Dynamic resize of ribbon components</b></td>
+    <td width="80%" valign="top">
+
+    <p><em>JRibbonComponent.setResizingAware(true)</em> turns on the 
+    dynamic resizing on for the specific component. When the ribbon containing
+    resize-aware components becomes smaller, the wrapped component will hide 
+    the caption and icon as necessary before the band will go to the collapsed 
+    state.</p>
+    
+    <p>The screenshots below show the same three comboboxes wrapped in
+    <em>JRibbonComponent</em>s with icons and captions in three different states
+    based on the available width:</p>
+    	
+    <img src="ribbon-comp-resize-top.png" width="198" height="106">
+    <img src="ribbon-comp-resize-medium.png" width="152" height="107">
+    <img src="ribbon-comp-resize-low.png" width="131" height="107">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Office Black 2007 skin</b></td>
+    <td width="80%" valign="top">
+
+    <p><a href="https://substance.dev.java.net">Substance 6.1</a> completes the 
+    collection of skins that can be used on the ribbon by adding Office Black 
+    2007 skin to the existing Office Silver 2007 and Office Blue 2007 skins. 
+    Here is how the ribbon looks under Office Black 2007 skin:</p>
+
+	<img src="https://substance.dev.java.net/release-info/6.1/office-black-2007-1.png" width="498" height="184">
+	
+	<p>This skin lives (as all others) in the 
+	<em>org.pushingpixels.substance.api.skin</em> package and can be used 
+	with the following:</p>
+
+	<ul>
+    <li>SubstanceLookAndFeel.setSkin(new OfficeBlack2007Skin())</li>
+    <li>SubstanceLookAndFeel.setSkin("org.pushingpixels.substance.api.
+      skin.OfficeBlack2007Skin")</li>
+    <li>-Dswing.defaultlaf=org.pushingpixels.substance.api.
+      skin.SubstanceOfficeBlack2007LookAndFeel</li>
+    <li>UIManager.setLookAndFeel(new SubstanceOfficeBlack2007LookAndFeel())</li>
+    <li>UIManager.setLookAndFeel("org.pushingpixels.substance.api.
+      skin.SubstanceOfficeBlack2007LookAndFeel");</li>
+	</ul>
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Better integration with Substance skins</b></td>
+    <td width="80%" valign="top">
+
+    <p>Use the latest version of <a href="https://substance.dev.java.net">Substance</a>
+    and <a href="https://substance-flamingo.dev.java.net">Substance Flamingo plugin</a>
+    to achieve much better ribbon visuals under different Substance skins.</p>
+    	
+    <p>Here is the ribbon under 
+    <a href="https://substance.dev.java.net/docs/skins/toneddown.html#BusinessBlackSteelSkin">Business Black Steel</a> skin:</p>
+	<img src="https://substance.dev.java.net/release-info/6.1/ribbon-business-black-steel.png" width="494" height="194"></p>
+
+	<p>And the same ribbon under <a href="https://substance.dev.java.net/docs/skins/toneddown.html#DustSkin">Dust</a> skin:</p>
+	<img src="https://substance.dev.java.net/release-info/6.1/ribbon-dust.png" width="494" height="184"></p>
+
+	<p>And the same ribbon under <a href="https://substance.dev.java.net/docs/skins/toneddown.html#DustCoffeeSkin">Dust Coffee</a> skin:</p>
+	<img src="https://substance.dev.java.net/release-info/6.1/ribbon-dust-coffee.png" width="495" height="193"></p>
+
+	<p>And the same ribbon under <a href="https://substance.dev.java.net/docs/skins/toneddown.html#GeminiSkin">Gemini</a> skin:</p>
+	<img src="https://substance.dev.java.net/release-info/6.1/ribbon-gemini.png" width="495" height="198"></p>
+
+	<p>And the same ribbon under <a href="https://substance.dev.java.net/docs/skins/dark.html#TwilightSkin">Twilight</a> skin:</p>
+	<img src="https://substance.dev.java.net/release-info/6.1/ribbon-twilight.png" width="494" height="203"></p>
+
+	<p>The ribbon also looks much better under other Substance skins such as 
+	<a href="https://substance.dev.java.net/docs/skins/toneddown.html#AutumnSkin">Autumn</a>:</p>
+	<img src="https://substance.dev.java.net/release-info/6.1/ribbon-autumn.png" width="494" height="183"></p>
+
+	<p>and <a href="https://substance.dev.java.net/docs/skins/toneddown.html#BusinessSkin">Business</a>:</p>
+	<img src="https://substance.dev.java.net/release-info/6.1/ribbon-business.png" width="494" height="194">
+    	
+    </td>
+  </tr>
+
+</table>
+
+</body>
+
+</html>

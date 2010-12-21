@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="flamingo" default="all">
+	<property file="local.build.properties" />
+	<property file="build.properties" />
+
+	<!-- Compiler options -->
+	<patternset id="javac.excluded" />
+	<patternset id="javac.resources">
+		<include name="**/?*.properties" />
+		<include name="**/?*.xml" />
+		<include name="**/?*.gif" />
+		<include name="**/?*.png" />
+		<include name="**/?*.jpeg" />
+		<include name="**/?*.jpg" />
+		<include name="**/?*.html" />
+		<include name="**/?*.dtd" />
+		<include name="**/?*.tld" />
+		<include name="**/?*.ttf" />
+		<include name="**/?*.svg" />
+		<include name="**/?*.svgz" />
+		<include name="**/?*.templ" />
+	</patternset>
+	<!-- JDK definitions -->
+
+	<path id="jdk.classpath">
+		<fileset dir="${jdk.home}">
+			<include name="jre/lib/charsets.jar" />
+			<include name="jre/lib/deploy.jar" />
+			<include name="jre/lib/javaws.jar" />
+			<include name="jre/lib/jce.jar" />
+			<include name="jre/lib/jsse.jar" />
+			<include name="jre/lib/plugin.jar" />
+			<include name="jre/lib/rt.jar" />
+			<include name="jre/lib/ext/dnsns.jar" />
+			<include name="jre/lib/ext/localedata.jar" />
+			<include name="jre/lib/ext/sunjce_provider.jar" />
+			<include name="jre/lib/ext/sunpkcs11.jar" />
+		</fileset>
+	</path>
+
+	<property name="project.jdk.home" value="${jdk.home}" />
+	<property name="project.jdk.classpath" value="jdk.classpath" />
+	<!-- Project Libraries -->
+	<!-- Global Libraries -->
+
+	<dirname property="module.flamingo.basedir" file="${ant.file}" />
+
+	<property name="javac.args.flamingo" value="${javac.args}" />
+
+	<property name="flamingo.build.dir" value="${module.flamingo.basedir}/build/" />
+	<property name="flamingo.output.dir" value="${flamingo.build.dir}/classes" />
+	<property name="flamingo.drop.dir" value="${module.flamingo.basedir}/drop" />
+	<property name="flamingo.lib.dir" value="${module.flamingo.basedir}/lib" />
+	<property name="flamingo.src.dir" value="${module.flamingo.basedir}/src/" />
+	<property name="flamingo.version" value="5.0" />
+	<property name="flamingo.versionKey" value="5.0RC Imogene" />
+
+	<path id="flamingo.module.bootclasspath">
+		<!-- Paths to be included in compilation bootclasspath -->
+	</path>
+
+	<property name="module.jdk.home.flamingo" value="${project.jdk.home}" />
+	<property name="module.jdk.classpath.flamingo" value="${project.jdk.classpath}" />
+
+	<path id="flamingo.module.classpath">
+		<path refid="${module.jdk.classpath.flamingo}" />
+		<pathelement location="${flamingo.lib.dir}/jsr173_api.jar" />
+		<pathelement location="${flamingo.lib.dir}/sjsxp.jar" />
+		<pathelement location="${flamingo.lib.dir}/batik-all.jar" />
+		<pathelement location="${flamingo.lib.dir}/js.jar" />
+		<pathelement location="${flamingo.lib.dir}/pdf-transcoder.jar" />
+		<pathelement location="${flamingo.lib.dir}/xerces_2_5_0.jar" />
+		<pathelement location="${flamingo.lib.dir}/xml-apis.jar" />
+		<pathelement location="${flamingo.lib.dir}/xml-apis-ext.jar" />
+		<pathelement location="${flamingo.lib.dir}/svnkit.jar" />
+		<pathelement location="${flamingo.lib.dir}/forms-1.2.0.jar" />
+		<pathelement location="${flamingo.lib.dir}/trident.jar" />
+	</path>
+
+	<patternset id="excluded.from.module.flamingo" />
+
+	<patternset id="excluded.from.compilation.flamingo">
+		<patternset refid="excluded.from.module.flamingo" />
+		<patternset refid="javac.excluded" />
+	</patternset>
+
+	<path id="flamingo.module.sourcepath">
+		<dirset dir="${flamingo.src.dir}">
+			<include name="org/pushingpixels/flamingo" />
+		</dirset>
+	</path>
+
+	<path id="flamingo.module.testsourcepath">
+		<dirset dir="${flamingo.src.dir}">
+			<include name="test" />
+		</dirset>
+	</path>
+
+	<target name="compile.module.flamingo" depends="compile.module.flamingo.production,compile.module.flamingo.tests" description="compile module flamingo" />
+
+	<target name="compile.module.flamingo.production" description="compile module flamingo production classes">
+		<mkdir dir="${flamingo.output.dir}" />
+		<javac source="${javac.source}" target="${javac.target}" encoding="${javac.encoding}" destdir="${flamingo.output.dir}" debug="${javac.debug}" nowarn="${javac.generate.no.warnings}" memoryMaximumSize="${javac.max.memory}" fork="true" executable="${module.jdk.home.flamingo}/bin/javac">
+			<compilerarg line="${javac.args.flamingo}" />
+			<bootclasspath refid="flamingo.module.bootclasspath" />
+			<classpath refid="flamingo.module.classpath" />
+			<src refid="flamingo.module.sourcepath" />
+			<patternset refid="excluded.from.compilation.flamingo" />
+		</javac>
+		<copy todir="${flamingo.output.dir}">
+			<fileset dir="${flamingo.src.dir}">
+				<patternset refid="javac.resources" />
+				<type type="file" />
+				<patternset refid="excluded.from.compilation.flamingo" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile.module.flamingo.tests" description="compile module flamingo test classes" unless="skip.tests">
+		<mkdir dir="${flamingo.output.dir}" />
+		<javac source="${javac.source}" target="${javac.target}" encoding="${javac.encoding}" destdir="${flamingo.output.dir}" debug="${javac.debug}" nowarn="${javac.generate.no.warnings}" memoryMaximumSize="${javac.max.memory}" fork="true" executable="${module.jdk.home.flamingo}/bin/javac">
+			<compilerarg line="${javac.args.flamingo}" />
+			<bootclasspath refid="flamingo.module.bootclasspath" />
+			<classpath refid="flamingo.module.classpath" />
+			<src refid="flamingo.module.testsourcepath" />
+			<patternset refid="excluded.from.compilation.flamingo" />
+		</javac>
+		<copy todir="${flamingo.output.dir}/test">
+			<fileset dir="${flamingo.src.dir}/test">
+				<patternset refid="javac.resources" />
+				<type type="file" />
+				<patternset refid="excluded.from.compilation.flamingo" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean.module.flamingo" description="cleanup module">
+		<delete dir="${flamingo.output.dir}" />
+	</target>
+
+	<target name="init" description="Build initialization">
+		<!-- Perform any build initialization in this target -->
+	</target>
+
+	<target name="jar-bin" description="create runtime jar">
+		<mkdir dir="${flamingo.drop.dir}" />
+		<delete file="${flamingo.drop.dir}/flamingo.jar" />
+		<jar compress="true" destfile="${flamingo.drop.dir}/flamingo.jar">
+			<fileset dir="${flamingo.output.dir}/" excludes="test/**" />
+			<fileset dir="${module.flamingo.basedir}/" includes="resources/**" />
+			<manifest>
+				<attribute name="Flamingo-Version" value="${flamingo.versionKey}" />
+				<attribute name="Flamingo-BuildStamp" value="${build.time}" />
+			</manifest>
+		</jar>
+		<copy file="${flamingo.drop.dir}/flamingo.jar" todir="${module.flamingo.basedir}/www/webstart" />
+	</target>
+
+	<target name="jar-bin-tst" description="create test runtime jar">
+		<delete file="${flamingo.drop.dir}/flamingo-tst.jar" />
+		<jar destfile="${flamingo.drop.dir}/flamingo-tst.jar">
+			<fileset dir="${flamingo.output.dir}/">
+				<include name="test/**/*.class" />
+				<include name="test/**/*.svg*" />
+				<include name="test/**/*.png" />
+				<include name="test/**/*.ttf" />
+				<include name="test/**/*.properties" />
+			</fileset>
+			<manifest>
+				<attribute name="Flamingo-Version" value="${flamingo.versionKey}" />
+				<attribute name="Flamingo-BuildStamp" value="${build.time}" />
+			</manifest>
+		</jar>
+		<copy file="${flamingo.drop.dir}/flamingo-tst.jar" todir="${module.flamingo.basedir}/www/webstart" />
+	</target>
+
+	<target name="distro" description="create distribution">
+		<delete file="${module.flamingo.basedir}/flamingo-all.zip" />
+		<zip destfile="${module.flamingo.basedir}/flamingo-all.zip" compress="true">
+			<fileset dir="${module.flamingo.basedir}">
+				<!--
+				<include name="drop/**" />
+				<include name="docs/**" />
+				<include name="www/*.html" />
+				<include name="www/docs/**" />
+				<include name="www/images/**" />
+				<include name="www/release-info/${flamingo.version}/**.png" />
+				<include name="www/release-info/${flamingo.version}/**.htm*" />
+-->
+				<include name="lib/**" />
+				<include name="src/**" />
+				<include name="build.properties" />
+				<include name="build.xml" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="flexislider-article" description="create source zip for FlexiSlider java.net article">
+		<delete file="${module.flamingo.basedir}/flexi-slider-src.zip" />
+		<zip destfile="${module.flamingo.basedir}/flexi-slider-src.zip" compress="true">
+			<fileset dir="${module.flamingo.basedir}">
+				<include name="src/org/pushingpixels/flamingo/slider/**" />
+				<include name="src/test/slider/**" />
+				<include name="src/utest/slider/**" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="timestamp">
+		<tstamp>
+			<format property="build.time" pattern="MMMM d, yyyy HH:mm:ss z" />
+		</tstamp>
+		<echo message="Beginning build: ${build.time}" />
+		<echo message="Java home: ${java.home}" />
+		<echo message="Java version: ${ant.java.version}" />
+		<echo message="Ant version: ${ant.version}" />
+	</target>
+
+	<target name="jar" depends="jar-bin, jar-bin-tst" description="create all jars" />
+
+	<target name="clean" depends="clean.module.flamingo" description="cleanup all" />
+
+	<target name="all" depends="timestamp, init, clean, compile.module.flamingo, jar" description="build all" />
+</project>

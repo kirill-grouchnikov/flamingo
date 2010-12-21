@@ -1,0 +1,393 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<META content=substance.dev.java.net name=AUTHOR>
+<META content="Copyright (c) 2005-2007 by Kirill Grouchnikov" name=COPYRIGHT>
+<META content="java, swing, command button, split button, menu button, ribbon, galleries, flamingo" name=KEYWORDS>
+<META content="Flamingo 3.1 release notes" name=DESCRIPTION>
+<title>Flamingo 3.1 release</title>
+</head>
+
+<body>
+
+<h1>Flamingo 3.1 <font color="darkblue">Eilinora</font> - new features</h1>
+
+<table border="0" cellpadding="10" cellspacing="0" width="100%">
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>SVG transcoder</b></td>
+    <td width="80%" valign="top">
+
+    <p>The org.jvnet.flamingo.svg.SvgTranscoder has the following new functionality:</p>
+    
+    <ul>
+    	<li>Generated Java2D class has two static methods 
+    		<code><font color="darkblue">getOrigWidth()</font></code> and 
+    		<code><font color="darkblue">getOrigHeight()</font></code>
+    	to query the default bounds of the original SVG image.</li>
+    	<li><code><font color="darkblue">setJavaPackageName(String)</font></code> 
+    		API allows changing the package name of the generated	Java2D class.</li>
+    	<li><code><font color="darkblue">setJavaToImplementResizableIconInterface(boolean)</font></code>
+    		API allows specifying	that the generated Java2D class should implement the 
+    		<code><font color="darkblue">org.jvnet.flamingo.common.icon.ResizableIcon</font></code> 
+    		interface, making it ready to be used instead of the 
+    		<code><font color="darkblue">org.jvnet.flamingo.svg.SvgBatikResizableIcon</font></code> 
+    		class. This comes handy since the heavy transcoding is done offline, 
+    		and the size of the compiled class is comparable with the size of the 
+    	compressed SVG file (especially if you turn the debugging info off).</li>
+    </ul>
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon contextual tasks</b></td>
+    <td width="80%" valign="top">
+
+    <p>The new <code><font color="darkblue">org.jvnet.flamingo.ribbon.RibbonContextualTaskGroup</font></code>
+    	implements <a href="../../docs/ribbon/ribbon-task-group.html">contextual task groups</a>.
+    	Use the following <code><font color="darkblue">JRibbon</font></code>
+    	APIs <a href="../../docs/ribbon/ribbon-creation.html">to operate</a> 
+    	on contextual task groups:</p>
+    	
+    <ul>
+    	<li><code><font color="darkblue">addContextualTaskGroup(RibbonContextualTaskGroup)</font></code> 
+    		to add a new contextual task group. By default the tasks of the 
+    		newly added group	are not visible.</li>
+    	<li><code><font color="darkblue">setVisible(RibbonContextualTaskGroup, boolean)</font></code> 
+    		to change the visibility of tasks in the specified contextual 
+    		task group.</li>
+    	<li><code><font color="darkblue">isVisible(RibbonContextualTaskGroup)</font></code> 
+    		to query the visibility	status of tasks in the specific contextual 
+    		task group.</li>
+    </ul>
+    
+    <p>The screenshot below shows a selected contextual task under
+    Metal look-and-feel:</p>
+    	
+    <img src="ribbon-contextual-task.png" height="144" width="533">
+    
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>JRibbonFrame top-level window</b></td>
+    <td width="80%" valign="top">
+
+    <p>The <code><font color="darkblue">org.jvnet.flamingo.ribbon.JRibbonFrame</font></code> 
+    	is going to be the only way to have a ribbon in your frame. It extends the 
+    	<code><font color="darkblue">JFrame</font></code> and enforces that a 
+    	<code><font color="darkblue">JRibbon</font></code> component is always in the 
+    	<code><font color="darkblue">BorderLayout.NORTH</font></code> position. Under 
+    	the hood, it also allows third-party look-and-feels (such as Substance) to 
+    	"relocate" the taskbar to the title pane and paint the contextual task group 
+    	headers. Going forward, the <code><font color="darkblue">JRibbon</font></code> 
+    	class will have package-protected constructor. This will be part of 4.0 release 
+    	to ensure easier transition to the new approach.</p>
+    	
+    	<p>Here is a screenshot of <code><font color="darkblue">JRibbonFrame</font></code>
+    		running in decorated mode under <a href="https://substance.dev.java.net">Substance</a>
+    		look-and-feel with <a href="https://substance-flamingo.dev.java.net">Substance plugin</a>
+    	  for Flamingo. It shows the taskbar panel placed on the left hand side of the
+    	title bar:</p>
+    	
+    <img src="ribbon-title-pane-taskbar-thumb.png" height="120" width="465">
+    
+    <p>Here is a screenshot of the same ribbon frame with two contextual task groups
+    	made visible. Note how the group headers are painted on the title pane 
+    and force the title text to be clipped:</p>
+    
+    <img src="ribbon-title-pane-contextual-thumb.png" height="120" width="465">
+    
+    <p>And the same ribbon frame with one of the contextual tasks selected:</p>
+    
+    <img src="ribbon-title-pane-contextual2-thumb.png" height="120" width="465">
+    
+    
+    
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Dynamic content of in-ribbon galleries</b></td>
+    <td width="80%" valign="top">
+
+    <p>The following APIs were added to the
+    	<code><font color="darkblue">org.jvnet.flamingo.ribbon.JRibbonBand</font></code>
+    	class to <a href="../../docs/ribbon/ribbon-band.html">allow dynamic changes</a>
+    	to in-ribbon galleries:</p>
+    	
+    	<ul>
+    		<li><code><font color="darkblue">addRibbonGalleryButtons()</font></code> 
+    			to add toggle command buttons to a button group in a ribbon gallery.</li>
+    		<li><code><font color="darkblue">removeRibbonGalleryButtons()</font></code> 
+    			to remove toggle command buttons from a ribbon gallery.</li>
+    		<li><code><font color="darkblue">setSelectedRibbonGalleryButton()</font></code> 
+    			to select a toggle command button in a ribbon gallery.</li>
+    	</ul>
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Decorating the ribbon under Substance</b></td>
+    <td width="80%" valign="top">
+
+    <p>The <a href="https://substance-flamingo.dev.java.net">Substance plugin</a>
+    	for Flamingo makes use of the 
+    	<a href="https://substance.dev.java.net/docs/api/SetDecorationType.html"><code><font color="darkblue">SubstanceLookAndFeel.setDecorationType</font></code></a> 
+    	API that allows the applications to mark specific visual areas as decoration 
+    	areas. Specifically for the ribbon component, this plugin sets the following 
+    	decoration types on the ribbon (see below for the screenshots):</p>
+
+		<ul>
+			<li>The ribbon itself is marked as 
+				<code><font color="darkblue">DecorationAreaType.HEADER</font></code>.</li>
+			<li>The task buttons and task bands are marked as 
+				<code><font color="darkblue">DecorationAreaType.GENERAL</font></code>.</li>
+		</ul>
+
+    <p>The first makes the ribbon blend with the title pane, especially under 
+    	decorated mode. The second makes all the ribbon controls be a) visually 
+    	different from the title pane and b) provide a slightly different visual 
+    	appearance than the "real" application area. The following screenshots 
+    	illustrate these two points.</p>
+    	
+    <p>Here is the ribbon with the old look under Substance 
+    	<a href="http://www.pushing-pixels.org/?p=48">Autumn skin</a>:</p>
+    		
+     <img src="decoration-ribbon-old-autumn.png" height="285" width="500">
+
+    <p>And here is the new look. Note how the ribbon blends much better with the title pane, 
+    	clearly delineating the currently selected task:</p>
+    	
+    <img src="decoration-ribbon-new-autumn.png" height="285" width="500">
+    	
+    <p>The old implementation under <a href="http://www.pushing-pixels.org/?p=156">Coffee Creme skin</a>:</p>
+    
+    <img src="decoration-ribbon-old-creme-coffee.png" height="285" width="500">
+    
+    <p>And the new visuals that make the top part of the application look more polished:</p>
+   
+    <img src="decoration-ribbon-new-creme-coffee.png" height="285" width="500">
+    
+    <p>Finally, the old visuals under the 
+    	<a href="https://substance.dev.java.net/docs/skins/toneddown.html#BusinessBlueSteelSkin">Business 
+    		Blue Steel skin</a>:</p>
+
+    <img src="decoration-ribbon-old-business-blue-steel.png" height="285" width="500">
+    
+    <p>And the new visuals (see explanation below):</p>
+
+    <img src="decoration-ribbon-new-business-blue-steel.png" height="285" width="500">
+    	
+    <p>Note that Business Blue Steel defines a separate scheme bundle for the 
+    	<code><font color="darkblue">DecorationAreaType.GENERAL</font></code> decoration 
+    	areas. For ribbon, it helps to make it stand apart from the rest of the application 
+    	window, but not in a too "aggressive" way. Also note how this scheme bundle is 
+    	applied to all ribbon visuals, including the command buttons, icons, in-ribbon 
+    	galleries and the usual controls (combo boxes, buttons).</p>    
+    	
+    </td>
+  </tr>
+
+
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>ICO-based resizable icons</b></td>
+    <td width="80%" valign="top">
+
+    <p>The <code><font color="darkblue">org.jvnet.flamingo.common.icon.IcoWrapperResizableIcon</font></code> 
+    	is based on Jeff Friesen's <a href="http://www.informit.com/articles/article.aspx?p=1186882">article</a>
+    	from <a href="http://www.informit.com/">InformIT.com</a>. This class allows
+    	loading .ICO files and exposing them as implementation of the
+    <code><font color="darkblue">ResizableIcon</font></code> interface.</p>
+    	
+    	<p>Here is a screenshot of an application showing ICO-based icons from the 
+    		<a href="http://www.jordan-michael.com/icons.html"><strong>Jordan Michael</strong>’s 
+    		portfolio</a> under 128*128 size:</p>
+
+			<img src="ico-resizable-icon-128-thumb.png" height="373" width="494">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Disabling command buttons</b></td>
+    <td width="80%" valign="top">
+
+     <p>Calling <code><font color="darkblue">setEnabled(false)</font></code> on a 
+     	command button will display the correct disabled state. As with the core 
+     	<code><font color="darkblue">AbstractButton</font></code>, 
+     	you can set a disabled icon with 
+     	<code><font color="darkblue">setDisabledIcon</font></code> API. The helper 
+     	<code><font color="darkblue">org.jvnet.flamingo.common.icon.FilteredResizableIcon</font></code> 
+     	class can be used to wrap an existing resizable icon with a 
+     	<code><font color="darkblue">ColorConvertOp</font></code> based on 
+     	<code><font color="darkblue">ColorSpace.CS_GRAY</font></code> (core JDK functionality). 
+     	Here is a screenshot of a few command buttons in enabled state:</p>
+
+			<img src="command-button-set-enabled-before.png" height="149" width="327">
+
+      <p>And here are the same buttons in disabled state. Note how the visuals are changed to 
+      	reflect the new state (including the foreground color of the main text and the 
+      	extra text, as well as the popup arrow icon). The buttons in the first 
+      	column specify a custom disabled icon (with the APIs mentioned above).</p>
+      	
+      <img src="command-button-set-enabled-after.png" height="149" width="325">
+
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Changing text of command buttons</b></td>
+    <td width="80%" valign="top">
+
+     <p>Previously, once a command button has been created, it was 
+     	not possible to change its display text with the 
+     	<code><font color="darkblue">setText(String)</font></code> API. 
+     	This release tracks the display text and recomputing the strings under 
+     	the relevant button states. Here is a screenshot of a few command 
+     	buttons with the default "Click!" text:</p>
+
+      <img src="command-button-set-text-before.png" height="149" width="159">
+
+     <p>And here are the same buttons after they have been clicked a number 
+     	of times. Each button has an action listener that counts the number 
+     	of clicks and updates the button text accordingly. Note how the 
+     	displayed text and the preferred size of the buttons are changed (automatically):</p>
+     	
+     <img src="command-button-set-text-after.png" height="149" width="174">
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Changing font of command buttons</b></td>
+    <td width="80%" valign="top">
+
+    <p>Previously, the command button would ignore setting a custom font set by the
+    	<code><font color="darkblue">setFont(Font)</font></code> API. This release 
+    	supports this API. Here is a screenshot of a few command buttons using a custom 
+    	italic font:</p>
+    	
+		<img src="command-button-set-font.png" height="149" width="170">
+    
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Auto-repeat mode on command buttons</b></td>
+    <td width="80%" valign="top">
+
+    <p>The <code><font color="darkblue">JCommandButton</font></code> component 
+    	has two new APIs to support the auto-repeat action mode. This mode comes 
+    	in handy when you want to have the action listeners invoked every N 
+    milliseconds as long as the button is pressed.</p>
+    
+    <ul>
+    	<li>Use the <code><font color="darkblue">setAutoRepeatAction(true)</font></code> 
+    		to set the auto-repeat action mode on.</li>
+    	<li>The default initial delay is 500 milliseconds and the default 
+    		subsequent delay is 100 milliseconds. To change the default values, call 
+    	<code><font color="darkblue">setAutoRepeatActionIntervals(int, int)</font></code> API.</li>
+    </ul>
+    
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Column-fill mode on command button panels</b></td>
+    <td width="80%" valign="top">
+
+    <p>Previously, the <a href="../../docs/commandbuttonpanel.html">command 
+    	button panel component</a> only supported row-fill mode. Under this mode, 
+    	the buttons are placed in row-first fashion, wrapping the rows when 
+    	the panel width is reached. Now, the component also supports the 
+    	column-fill mode. Use the 
+    	<code><font color="darkblue">setLayoutKind(LayoutKind)</font></code> 
+    	API to specify the layout mode.</p>
+    	
+    <p>Here is a screenshot of a command button panel with the default 
+    	row-fill mode (note the vertical scroll bar):</p>
+    	
+    <img src="command-button-panel-row-fill.png" height="230" width="484">
+    
+    <p>and here is the same panel under the column-fill mode (notice the 
+    	horizontal scroll bar):</p>
+    	
+    <img src="command-button-panel-column-fill.png" height="230" width="484">
+    </td>
+  </tr>
+
+</table>
+
+</body>
+
+</html>

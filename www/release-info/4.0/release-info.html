@@ -1,0 +1,741 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<META content=flamingo.dev.java.net name=AUTHOR>
+<META content="Copyright (c) 2005-2009 by Kirill Grouchnikov" name=COPYRIGHT>
+<META content="java, swing, ribbon, command button, split button, menu button, galleries, flamingo" name=KEYWORDS>
+<META content="Flamingo 4.0 release notes" name=DESCRIPTION>
+<title>Flamingo 4.0 release</title>
+</head>
+
+<body>
+
+<h1>Flamingo 4.0 <font color="darkblue">Fainnear</font> - new features</h1>
+
+<table border="0" cellpadding="10" cellspacing="0" width="100%">
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - application menu</b></td>
+    <td width="80%" valign="top">
+
+    <p>Application menu button is a big round button placed in the
+    	top-left corner of the ribbon frame. The
+    	<code><font color="darkblue">JRibbon.setApplicationMenu</font></code>
+    	API is used to provide the meta-data description of the entries
+    in the application menu.</p>
+    	
+    <p>Depending on custom support in current look-and-feel, the
+    	application menu button may be partially hosted in the decorated
+    	titled pane. This functionality is presently supported by
+    A03 and Substance look-and-feels.</p>
+    
+    <p>The screenshot below shows an expanded two-level application menu
+    under Blue Ice skin of Synthetica look-and-feel:</p>
+    
+    <img src="application-menu-button-expanded-syntheticablueice.png" width="460" height="430">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - application title bar</b></td>
+    <td width="80%" valign="top">
+
+    <p>Application title bar hosts two types of content - taskbar components
+    	added by the
+    	<code><font color="darkblue">JRibbon.addTaskbarComponent</font></code>
+    	API, and contextual task group headers. This is relevant only for those
+    	look-and-feels that do not explicitly support placing this content in
+    the ribbon frame title bar.</p>
+    
+    <p>The application title bar is shown to the right of the application 
+    	menu button, directly above the ribbon task toggle buttons.</p>
+    	    
+    <p>The screenshot below shows the application title bar hosting the 
+    	ribbon taskbar under Metal look-and-feel:</p>
+    
+    <img src="application-menu-button-metal.png" width="400" height="200">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - resize policies</b></td>
+    <td width="80%" valign="top">
+
+    <p>The <strong>resize policy</strong> defines a single visual 
+    	state of the given ribbon band. For every control in the 
+    	specific ribbon band (command button, gallery etc), the 
+    	resize policy defines what is its display state. The 
+    	<strong>resize sequencing policy</strong> defines which ribbon 
+    band will be chosen next when the ribbon is shrinked / expanded.</p>
+
+		<p>The base interface for the resize policies is defined in the 
+			<code><font color="darkblue">RibbonBandResizePolicy</font></code> 
+			interface. The new 
+			<code><font color="darkblue">JRibbonBand.setResizePolicies</font></code> 
+			API can be used to install a custom set of resize policies on 
+			the specific ribbon band. The 
+			<code><font color="darkblue">CoreRibbonResizePolicies</font></code> 
+			factory provides two core resize policies list - permissive and 
+			restrictive. The default permissive list starts with a resize policy 
+			that shows all command buttons and ribbon galleries in the BIG display 
+			state, fully utilizing the available screen space. The restrictive 
+			list starts with a resize policy that respects the associated ribbon 
+		element priority set on the specific component.</p>
+			
+		<p>The base interface for the resize sequencing policies is defined 
+			in the 
+			<code><font color="darkblue">RibbonBandResizeSequencingPolicy</font></code> 
+			interface. The new 
+			<code><font color="darkblue">RibbonTask.setResizeSequencingPolicy</font></code>  
+			API can be used to install a custom resize sequencing policy on 
+			the specific ribbon task. The 
+			<code><font color="darkblue">CoreRibbonResizeSequencingPolicies</font></code>  
+			factory provides two core policies - round robin and collapse from last. 
+			Under the default round robin policy, the ribbon bands are being 
+			collapsed in a cyclic fashion, distributing the collapsed pixels 
+			between the different bands. Under the collapse from last policy, 
+			the ribbon bands are being collapsed from right to left.</p>
+    
+    <p>The screenshot below shows the progressive collapse of different 
+    	ribbon bands under the core <code><font color="darkblue">CollapseFromLast</font></code>  
+    	resize sequencing policy. Under this policy, the ribbon bands are being 
+    	collapsed from right to left. When the currently collapsing band has 
+    	reached the last step (iconified), the band to its left becomes the 
+    next one to be collapsed.</p>
+    
+    <img src="resizing-collapsefromlast-overview.png" width="474" height="546">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - scrolling shrinked content</b></td>
+    <td width="80%" valign="top">
+
+    <p>When you start to shrink the ribbon frame horizontally, 
+    	at a certain point the content needs to be either shrinked or 
+    	scrolled, depending on the minimum size of the corresponding 
+    	ribbon components and the overall content of the frame. 
+    	The screenshot below shows three first stages of the ribbon 
+    	component at progressively smaller widths:</p>
+    
+    <img src="ribbon-shrink-start.png" width="510" height="365">
+    
+    <p>The second step shows that the contextual task group header 
+    	(in the title pane) does not overflow into the bounds of the 
+    	min / max / close buttons. The third step shows what happens 
+    	when there is not enough width to show the preferred content 
+    	of all the task toggle buttons - they begin to shrink (note 
+    	the last letters that are cut off on some of the buttons), 
+    and the area shows horizontal dividers between the buttons.</p>
+
+		<p>At a certain point, there is not enough space to show all the 
+			task toggle buttons under the minimum width (that is still able 
+			to show the first few letters). At this point, the area that 
+		hosts the task toggle buttons becomes a scrollable panel:</p>
+    	
+    <img src="ribbon-shrink-task-toggle-buttons-0.png" width="287" height="200">
+    
+    <p>Finally, at some point there is not enough space to show the 
+    	ribbon bands under the most restrictive resize policy. At that 
+    	point, the area that hosts the ribbon bands becomes a scrollable 
+    panel as well:</p>
+    
+    <img src="ribbon-shrink-bands-0.png" width="262" height="200">
+    
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - rich tooltips</b></td>
+    <td width="80%" valign="top">
+
+    <p>The <code><font color="darkblue">org.jvnet.flamingo.common.RichTooltip</font></code> 
+    	class provides the API to define different parts of the rich tooltip:</p>
+			<ul>
+				<li>Title text</li>
+				<li>Optional main image</li>
+				<li>One or more description paragraphs</li>
+				<li>Optional footer image</li>
+				<li>Optional one of more footer paragraphs</li>
+			</ul>
+
+		<p>The following APIs can be used to set rich tooltips:</p>
+		
+		<ul>
+			<li><code><font color="darkblue">AbstractCommandButton.setActionRichTooltip</font></code> 
+				to set the rich tooltip on the action area of a command button.</li>
+			<li><code><font color="darkblue">JCommandButton.setPopupRichTooltip</font></code> 
+				to set the rich tooltip on the popup area of a command button 
+				(does not apply to toggle command buttons in the 
+				<code><font color="darkblue">JToggleCommandButton</font></code> 
+				class that only has an action area).</li>
+			<li><code><font color="darkblue">JRibbon.setApplicationMenuRichTooltip</font></code> 
+			to set the rich tooltip on the ribbon application menu button.</li>
+			<li><code><font color="darkblue">JRibbonComponent.setRichTooltip</font></code> 
+			to set the rich tooltip on the hosted core Swing components (see later).</li>
+		</ul>
+		
+		<p>When a command button is part of a ribbon band, its rich tooltips 
+			will be shown <strong>below</strong> the ribbon. Here is a rich 
+			tooltip of action area of the <code><font color="darkblue">Paste</font></code> button in the first 
+			ribbon band (note how the tooltip is displayed below the ribbon 
+			and does not hide any part of the ribbon):</p>
+
+		<img src="rich-tooltip-ribbon-windows-action.png" height="197" width="271">
+		
+		<p>The left horizontal alignment makes sure that the tooltip is clearly 
+			associated with the command button (since there is a considerable 
+			vertical space between them). The same command button has a different 
+			rich tooltip for the popup area:</p>
+			
+		<img src="rich-tooltip-ribbon-windows-popup.png" height="197" width="271">
+		
+		<p>You can associate a rich tooltip with the application menu button:</p>
+		
+		<img src="rich-tooltip-ribbon-windows-appmenu.png" height="284" width="425">
+		
+		<p>Command buttons in the application task bar show the rich tooltip 
+			directly below:</p>
+			
+		<img src="rich-tooltip-ribbon-windows-taskbar.png" height="170" width="378">
+
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - key tips</b></td>
+    <td width="80%" valign="top">
+
+    <p>Key tips allow operating the ribbon with keyboard. 
+    	Unlike the traditional menus-and-toolbars system, every 
+    	command and control in ribbon can have associated key tip. 
+    	This allows efficient access and activation of application 
+    	menu items, task toggle buttons, task bar buttons, task 
+    	expand buttons and other ribbon sub-components. The key 
+    	tip mode is initiated with either <strong>Alt</strong> or 
+    	<strong>F10</strong> key.</p>
+
+		<p>Key tips are shown in groups. A key tip group is associated with the 
+			specific ribbon entity. When the key tip mode is initiated, the key 
+			tip group for the entire ribbon is displayed. It contains key 
+			tips for the application menu button, taskbar components and task toggle buttons:</p>
+			
+		<img src="keytips-toplevel.png" height="238" width="399"></p>
+		
+		<p>Pressing the letter for taksbar button activates that button. 
+			Key tips for disabled buttons are painted with partial translucency. 
+			Pressing the letter for task toggle button selects the matching 
+			ribbon task. Pressing the letter for the application menu button
+			shows the application menu. Once the next key tip group is shown, 
+			the previously shown key tip group is hidden. Pressing <strong>Esc</strong> 
+			dismisses the currently shown key tip group and shows the previous 
+			key tip group. When the initial key tip group is dismissed, 
+			the key tip mode is exited.</p>
+
+		<p>In the screenshot above, pressing key ‘<strong>P</strong>‘ shows the 
+			key tip group for the first (and currently selected) ribbon task:</p>
+
+		<img src="keytips-task.png" height="127" width="498">
+		
+		<p>The key tips are shown for ribbon buttons, task expand buttons 
+			(look for ‘<strong>FO</strong>‘ and ‘<strong>FN</strong>‘), 
+			ribbon gallery expand buttons (look for ‘<strong>L</strong>‘) 
+			and buttons in button strips (in the <code><font color="darkblue">"Font"</font></code> ribbon band). 
+			Some key tips have two letters - this can be useful not only when 
+			there are not enough letters for the contents of the current task. 
+			It can also help in grouping key tips of related functionality 
+			(such as alignment and indentation command buttons in the 
+			<code><font color="darkblue">"Font"</font></code> ribbon band that start with <strong>A</strong>). 
+			In the present situation, when letter ‘<strong>F</strong>‘ is pressed, 
+			only key tips that start with that letter are shown:</p>
+
+		<img src="keytips-task-char2.png" height="124" width="498">
+		
+		<p>Key tips are also shown in popup menus and for menu buttons in 
+			rich popup panels (see below):</p>
+		
+		<img src="keytips-popuppanel.png" height="433" width="409">
+		
+		<p>Here, in order to activate the <code><font color="darkblue">"Save Selection"</font></code>, you 
+			would have to press the following sequence of keys:</p>
+		<ul>
+			<li><strong>Alt</strong> or <strong>F10</strong> to activate the key tip mode</li>
+			<li><strong>P</strong> to select the first ribbon task</li>
+			<li><strong>F, P</strong> to show the popup of the <code><font color="darkblue">"Format"</font></code> 
+				button in the <code><font color="darkblue">"Clipboard"</font></code> ribbon task</li>
+			<li><strong>S, S</strong> to activate the <code><font color="darkblue">"Save Selection"</font></code> 
+				menu button</li>
+		</ul>
+
+		<p>The sequence to activate a specific command can be quite long. As 
+			such, commands that are used often need to be identified and 
+			associated with shorter (and perhaps more memorable) sequences.</p>
+			
+		<p>The APIs to associate key tips with different ribbon components are:</p>
+		<ul>
+			<li><code><font color="darkblue">AbstractCommandButton.setActionKeyTip</font></code></li>
+			<li><code><font color="darkblue">JCommandButton.setPopupKeyTip</font></code></li>
+			<li><code><font color="darkblue">AbstractRibbonBand.setCollapsedStateKeyTip</font></code></li>
+			<li><code><font color="darkblue">AbstractRibbonBand.setExpandKeyTip</font></code></li>
+			<li><code><font color="darkblue">JRibbonBand.setRibbonGalleryExpandKeyTip</font></code></li>
+			<li><code><font color="darkblue">RibbonApplicationMenuEntry.setActionKeyTip</font></code></li>
+			<li><code><font color="darkblue">RibbonApplicationMenuEntry.setPopupKeyTip</font></code></li>
+			<li><code><font color="darkblue">JRibbon.setApplicationMenuKeyTip</font></code></li>
+			<li><code><font color="darkblue">RibbonTask.setKeyTip</font></code></li>
+			<li><code><font color="darkblue">JRibbonComponent.setKeyTip</font></code></li>
+		</ul>
+    
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - minimized mode</b></td>
+    <td width="80%" valign="top">
+
+    <p>There are three ways to minimize and un-minimize the ribbon:</p>
+		<ul>
+			<li>Application code can use the new 
+					<code><font color="darkblue">JRibbon.setMinimized</font></code> API</li>
+			<li>User double-clicking a task toggle button</li>
+			<li>User pressing <code><font color="darkblue">Ctrl+F1</font></code> key stroke</li>
+		</ul>
+
+		<p>Here is a screenshot of a ribbon when it is not minimized:</p>
+		
+		<img src="ribbon-minimized-no.png" height="271" width="509">
+		
+		<p>When the ribbon is minimized in one of the three ways mentioned above, 
+			only the task bar and the task toggle button bar are shown. The ribbon 
+			bands of the currently selected ribbon task are hidden. Note how the 
+			main content of the frame (delineated with the Word-style ruler bands) 
+			gets expanded to occupy the area of the ribbon bands:</p>
+			
+		<img src="ribbon-minimized-yes.png" height="271" width="509">
+		
+		<p>When a task toggle button is single-clicked, the ribbon bands of the 
+			clicked task are shown in a popup overlay <strong>without</strong> 
+			shifting the main content area down:</p>
+			
+		<img src="ribbon-minimized-overlay.png" height="271" width="509">
+		
+		<p>The ribbon tasks in the popup overlay have the same cascading popup 
+			support as the usual (non-minimized) ribbon tasks. Here is a extended 
+			popup menu of a <code><font color="darkblue">Format</font></code> button from the first ribbon task:</p>
+				
+		<img src="ribbon-minimized-with-popup.png" height="271" width="509">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - visual groups in ribbon bands</b></td>
+    <td width="80%" valign="top">
+
+    <p>Groups in ribbon bands allow fine-tuning the layout of larger 
+    	ribbon bands, grouping associated controls while still not 
+    	breaking the groups across multiple ribbon bands. Ribbon 
+    	band groups are separated with vertical separators and 
+    	are started with the 
+    	<code><font color="darkblue">JRibbonBand.startGroup()</font></code> API. 
+    	Here is a screenshot of a ribbon band with two groups:</p>
+    	
+		<img src="ribbon-band-groups-1.png" height="96" width="388">
+
+		<p>Here is a screenshot of another ribbon band, with two groups as well:</p>
+
+		<img src="ribbon-band-groups-2.png" height="95" width="243">
+
+		<p>And here is a screenshot of a ribbon band with three groups:</p>
+
+		<img src="ribbon-band-groups-3.png" height="96" width="365">
+
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - flow ribbon bands</b></td>
+    <td width="80%" valign="top">
+
+    <p>The <code><font color="darkblue">JFlowRibbonBand</font></code> 
+    	class allows placing flowing content in a ribbon band. 
+    	Unlike the <code><font color="darkblue">JRibbonBand</font></code>, 
+    	it can host <strong>any core or third-party</strong> Swing component. 
+    	It is highly recommended to use components that do not take too 
+    	much vertical space (good examples are buttons, combo boxes, 
+    	radio buttons, checkboxes, spinners). The  
+    	<code><font color="darkblue">CoreRibbonResizePolicies.getCoreFlowPoliciesRestrictive</font></code> 
+    	API can be used to install a resize policy that first tries to 
+    	place the controls in two rows, and then, if there is not enough 
+    	horizontal space, will place the controls in three rows.</p>
+    	
+		<p>Here is a screenshot of a flow ribbon band with enough horizontal 
+			space to host all the controls in two rows:</p>
+			
+		<img src="ribbon-band-flowing-2rows.png" height="97" width="259">
+		
+		<p>When the ribbon is resized, the content of this band will be 
+			placed in three rows as necessary:</p>
+
+		<img src="ribbon-band-flowing-3rows.png" height="96" width="206">
+		
+		<p>Key tip placement on the flow ribbon band content is 
+			aligned with key tip placement of the command buttons on 
+			regular ribbon bands. Here is a screenshot of flow ribbon band 
+			keytips with two rows:</p>
+			
+		<img src="ribbon-band-flowing-2rows-keytips.png"height="130" width="343">
+		
+		<p>The keytips for both the top row and the bottom row are aligned, 
+			resulting in a consistent UI appearance. As a side note, to 
+			associate a keytip with a core Swing component, wrap it 
+			with <code><font color="darkblue">JRibbonComponent</font></code>
+			(more on this below).</p>
+				
+		<p>And here is a screenshot of the same flow ribbon band with three rows:</p>
+		
+		<img src="ribbon-band-flowing-3rows-keytips.png" height="127" width="431">
+
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - hosting core Swing components</b></td>
+    <td width="80%" valign="top">
+
+    <p>Core Swing components can be placed into regular 
+    	<code><font color="darkblue">JRibbonBand</font></code>s. To do so, 
+    	wrap such a component with the 
+    	<code><font color="darkblue">JRibbonComponent</font></code> class. 
+    	In the simple case, use the constructor that takes a 
+    	<code><font color="darkblue">JComponent</font></code> to create a 
+    	ribbon band like this:</p>
+
+		<img src="ribbon-band-core-comps-2.png" height="97" width="223">
+		
+		<p>You can also associate an icon and a caption with the core Swing 
+			component that you want to add to the ribbon band. For this, use the 
+			<code><font color="darkblue">JRibbonComponent</font></code> constructor 
+			that takes three parameters to create ribbon bands like these:</p>
+			
+		<img src="ribbon-band-core-comps-1.png" height="97" width="385">
+		
+	<p>In this screenshot, the first ribbon band hosts three 
+		<code><font color="darkblue">JRibbonComponent</font></code>s, each one 
+		wrapping a <code><font color="darkblue">JComboBox</font></code> with a 
+		custom icon and caption text. The second ribbon band has two groups, 
+		first hosting two <code><font color="darkblue">JSpinner</font></code>s 
+		with associated icons and captions, and the second hosting two 
+		<code><font color="darkblue">JSpinner</font></code>s. The second ribbon 
+		band also shows that ribbon band groups can have titles - use the 
+		<code><font color="darkblue">JRibbonBand.startGroup(String)</font></code> API.</p>
+
+	<p>Using the <code><font color="darkblue">JRibbonComponent</font></code> class
+		provides support for associating key tips and rich tooltips with core Swing
+		control.</p>
+		
+	<p>The <code><font color="darkblue">JRibbonComponent.setKeyTip</font></code> 
+		allows associating a keytip with the wrapped component. For simple wrappers, 
+		the keytip is shown on the left hand side of the component, vertically aligned 
+		with the other keytips shown on the ribbon:</p>
+
+	<img src="ribbon-band-core-comps-keytips-2.png" height="120" width="223">
+	
+	<p>For wrappers that show icons and captions, the keytips are shown between 
+		the icon and the caption, vertically aligned with the other keytips shown 
+		on the ribbon:</p>
+		
+	<img src="ribbon-band-core-comps-keytips-1.png" height="121" width="385">
+	
+	<p>Pressing the key sequence that leads to the specific core component will 
+		activate the relevant action. Buttons will be activated (including toggling 
+		the selection on toggle buttons, radio buttons and check boxes), comboboxes 
+		will show the popup, and other controls will acquire focus.</p>
+		
+	<p>The <code><font color="darkblue">JRibbonComponent.setRichTooltip</font></code> 
+		allows associating a rich tooltip</a> with the icon / caption area of the 
+		wrapped component. As with command buttons placed in the ribbon bands, 
+		the rich tooltip will be shown below the ribbon so as not to interfere 
+		with navigating the UI:</p>
+		
+	<img src="ribbon-band-core-comps-richtooltip.png" height="218" width="421">
+	
+	<p>Here, the mouse is hovering over the <code><font color="darkblue">Right:</font></code> 
+		caption of the left-bottom spinner in the 
+		<code><font color="darkblue">Paragraph</font></code> ribbon band.</p>
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - rich popup panels</b></td>
+    <td width="80%" valign="top">
+
+    <p>The <code><font color="darkblue">JCommandPopupMenu</font></code>
+    	provides functionality of a rich popup panel that can host
+    	a command button panel and command menu buttons with
+    	optional separators.</p>
+    	
+    <p>The screenshot below shows a rich popup panel
+    	associated with the <code><font color="darkblue">Format</font></code>
+    popup button:</p>
+    
+    <img src="popup-button-pressed-jgoodies-plasticxp.png" width="433" height="413">
+
+		<p>Internally, this class is used to show popup menus of
+			ribbon galleries. After adding a ribbon gallery with the
+			<code><font color="darkblue">JRibbonBand.addRibbonGallery</font></code>,
+			call the optional 
+			<code><font color="darkblue">JRibbonBand.setRibbonGalleryPopupCallback</font></code>
+			API. The <code><font color="darkblue">JRibbonBand.RibbonGalleryPopupCallback.popupToBeShown</font></code>
+			method will be called when the expand button of the relevant ribbon gallery
+			is activated. At that point, the application code can place additional
+			content in the passed <code><font color="darkblue">JCommandPopupMenu</font></code>
+			instance, using <code><font color="darkblue">JCommandPopupMenu.addMenuButton</font></code>
+			and <code><font color="darkblue">JCommandPopupMenu.addMenuSeparator</font></code>
+		APIs.</p>
+		
+		<p>The next screenshot shows an unexpanded ribbon gallery:</p>
+		
+		<img src="gallery-unexpanded-synthetica-bluemoon.png" width="271" height="93">
+		
+		<p>And here is the popup menu of this gallery its expand button
+		is activated:</p>
+		
+		<img src="gallery-expanded-synthetica-bluemoon-1.png" width="289" height="280">
+
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - help button</b></td>
+    <td width="80%" valign="top">
+
+    <p>The <code><font color="darkblue">JRibbon.configureHelp</font></code> API
+    can be used to place a help button on the far right side of the task toggle 
+    button panel and configure it with a custom application action listener.</p>
+    
+    <p>The screenshot below shows the ribbon help button with custom icon:</p>
+    
+    <img src="help-button.png" width="163" height="143">
+    	
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - A03 plugin</b></td>
+    <td width="80%" valign="top">
+
+    <p>The <a href="http://www.davideraccagni.com/index.php?q=node/64">A03 Flamingo plugin</a>
+    provides fine-tuned visuals to some of ribbon's components. It also allows A03-powered 
+    <code><font color="darkblue">JRibbonFrame</font></code>s to host the application menu button, 
+    taskbar panel and contextual task group headers on the title pane under decorated mode. 
+    In doing so, A03 has joined Substance in providing streamlined visuals for the interested 
+    applications.</p>
+    
+    <p>The screenshot below shows ribbon with two contextual task groups under A03. Note that
+    the application menu button, taskbar panel and contextual task group headers are hosted on
+    the decorated title pane:</p>
+    
+    <img src="a03-ribbon-4.png" width="512" height="288">
+    
+    <p>The screenshot below shows ribbon with activated application menu:</p>
+    
+    <img src="a03-ribbon-1.png" width="512" height="288">
+    
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Ribbon - high fidelity Substance skins</b></td>
+    <td width="80%" valign="top">
+
+    <p><a href="https://substance.dev.java.net/servlets/ProjectDocumentList?folderID=9954">Release 5.1</a>
+    of core Substance look-and-feel and the matching 
+    <a href="https://substance-flamingo.dev.java.net/servlets/ProjectDocumentList?folderID=9956">release 5.1</a>
+    of Substance Flamingo plugin provide high-fidelity implementation of Office Blue and Office Silver
+    skins for the ribbon component.</p>
+    
+    <p>The screenshot below shows a sample ribbon under the new Substance
+    Office Blue skin:</p>
+    
+    <img src="substance-office-blue-skin.png" width="500" height="196">
+    
+    <p>The screenshot below shows a sample ribbon under the new Substance
+    Office Silver skin:</p>
+    
+    <img src="substance-office-silver-skin.png" width="500" height="196">
+    
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>General - command button strip visuals</b></td>
+    <td width="80%" valign="top">
+
+    <p>Visuals of command buttons and command button strips have been polished.
+    This is especially visible under look-and-feels that have non-zero padding around them 
+    (such as Nimbus). Here is how a sample command button strip looked under the Windows 
+    look-and-feel on Vista:</p>
+    
+		<img src="button-strips-windows-old.png" width="250" height="92">
+		
+		<p>and this is how it looks now:</p>
+		
+		<img src="button-strips-windows-new.png" width="254" height="91">
+		
+		<p>This is the same command buttons strip under Nimbus before:</p>
+		
+		<img src="button-strips-nimbus-old.png" width="279" height="96">
+		
+		<p>and now:</p>
+
+		<img src="button-strips-nimbus-new.png" width="285" height="96">
+
+		<p>Applications that wish to use the "segmented" appearance for command 
+		buttons outside the command button strips (akin to the 
+		<a href="http://developer.apple.com/technotes/tn2007/tn2196.html#BUTTONS">"<code><font color="darkblue">JButton.segmentPosition</font></code>" 
+		client property</a> supported by Aqua look-and-feel) can use the new 
+		<code><font color="darkblue">AbstractCommandButton.setLocationOrderKind</font></code> 
+		API. When you're placing buttons inside a command button strip component, 
+		there's no need to use this API explicitly.</p>
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>General - command button gap scaling</b></td>
+    <td width="80%" valign="top">
+
+		<p>The <code><font color="darkblue">setHGapScaleFactor</font></code> 
+		and <code><font color="darkblue">setVGapScaleFactor</font></code> APIs on 
+		the <code><font color="darkblue">AbstractCommandButton</font></code> and 
+		<code><font color="darkblue">JCommandButtonStrip</font></code> classes allow 
+		applications to fine tune the "density" of command buttons. This is especially 
+		relevant for command button strips.</p>
+		
+		<p>By default, buttons in horizontal command button strips use 
+		<code><font color="darkblue">hGapScaleFactor</font></code> of 0.75, and the 
+		buttons in vertical command button strips use 
+		<code><font color="darkblue">vGapScaleFactor</font></code> of 0.75. This makes 
+		the "kerning" between the adjacent buttons 25% smaller, accounting for gaps on 
+		both sides of the inter-button separators.</p>
+		
+		<p>The following screenshot illustrates the horizontal and vertical gap 
+		scale factors on two different command button strips under Nimbus look-and-feel:</p>
+
+		<img src="button-strips-horizontal-nimbus.png" height="221" width="385">
+		
+		<p>The top three rows have the same vertical gap scaling, but the horizontal gap 
+		scaling is different. The bottom three rows have the same horizontal gap scaling, 
+		but the vertical gap scaling is different. The gap scaling is supported on 
+		vertical command button strips as well:</p>
+		
+		<img src="button-strips-vertical-nimbus.png" height="252" width="410">    
+    	
+    </td>
+  </tr>
+
+</table>
+
+</body>
+
+</html>
