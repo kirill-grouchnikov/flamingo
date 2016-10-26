@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Flamingo Kirill Grouchnikov. All Rights Reserved.
+ * Copyright (c) 2005-2016 Flamingo Kirill Grouchnikov. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
@@ -1663,9 +1663,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
 					.setMainImage(ImageIO
 							.read(BasicCheckRibbon.class
 									.getResource("/test/ribbon/appmenubutton-tooltip-main.png")));
-			appMenuRichTooltip.setFooterImage(ImageIO
-					.read(BasicCheckRibbon.class
-							.getResource("/test/ribbon/help-browser.png")));
+			appMenuRichTooltip.setFooterIcon(new help_browser());
 		} catch (IOException ioe) {
 		}
 		appMenuRichTooltip.addFooterSection(resourceBundle

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Flamingo Kirill Grouchnikov. All Rights Reserved.
+ * Copyright (c) 2005-2016 Flamingo Kirill Grouchnikov. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
@@ -245,6 +245,8 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 				maxTitleLineWidth = Math.max(maxTitleLineWidth, lineWidth);
 			}
 			height += titleTextHeight;
+			
+			height += gap;
 
 			// The description text
 			int descriptionTextHeight = 0;
@@ -280,7 +282,7 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 				height += descriptionTextHeight;
 			}
 
-			if ((tooltipInfo.getFooterImage() != null)
+			if ((tooltipInfo.getFooterIcon() != null)
 					|| (tooltipInfo.getFooterSections().size() > 0)) {
 				height += gap;
 				// The footer separator
@@ -291,9 +293,8 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 
 				int footerTextHeight = 0;
 				int availableWidth = descTextWidth;
-				if (tooltipInfo.getFooterImage() != null) {
-					availableWidth -= tooltipInfo.getFooterImage().getWidth(
-							null);
+				if (tooltipInfo.getFooterIcon() != null) {
+					availableWidth -= 16;
 				}
 				if (tooltipInfo.getMainImage() != null) {
 					availableWidth += tooltipInfo.getMainImage().getWidth(null);
@@ -318,10 +319,8 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 				// remove the empty line after the last paragraph
 				footerTextHeight -= fontHeight;
 
-				if (tooltipInfo.getFooterImage() != null) {
-					height += Math.max(footerTextHeight, new JLabel(
-							new ImageIcon(tooltipInfo.getFooterImage()))
-							.getPreferredSize().height);
+				if (tooltipInfo.getFooterIcon() != null) {
+					height += Math.max(footerTextHeight, 16);
 				} else {
 					height += footerTextHeight;
 				}
@@ -333,7 +332,7 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 			if (tooltipInfo.getDescriptionSections().isEmpty()
 					&& (tooltipInfo.getMainImage() == null)
 					&& tooltipInfo.getFooterSections().isEmpty()
-					&& (tooltipInfo.getFooterImage() == null)) {
+					&& (tooltipInfo.getFooterIcon() == null)) {
 				width = maxTitleLineWidth + 1 + ins.left + ins.right;
 			}
 
@@ -394,7 +393,7 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 				titleCurrOffset += charCount;
 			}
 			y += gap;
-
+			
 			// The main image
 			int x = ltr ? ins.left : parent.getWidth() - ins.right;
 			if (tooltipInfo.getMainImage() != null) {
@@ -463,7 +462,7 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 						+ mainImageLabel.getHeight());
 			}
 
-			if ((tooltipInfo.getFooterImage() != null)
+			if ((tooltipInfo.getFooterIcon() != null)
 					|| (tooltipInfo.getFooterSections().size() > 0)) {
 				y += gap;
 				// The footer separator
@@ -477,9 +476,9 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 
 				// The footer image
 				x = ltr ? ins.left : parent.getWidth() - ins.right;
-				if (tooltipInfo.getFooterImage() != null) {
-					footerImageLabel = new JLabel(new ImageIcon(tooltipInfo
-							.getFooterImage()));
+				if (tooltipInfo.getFooterIcon() != null) {
+					tooltipInfo.getFooterIcon().setDimension(new Dimension(16, 16));
+					footerImageLabel = new JLabel(tooltipInfo.getFooterIcon());
 					richTooltipPanel.add(footerImageLabel);
 					int footerImageWidth = footerImageLabel.getPreferredSize().width;
 					if (ltr) {

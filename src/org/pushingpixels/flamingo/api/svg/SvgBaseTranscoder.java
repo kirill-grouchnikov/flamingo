@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Flamingo Kirill Grouchnikov. All Rights Reserved.
+ * Copyright (c) 2005-2016 Flamingo Kirill Grouchnikov. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
@@ -77,6 +77,8 @@ abstract class SvgBaseTranscoder {
 
 	protected boolean javaToImplementResizableIconInterface;
 
+	protected boolean javaToImplementSubstanceIconInterfaces;
+
 	protected final static String TOKEN_PACKAGE = "TOKEN_PACKAGE";
 
 	protected final static String TOKEN_CLASSNAME = "TOKEN_CLASSNAME";
@@ -108,6 +110,10 @@ abstract class SvgBaseTranscoder {
 			boolean javaToImplementResizableIconInterface) {
 		this.javaToImplementResizableIconInterface = javaToImplementResizableIconInterface;
 	}
+	
+	public void setJavaToImplementSubstanceInterfaces() {
+		this.javaToImplementSubstanceIconInterfaces = true;
+	}
 
 	public void setJavaPackageName(String javaPackageName) {
 		this.javaPackageName = javaPackageName;
@@ -132,8 +138,11 @@ abstract class SvgBaseTranscoder {
 	 * Transcodes the SVG image into Java2D code.
 	 */
 	public void transcode(GraphicsNode gvtRoot) {
-		String template = this.javaToImplementResizableIconInterface ? "SvgTranscoderTemplateResizable.templ"
-				: "SvgTranscoderTemplatePlain.templ";
+		String template = this.javaToImplementSubstanceIconInterfaces 
+				? "SvgTranscoderTemplateSubstance.templ" :
+					(this.javaToImplementResizableIconInterface 
+						? "SvgTranscoderTemplateResizable.templ"
+						: "SvgTranscoderTemplatePlain.templ");
 		// load the template
 		InputStream templateStream = SvgBaseTranscoder.class
 				.getResourceAsStream(template);

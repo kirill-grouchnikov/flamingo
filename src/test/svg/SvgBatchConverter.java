@@ -46,7 +46,7 @@ public class SvgBatchConverter {
 
 				SvgTranscoder transcoder = new SvgTranscoder(file.toURI()
 						.toURL().toString(), svgClassName);
-				transcoder.setJavaToImplementResizableIconInterface(false);
+				transcoder.setJavaToImplementSubstanceInterfaces();
 				transcoder.setJavaPackageName(args[1]);
 				transcoder.setListener(new TranscoderListener() {
 					public Writer getWriter() {

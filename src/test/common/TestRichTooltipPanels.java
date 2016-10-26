@@ -6,20 +6,18 @@ import javax.swing.*;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.internal.ui.common.JRichTooltipPanel;
 
+import test.ribbon.help_browser;
+
 public class TestRichTooltipPanels extends JFrame {
 	public TestRichTooltipPanels() {
 		RichTooltip rt = new RichTooltip();
-		rt
-				.setTitle("Main title that can go over multiple lines of text even exceeding the bigger");
-		rt
-				.addDescriptionSection("Simple description that can go over multiple lines of text even exceeding the bigger");
-		rt
-				.addDescriptionSection("Second paragraph that can be multiline as well to test this feature");
+		rt.setTitle("Main title that can go over multiple lines of text even exceeding the bigger");
+		rt.addDescriptionSection("Simple description that can go over multiple lines of text even exceeding the bigger");
+		rt.addDescriptionSection("Second paragraph that can be multiline as well to test this feature");
 		try {
 			rt.setMainImage(ImageIO.read(TestRichTooltipPanels.class
 					.getResource("/test/resource/address-book-new.png")));
-			rt.setFooterImage(ImageIO.read(TestRichTooltipPanels.class
-					.getResource("/test/resource/help-browser.png")));
+			rt.setFooterIcon(new help_browser());
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}

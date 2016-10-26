@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Flamingo Kirill Grouchnikov. All Rights Reserved.
+ * Copyright (c) 2005-2016 Flamingo Kirill Grouchnikov. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,8 @@ package org.pushingpixels.flamingo.api.common;
 
 import java.awt.Image;
 import java.util.*;
+
+import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
 /**
  * Rich tooltip for command buttons.
@@ -175,9 +177,9 @@ public class RichTooltip {
 	 * The footer image of this tooltip. Can be <code>null</code>.
 	 * 
 	 * @see #getFooterImage()
-	 * @see #setFooterImage(Image)
+	 * @see #setFooterIcon(ResizableIcon)
 	 */
-	protected Image footerImage;
+	protected ResizableIcon footerIcon;
 
 	/**
 	 * The footer sections of this tooltip. Can be empty.
@@ -252,8 +254,8 @@ public class RichTooltip {
 	 * @see #getFooterImage()
 	 * @see #addFooterSection(String)
 	 */
-	public void setFooterImage(Image image) {
-		this.footerImage = image;
+	public void setFooterIcon(ResizableIcon footerIcon) {
+		this.footerIcon = footerIcon;
 	}
 
 	/**
@@ -311,14 +313,14 @@ public class RichTooltip {
 	}
 
 	/**
-	 * Returns the footer image of this tooltip. Can return <code>null</code>.
+	 * Returns the footer icon of this tooltip. Can return <code>null</code>.
 	 * 
-	 * @return The footer image of this tooltip.
-	 * @see #setFooterImage(Image)
+	 * @return The footer icon of this tooltip.
+	 * @see #setFooterIcon(ResizableIcon)
 	 * @see #getFooterSections()
 	 */
-	public Image getFooterImage() {
-		return this.footerImage;
+	public ResizableIcon getFooterIcon() {
+		return this.footerIcon;
 	}
 
 	/**

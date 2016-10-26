@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Flamingo Kirill Grouchnikov. All Rights Reserved.
+ * Copyright (c) 2005-2016 Flamingo Kirill Grouchnikov. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
@@ -39,6 +39,8 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 
+import test.ribbon.help_browser;
+
 public class TestCommandButtonsRichTooltips extends TestCommandButtons {
 
 	@Override
@@ -58,10 +60,7 @@ public class TestCommandButtonsRichTooltips extends TestCommandButtons {
 							.setMainImage(ImageIO
 									.read(TestRichTooltipPanels.class
 											.getResource("/test/resource/address-book-new.png")));
-					actionRichTooltip
-							.setFooterImage(ImageIO
-									.read(TestRichTooltipPanels.class
-											.getResource("/test/resource/help-browser.png")));
+					actionRichTooltip.setFooterIcon(new help_browser());
 				} catch (Exception exc) {
 					exc.printStackTrace();
 				}
@@ -76,10 +75,7 @@ public class TestCommandButtonsRichTooltips extends TestCommandButtons {
 				popupRichTooltip.addDescriptionSection(resourceBundle
 						.getString("Tooltip.textParagraph1"));
 				try {
-					popupRichTooltip
-							.setFooterImage(ImageIO
-									.read(TestRichTooltipPanels.class
-											.getResource("/test/resource/help-browser.png")));
+					popupRichTooltip.setFooterIcon(new help_browser());
 				} catch (Exception exc) {
 					exc.printStackTrace();
 				}
