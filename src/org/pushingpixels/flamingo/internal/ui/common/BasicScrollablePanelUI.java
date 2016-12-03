@@ -98,8 +98,7 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 					return;
 				}
 
-				int scrollAmount = 8 * e.getScrollAmount()
-						* e.getWheelRotation();
+				int scrollAmount = 8 * e.getScrollAmount() * e.getWheelRotation();
 				viewOffset += scrollAmount;
 				syncScrolling();
 			}
@@ -112,13 +111,11 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 				if ("scrollOnRollover".equals(evt.getPropertyName())) {
 					boolean isScrollOnRollover = (Boolean) evt.getNewValue();
 					leadingScroller.setFireActionOnRollover(isScrollOnRollover);
-					trailingScroller
-							.setFireActionOnRollover(isScrollOnRollover);
+					trailingScroller.setFireActionOnRollover(isScrollOnRollover);
 				}
 			}
 		};
-		this.scrollablePanel
-				.addPropertyChangeListener(this.propertyChangeListener);
+		this.scrollablePanel.addPropertyChangeListener(this.propertyChangeListener);
 
 		if (this.scrollablePanel.getView() != null) {
 			this.componentListener = new ComponentAdapter() {
@@ -127,8 +124,7 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 					scrollablePanel.doLayout();
 				}
 			};
-			this.scrollablePanel.getView().addComponentListener(
-					this.componentListener);
+			this.scrollablePanel.getView().addComponentListener(this.componentListener);
 
 		}
 	}
@@ -161,15 +157,14 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 					int availWidth = parent.getWidth();
 
 					int offsetX = -viewOffset;
-					view.setBounds(offsetX, 0, Math.max(viewWidth, availWidth),
-							parent.getHeight());
+					view.setBounds(offsetX, 0, Math.max(viewWidth, availWidth), parent.getHeight());
 				} else {
 					int viewHeight = view.getPreferredSize().height;
 					int availHeight = parent.getHeight();
 
 					int offsetY = -viewOffset;
-					view.setBounds(0, offsetY, parent.getWidth(), Math.max(
-							viewHeight, availHeight));
+					view.setBounds(0, offsetY, parent.getWidth(),
+							Math.max(viewHeight, availHeight));
 				}
 			}
 		});
@@ -215,53 +210,45 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 	}
 
 	protected void uninstallListeners() {
-		this.scrollablePanel
-				.removePropertyChangeListener(this.propertyChangeListener);
+		this.scrollablePanel.removePropertyChangeListener(this.propertyChangeListener);
 		this.propertyChangeListener = null;
 
 		this.scrollablePanel.removeMouseWheelListener(this.mouseWheelListener);
 		this.mouseWheelListener = null;
 
 		if (this.scrollablePanel.getView() != null) {
-			this.scrollablePanel.getView().removeComponentListener(
-					this.componentListener);
+			this.scrollablePanel.getView().removeComponentListener(this.componentListener);
 			this.componentListener = null;
 		}
 	}
 
 	protected JCommandButton createLeadingScroller() {
-		JCommandButton b = new JCommandButton(
-				null,
-				new DoubleArrowResizableIcon(
-						new Dimension(9, 9),
-						this.scrollablePanel.getScrollType() == ScrollType.HORIZONTALLY ? SwingConstants.WEST
+		JCommandButton b = new JCommandButton(null,
+				new DoubleArrowResizableIcon(new Dimension(9, 9),
+						this.scrollablePanel.getScrollType() == ScrollType.HORIZONTALLY
+								? SwingConstants.WEST
 								: SwingConstants.NORTH));
 
 		b.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		b.setFocusable(false);
 		b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		b.putClientProperty(BasicCommandButtonUI.EMULATE_SQUARE_BUTTON,
-				Boolean.TRUE);
-		b.putClientProperty(BasicCommandButtonUI.DONT_DISPOSE_POPUPS,
-				Boolean.TRUE);
+		b.putClientProperty(BasicCommandButtonUI.EMULATE_SQUARE_BUTTON, Boolean.TRUE);
+		b.putClientProperty(BasicCommandButtonUI.DONT_DISPOSE_POPUPS, Boolean.TRUE);
 		return b;
 	}
 
 	protected JCommandButton createTrailingScroller() {
-		JCommandButton b = new JCommandButton(
-				null,
-				new DoubleArrowResizableIcon(
-						new Dimension(9, 9),
-						this.scrollablePanel.getScrollType() == ScrollType.HORIZONTALLY ? SwingConstants.EAST
+		JCommandButton b = new JCommandButton(null,
+				new DoubleArrowResizableIcon(new Dimension(9, 9),
+						this.scrollablePanel.getScrollType() == ScrollType.HORIZONTALLY
+								? SwingConstants.EAST
 								: SwingConstants.SOUTH));
 
 		b.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		b.setFocusable(false);
 		b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		b.putClientProperty(BasicCommandButtonUI.EMULATE_SQUARE_BUTTON,
-				Boolean.TRUE);
-		b.putClientProperty(BasicCommandButtonUI.DONT_DISPOSE_POPUPS,
-				Boolean.TRUE);
+		b.putClientProperty(BasicCommandButtonUI.EMULATE_SQUARE_BUTTON, Boolean.TRUE);
+		b.putClientProperty(BasicCommandButtonUI.DONT_DISPOSE_POPUPS, Boolean.TRUE);
 		return b;
 	}
 
@@ -294,8 +281,7 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 	protected void configureLeftScrollerButtonAction() {
 		this.leadingScroller.setAutoRepeatAction(true);
 		this.leadingScroller.setAutoRepeatActionIntervals(200, 50);
-		this.leadingScroller.setFireActionOnRollover(this.scrollablePanel
-				.isScrollOnRollover());
+		this.leadingScroller.setFireActionOnRollover(this.scrollablePanel.isScrollOnRollover());
 		this.leadingScroller.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -308,8 +294,7 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 	protected void configureRightScrollerButtonAction() {
 		this.trailingScroller.setAutoRepeatAction(true);
 		this.trailingScroller.setAutoRepeatActionIntervals(200, 50);
-		this.trailingScroller.setFireActionOnRollover(this.scrollablePanel
-				.isScrollOnRollover());
+		this.trailingScroller.setFireActionOnRollover(this.scrollablePanel.isScrollOnRollover());
 		this.trailingScroller.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -451,20 +436,17 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 				leadingScroller.setVisible(shouldShowScrollerButtons);
 				trailingScroller.setVisible(shouldShowScrollerButtons);
 
-				int scrollPanelWidth = shouldShowScrollerButtons ? width
-						- ins.left - ins.right
-						- leadingScroller.getPreferredSize().width
-						- trailingScroller.getPreferredSize().width - 4 : width
-						- ins.left - ins.right;
+				int scrollPanelWidth = shouldShowScrollerButtons
+						? width - ins.left - ins.right - leadingScroller.getPreferredSize().width
+								- trailingScroller.getPreferredSize().width - 4
+						: width - ins.left - ins.right;
 				int x = ins.left;
 				if (shouldShowScrollerButtons) {
 					int spw = leadingScroller.getPreferredSize().width;
-					leadingScroller.setBounds(x, ins.top, spw, height - ins.top
-							- ins.bottom);
+					leadingScroller.setBounds(x, ins.top, spw, height - ins.top - ins.bottom);
 					x += spw + 2;
 				}
-				viewport.setBounds(x, ins.top, scrollPanelWidth, height
-						- ins.top - ins.bottom);
+				viewport.setBounds(x, ins.top, scrollPanelWidth, height - ins.top - ins.bottom);
 
 				int viewPreferredWidth = view.getPreferredSize().width;
 				if (viewOffset < 0) {
@@ -472,16 +454,14 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 				}
 				if ((viewPreferredWidth > 0)
 						&& (viewOffset + scrollPanelWidth > viewPreferredWidth)) {
-					viewOffset = Math.max(0, viewPreferredWidth
-							- scrollPanelWidth);
+					viewOffset = Math.max(0, viewPreferredWidth - scrollPanelWidth);
 				}
 				viewport.doLayout();
 
 				x += scrollPanelWidth + 2;
 				if (shouldShowScrollerButtons) {
 					int spw = trailingScroller.getPreferredSize().width;
-					trailingScroller.setBounds(x, ins.top, spw, height
-							- ins.top - ins.bottom);
+					trailingScroller.setBounds(x, ins.top, spw, height - ins.top - ins.bottom);
 				}
 			} else {
 				boolean shouldShowScrollerButtons = (viewPrefSize.height > height);
@@ -489,20 +469,17 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 				leadingScroller.setVisible(shouldShowScrollerButtons);
 				trailingScroller.setVisible(shouldShowScrollerButtons);
 
-				int scrollPanelHeight = shouldShowScrollerButtons ? height
-						- ins.top - ins.bottom
-						- leadingScroller.getPreferredSize().height
-						- trailingScroller.getPreferredSize().height - 4
+				int scrollPanelHeight = shouldShowScrollerButtons
+						? height - ins.top - ins.bottom - leadingScroller.getPreferredSize().height
+								- trailingScroller.getPreferredSize().height - 4
 						: height - ins.top - ins.bottom;
 				int y = ins.top;
 				if (shouldShowScrollerButtons) {
 					int sph = leadingScroller.getPreferredSize().height;
-					leadingScroller.setBounds(ins.left, y, width - ins.left
-							- ins.right, sph);
+					leadingScroller.setBounds(ins.left, y, width - ins.left - ins.right, sph);
 					y += sph + 2;
 				}
-				viewport.setBounds(ins.left, y, width - ins.left - ins.right,
-						scrollPanelHeight);
+				viewport.setBounds(ins.left, y, width - ins.left - ins.right, scrollPanelHeight);
 
 				int viewPreferredHeight = view.getPreferredSize().height;
 				if (viewOffset < 0) {
@@ -510,27 +487,21 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 				}
 				if ((viewPreferredHeight > 0)
 						&& (viewOffset + scrollPanelHeight > viewPreferredHeight)) {
-					viewOffset = Math.max(0, viewPreferredHeight
-							- scrollPanelHeight);
+					viewOffset = Math.max(0, viewPreferredHeight - scrollPanelHeight);
 				}
 				viewport.doLayout();
 
 				y += scrollPanelHeight + 2;
 				if (shouldShowScrollerButtons) {
 					int sph = trailingScroller.getPreferredSize().height;
-					trailingScroller.setBounds(ins.left, y, width - ins.left
-							- ins.right, sph);
+					trailingScroller.setBounds(ins.left, y, width - ins.left - ins.right, sph);
 				}
 			}
 
 			if (scrollablePanel.getScrollType() == ScrollType.HORIZONTALLY) {
-				trailingScroller
-						.setEnabled((viewOffset + viewport.getWidth()) < view
-								.getWidth());
+				trailingScroller.setEnabled((viewOffset + viewport.getWidth()) < view.getWidth());
 			} else {
-				trailingScroller
-						.setEnabled((viewOffset + viewport.getHeight()) < view
-								.getHeight());
+				trailingScroller.setEnabled((viewOffset + viewport.getHeight()) < view.getHeight());
 			}
 			leadingScroller.setEnabled(viewOffset > 0);
 		}

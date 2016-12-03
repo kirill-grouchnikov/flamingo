@@ -23,7 +23,7 @@
 	<!-- JDK definitions -->
 
 	<path id="jdk.classpath">
-		<fileset dir="${jdk.home}">
+		<fileset dir="${java.home}">
 			<include name="jre/lib/charsets.jar" />
 			<include name="jre/lib/deploy.jar" />
 			<include name="jre/lib/javaws.jar" />
@@ -38,7 +38,7 @@
 		</fileset>
 	</path>
 
-	<property name="project.jdk.home" value="${jdk.home}" />
+	<property name="project.jdk.home" value="${java.home}" />
 	<property name="project.jdk.classpath" value="jdk.classpath" />
 	<!-- Project Libraries -->
 	<!-- Global Libraries -->
@@ -100,7 +100,7 @@
 
 	<target name="compile.module.flamingo.production" description="compile module flamingo production classes">
 		<mkdir dir="${flamingo.output.dir}" />
-		<javac source="${javac.source}" target="${javac.target}" encoding="${javac.encoding}" destdir="${flamingo.output.dir}" debug="${javac.debug}" nowarn="${javac.generate.no.warnings}" memoryMaximumSize="${javac.max.memory}" fork="true" executable="${module.jdk.home.flamingo}/bin/javac">
+		<javac source="${javac.source}" target="${javac.target}" encoding="${javac.encoding}" destdir="${flamingo.output.dir}" debug="${javac.debug}" nowarn="${javac.generate.no.warnings}" memoryMaximumSize="${javac.max.memory}" fork="true">
 			<compilerarg line="${javac.args.flamingo}" />
 			<bootclasspath refid="flamingo.module.bootclasspath" />
 			<classpath refid="flamingo.module.classpath" />
@@ -118,7 +118,7 @@
 
 	<target name="compile.module.flamingo.tests" description="compile module flamingo test classes" unless="skip.tests">
 		<mkdir dir="${flamingo.output.dir}" />
-		<javac source="${javac.source}" target="${javac.target}" encoding="${javac.encoding}" destdir="${flamingo.output.dir}" debug="${javac.debug}" nowarn="${javac.generate.no.warnings}" memoryMaximumSize="${javac.max.memory}" fork="true" executable="${module.jdk.home.flamingo}/bin/javac">
+		<javac source="${javac.source}" target="${javac.target}" encoding="${javac.encoding}" destdir="${flamingo.output.dir}" debug="${javac.debug}" nowarn="${javac.generate.no.warnings}" memoryMaximumSize="${javac.max.memory}" fork="true">
 			<compilerarg line="${javac.args.flamingo}" />
 			<bootclasspath refid="flamingo.module.bootclasspath" />
 			<classpath refid="flamingo.module.classpath" />
