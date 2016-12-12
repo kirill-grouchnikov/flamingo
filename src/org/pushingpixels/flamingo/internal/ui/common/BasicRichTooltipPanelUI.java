@@ -29,17 +29,38 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common;
 
-import java.awt.*;
-import java.awt.font.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.text.AttributedString;
 import java.util.ArrayList;
 
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.plaf.*;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JSeparator;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 
 import org.pushingpixels.flamingo.api.common.RichTooltip;
+import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
 /**
@@ -219,7 +240,7 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 			FontRenderContext frc = new FontRenderContext(
 					new AffineTransform(), true, false);
 			if (tooltipInfo.getMainImage() != null) {
-				width += tooltipInfo.getMainImage().getWidth(null);
+				width += tooltipInfo.getMainImageDimension().width;
 			}
 
 			int fontHeight = parent.getFontMetrics(font).getHeight();
@@ -275,9 +296,8 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 			}
 
 			if (tooltipInfo.getMainImage() != null) {
-				height += Math.max(descriptionTextHeight, new JLabel(
-						new ImageIcon(tooltipInfo.getMainImage()))
-						.getPreferredSize().height);
+				height += Math.max(descriptionTextHeight, 
+						tooltipInfo.getMainImageDimension().height);
 			} else {
 				height += descriptionTextHeight;
 			}
@@ -297,7 +317,7 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 					availableWidth -= 16;
 				}
 				if (tooltipInfo.getMainImage() != null) {
-					availableWidth += tooltipInfo.getMainImage().getWidth(null);
+					availableWidth += tooltipInfo.getMainImageDimension().width;
 				}
 				for (String footerText : tooltipInfo.getFooterSections()) {
 					AttributedString footerAttributedDescription = new AttributedString(
@@ -396,9 +416,10 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 			
 			// The main image
 			int x = ltr ? ins.left : parent.getWidth() - ins.right;
-			if (tooltipInfo.getMainImage() != null) {
-				mainImageLabel = new JLabel(new ImageIcon(tooltipInfo
-						.getMainImage()));
+			ResizableIcon mainImage = tooltipInfo.getMainImage();
+			if (mainImage != null) {
+				mainImage.setDimension(tooltipInfo.getMainImageDimension());
+				mainImageLabel = new JLabel(mainImage);
 				richTooltipPanel.add(mainImageLabel);
 				int mainImageWidth = mainImageLabel.getPreferredSize().width;
 				if (ltr) {

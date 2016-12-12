@@ -47,6 +47,8 @@ import org.apache.batik.transcoder.*;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.util.EventDispatcher;
 import org.apache.batik.util.EventDispatcher.Dispatcher;
+import org.pushingpixels.flamingo.internal.hidpi.UIUtil;
+import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
 /**
  * A Swing Icon that draws an SVG image.
@@ -78,10 +80,9 @@ abstract class SvgBatikIcon extends UserAgentAdapter implements Icon {
 	/**
 	 * The listeners.
 	 */
-	protected List listeners;
+	protected List<GVTTreeRendererListener> listeners;
 
-	private static ExecutorService loadService = Executors
-			.newFixedThreadPool(5);
+	private static ExecutorService loadService = Executors.newFixedThreadPool(5);
 
 	/**
 	 * Create a new SVG icon.
@@ -121,7 +122,13 @@ abstract class SvgBatikIcon extends UserAgentAdapter implements Icon {
 		/**
 		 * The BufferedImage generated from the SVG document.
 		 */
-		protected BufferedImage bufferedImage;
+		private BufferedImage bufferedImage;
+		
+		private int scaleFactor;
+		
+		public BufferedImageTranscoder(int scaleFactor) {
+			this.scaleFactor = scaleFactor;
+		}
 
 		/**
 		 * Creates a new ARGB image with the specified dimension.
@@ -170,8 +177,8 @@ abstract class SvgBatikIcon extends UserAgentAdapter implements Icon {
 		 *            Height.
 		 */
 		public void setDimensions(int w, int h) {
-			hints.put(KEY_WIDTH, new Float(w));
-			hints.put(KEY_HEIGHT, new Float(h));
+			hints.put(KEY_WIDTH, new Float(w * this.scaleFactor));
+			hints.put(KEY_HEIGHT, new Float(h * this.scaleFactor));
 		}
 	}
 
@@ -203,9 +210,11 @@ abstract class SvgBatikIcon extends UserAgentAdapter implements Icon {
 		BufferedImage image = this.cachedImages.get(this.getIconWidth() + ":"
 				+ this.getIconHeight());
 		if (image != null) {
-			int dx = (this.width - image.getWidth()) / 2;
-			int dy = (this.height - image.getHeight()) / 2;
-			g.drawImage(image, x + dx, y + dy, null);
+			int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+			int dx = (this.width - image.getWidth() / scaleFactor) / 2;
+			int dy = (this.height - image.getHeight() / scaleFactor) / 2;
+			g.drawImage(image, x + dx, y + dy, image.getWidth() / scaleFactor,
+					image.getHeight() / scaleFactor, null);
 		}
 	}
 
@@ -279,7 +288,8 @@ abstract class SvgBatikIcon extends UserAgentAdapter implements Icon {
 					ev = new GVTTreeRendererEvent(this, null);
 					fireEvent(startedDispatcher, ev);
 
-					BufferedImageTranscoder t = new BufferedImageTranscoder();
+					BufferedImageTranscoder t = 
+							new BufferedImageTranscoder(UIUtil.isRetina() ? 2 : 1);
 					if (renderWidth != 0 && renderHeight != 0) {
 						t.setDimensions(renderWidth, renderHeight);
 					}
@@ -289,8 +299,7 @@ abstract class SvgBatikIcon extends UserAgentAdapter implements Icon {
 					t.transcode(ti, null);
 
 					BufferedImage bufferedImage = t.getBufferedImage();
-					String key = bufferedImage.getWidth() + ":"
-							+ bufferedImage.getHeight();
+					String key = renderWidth + ":" + renderHeight;
 					if (bufferedImage != null) {
 						synchronized (SvgBatikIcon.this) {
 							cachedImages.put(key, bufferedImage);

@@ -651,8 +651,8 @@ public class BasicCommandButtonUI extends CommandButtonUI {
 	 * @return Current icon.
 	 */
 	protected Icon getIconToPaint() {
-		return (toUseDisabledIcon() && this.commandButton.getDisabledIcon() != null) ? this.commandButton
-				.getDisabledIcon()
+		return (toUseDisabledIcon() && this.commandButton.getDisabledIcon() != null)
+				? this.commandButton.getDisabledIcon()
 				: this.commandButton.getIcon();
 	}
 
@@ -660,13 +660,11 @@ public class BasicCommandButtonUI extends CommandButtonUI {
 		// special case for command buttons with POPUP_ONLY kind -
 		// check the popup model
 		boolean toUseDisabledIcon;
-		if (this.commandButton instanceof JCommandButton
-				&& ((JCommandButton) this.commandButton).getCommandButtonKind() == JCommandButton.CommandButtonKind.POPUP_ONLY) {
-			toUseDisabledIcon = !((JCommandButton) this.commandButton)
-					.getPopupModel().isEnabled();
+		if (this.commandButton instanceof JCommandButton && ((JCommandButton) this.commandButton)
+				.getCommandButtonKind() == JCommandButton.CommandButtonKind.POPUP_ONLY) {
+			toUseDisabledIcon = !((JCommandButton) this.commandButton).getPopupModel().isEnabled();
 		} else {
-			toUseDisabledIcon = !this.commandButton.getActionModel()
-					.isEnabled();
+			toUseDisabledIcon = !this.commandButton.getActionModel().isEnabled();
 		}
 		return toUseDisabledIcon;
 	}
@@ -1198,10 +1196,8 @@ public class BasicCommandButtonUI extends CommandButtonUI {
 		} else {
 			// disabled icon coming from app code
 			if (icon != null) {
-				this.commandButton.getDisabledIcon()
-						.setDimension(
-								new Dimension(icon.getIconWidth(), icon
-										.getIconHeight()));
+				this.commandButton.getDisabledIcon().setDimension(
+						new Dimension(icon.getIconWidth(), icon.getIconHeight()));
 			}
 		}
 	}

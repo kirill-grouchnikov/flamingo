@@ -29,21 +29,45 @@
  */
 package org.pushingpixels.flamingo.internal.utils;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import javax.swing.*;
-import javax.swing.plaf.*;
+import javax.swing.CellRendererPane;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.UIResource;
 
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
-import org.pushingpixels.flamingo.api.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.AbstractRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbon;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
 import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
+import org.pushingpixels.flamingo.internal.hidpi.JBHiDPIScaledImage;
+import org.pushingpixels.flamingo.internal.hidpi.UIUtil;
 import org.pushingpixels.flamingo.internal.ui.ribbon.AbstractBandControlPanel;
 import org.pushingpixels.flamingo.internal.ui.ribbon.JRibbonTaskToggleButton;
 import org.pushingpixels.flamingo.internal.ui.ribbon.appmenu.JRibbonApplicationMenuButton;
@@ -387,13 +411,15 @@ public class FlamingoUtilities {
 	 * @return Transparent image of specified dimension.
 	 */
 	public static BufferedImage getBlankImage(int width, int height) {
-		GraphicsEnvironment e = GraphicsEnvironment
-				.getLocalGraphicsEnvironment();
-		GraphicsDevice d = e.getDefaultScreenDevice();
-		GraphicsConfiguration c = d.getDefaultConfiguration();
-		BufferedImage compatibleImage = c.createCompatibleImage(width, height,
-				Transparency.TRANSLUCENT);
-		return compatibleImage;
+		if (UIUtil.isRetina()) {
+			return new JBHiDPIScaledImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		} else {
+			GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			GraphicsDevice d = e.getDefaultScreenDevice();
+			GraphicsConfiguration c = d.getDefaultConfiguration();
+			return c.createCompatibleImage(width, height,
+					Transparency.TRANSLUCENT);
+		}
 	}
 
 	/**

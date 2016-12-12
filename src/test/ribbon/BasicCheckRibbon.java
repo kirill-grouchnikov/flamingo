@@ -29,33 +29,158 @@
  */
 package test.ribbon;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.RepaintManager;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
+import org.pushingpixels.flamingo.api.common.HorizontalAlignment;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
-import org.pushingpixels.flamingo.api.common.icon.*;
-import org.pushingpixels.flamingo.api.common.popup.*;
+import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
+import org.pushingpixels.flamingo.api.common.JCommandButtonStrip;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
+import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
+import org.pushingpixels.flamingo.api.common.JCommandToggleMenuButton;
+import org.pushingpixels.flamingo.api.common.RichTooltip;
+import org.pushingpixels.flamingo.api.common.StringValuePair;
+import org.pushingpixels.flamingo.api.common.icon.DecoratedResizableIcon;
+import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
+import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupListener;
-import org.pushingpixels.flamingo.api.ribbon.*;
-import org.pushingpixels.flamingo.api.ribbon.resize.*;
+import org.pushingpixels.flamingo.api.ribbon.JFlowRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonComponent;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryFooter;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryPrimary;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntrySecondary;
+import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
+import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
+import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
+import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizeSequencingPolicies;
+import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
+import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
 import org.pushingpixels.flamingo.internal.utils.RenderingUtils;
-
-import test.common.LookAndFeelSwitcher;
-import test.svg.transcoded.*;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+
+import test.common.LookAndFeelSwitcher;
+import test.svg.transcoded.address_book_new;
+import test.svg.transcoded.applications_games;
+import test.svg.transcoded.applications_internet;
+import test.svg.transcoded.applications_office;
+import test.svg.transcoded.applications_other;
+import test.svg.transcoded.appointment_new;
+import test.svg.transcoded.bookmark_new;
+import test.svg.transcoded.contact_new;
+import test.svg.transcoded.document_new;
+import test.svg.transcoded.document_open;
+import test.svg.transcoded.document_print;
+import test.svg.transcoded.document_print_preview;
+import test.svg.transcoded.document_properties;
+import test.svg.transcoded.document_save;
+import test.svg.transcoded.document_save_as;
+import test.svg.transcoded.edit_clear;
+import test.svg.transcoded.edit_copy;
+import test.svg.transcoded.edit_cut;
+import test.svg.transcoded.edit_find;
+import test.svg.transcoded.edit_find_replace;
+import test.svg.transcoded.edit_paste;
+import test.svg.transcoded.edit_select_all;
+import test.svg.transcoded.folder;
+import test.svg.transcoded.folder_remote;
+import test.svg.transcoded.folder_saved_search;
+import test.svg.transcoded.font_x_generic;
+import test.svg.transcoded.format_indent_less;
+import test.svg.transcoded.format_indent_more;
+import test.svg.transcoded.format_justify_center;
+import test.svg.transcoded.format_justify_fill;
+import test.svg.transcoded.format_justify_left;
+import test.svg.transcoded.format_justify_right;
+import test.svg.transcoded.format_text_bold;
+import test.svg.transcoded.format_text_italic;
+import test.svg.transcoded.format_text_strikethrough;
+import test.svg.transcoded.format_text_underline;
+import test.svg.transcoded.image_x_generic;
+import test.svg.transcoded.mail_forward;
+import test.svg.transcoded.mail_message_new;
+import test.svg.transcoded.network_wireless;
+import test.svg.transcoded.preferences_desktop_accessibility;
+import test.svg.transcoded.preferences_desktop_assistive_technology;
+import test.svg.transcoded.preferences_desktop_font;
+import test.svg.transcoded.preferences_desktop_keyboard_shortcuts;
+import test.svg.transcoded.preferences_desktop_locale;
+import test.svg.transcoded.preferences_desktop_screensaver;
+import test.svg.transcoded.preferences_desktop_theme;
+import test.svg.transcoded.printer;
+import test.svg.transcoded.system_log_out;
+import test.svg.transcoded.system_search;
+import test.svg.transcoded.text_html;
+import test.svg.transcoded.text_x_generic;
+import test.svg.transcoded.x_office_document;
 
 public class BasicCheckRibbon extends JRibbonFrame {
 	protected Locale currLocale;
@@ -1659,10 +1784,42 @@ public class BasicCheckRibbon extends JRibbonFrame {
 		appMenuRichTooltip.addDescriptionSection(resourceBundle
 				.getString("AppMenu.tooltip.paragraph1"));
 		try {
-			appMenuRichTooltip
-					.setMainImage(ImageIO
-							.read(BasicCheckRibbon.class
-									.getResource("/test/ribbon/appmenubutton-tooltip-main.png")));
+			final BufferedImage appMenuButtonTooltipImage = ImageIO.read(BasicCheckRibbon.class
+					.getResource("/test/ribbon/appmenubutton-tooltip-main.png"));
+			final int appMenuButtonTooltipImageWidth = appMenuButtonTooltipImage.getWidth();
+			final int appMenuButtonTooltipImageHeight = appMenuButtonTooltipImage.getHeight();
+			final float appMenuButtonTooltipImageRatio = (float) appMenuButtonTooltipImageWidth /
+					(float) appMenuButtonTooltipImageHeight;
+			final int appMenuButtonTooltipImageInitialWidth = 160;
+			final int appMenuButtonTooltipImageInitialHeight = 
+					(int) (appMenuButtonTooltipImageInitialWidth / appMenuButtonTooltipImageRatio);
+			appMenuRichTooltip.setMainImage(new ResizableIcon() {
+				private int width;
+				private int height;
+				
+				@Override
+				public int getIconWidth() {
+					return this.width;
+				}
+				
+				@Override
+				public int getIconHeight() {
+					return this.height;
+				}
+				
+				@Override
+				public void setDimension(Dimension newDimension) {
+					this.width = newDimension.width;
+					this.height = newDimension.height;
+				}
+				
+				@Override
+				public void paintIcon(Component c, Graphics g, int x, int y) {
+					g.drawImage(appMenuButtonTooltipImage, x, y, 
+							getIconWidth(), getIconHeight(), null);
+				}
+			}, new Dimension(appMenuButtonTooltipImageInitialWidth, 
+					appMenuButtonTooltipImageInitialHeight));
 			appMenuRichTooltip.setFooterIcon(new help_browser());
 		} catch (IOException ioe) {
 		}

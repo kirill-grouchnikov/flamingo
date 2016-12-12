@@ -29,15 +29,27 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common.popup;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.Rectangle2D;
 
-import javax.swing.*;
+import javax.swing.ButtonModel;
+import javax.swing.DefaultButtonModel;
+import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
 
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
+import org.pushingpixels.flamingo.internal.hidpi.UIUtil;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.swing.SwingRepaintCallback;
 
@@ -217,21 +229,37 @@ public class BasicColorSelectorComponentUI extends ColorSelectorComponentUI {
 		g2d.fillRect(0, 0, w, h);
 
 		float[] hsb = new float[3];
-		Color.RGBtoHSB(fillColor.getRed(), fillColor.getGreen(), fillColor
-				.getBlue(), hsb);
+		Color.RGBtoHSB(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), hsb);
 		float brightness = hsb[2] * 0.7f;
 		g2d.setColor(new Color(brightness, brightness, brightness));
-		int ty = this.colorSelectorComponent.isTopOpen() ? 1 : 0;
-		int by = this.colorSelectorComponent.isBottomOpen() ? 1 : 0;
-		g2d.drawRect(0, -ty, w - 1, h - 1 + ty + by);
+
+		float borderThickness = UIUtil.isRetina() ? 0.5f : 1.0f;
+		float ty = this.colorSelectorComponent.isTopOpen() ? borderThickness : 0;
+		float by = this.colorSelectorComponent.isBottomOpen() ? borderThickness : 0;
+		g2d.setStroke(new BasicStroke(borderThickness, BasicStroke.CAP_ROUND, 
+				BasicStroke.JOIN_ROUND));
+		g2d.draw(new Rectangle2D.Double(0, -ty, w - borderThickness, 
+				h - borderThickness + ty + by));
 
 		if (this.rollover > 0.0f) {
-			g2d.setComposite(AlphaComposite.SrcOver.derive(this.rollover));
-			g2d.setColor(new Color(207, 186, 115));
-			g2d.drawRect(0, 0, w - 1, h - 1);
-			g2d.setColor(new Color(230, 212, 150));
-			g2d.drawRect(1, 1, w - 3, h - 3);
+			paintRolloverIndication(g2d);
 		}
+
+		g2d.dispose();
+	}
+
+	protected void paintRolloverIndication(Graphics g) {
+		int w = this.colorSelectorComponent.getWidth();
+		int h = this.colorSelectorComponent.getHeight();
+		float borderThickness = UIUtil.isRetina() ? 0.5f : 1.0f;
+		
+		Graphics2D g2d = (Graphics2D) g.create();
+		g2d.setComposite(AlphaComposite.SrcOver.derive(this.rollover));
+		g2d.setColor(new Color(207, 186, 115));
+		g2d.draw(new Rectangle2D.Double(0, 0, w - borderThickness, h - borderThickness));
+		g2d.setColor(new Color(230, 212, 150));
+		g2d.draw(new Rectangle2D.Double(borderThickness, borderThickness, 
+				w - 3 * borderThickness, h - 3 * borderThickness));
 
 		g2d.dispose();
 	}

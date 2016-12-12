@@ -597,16 +597,13 @@ public class JRibbonFrame extends JFrame {
 					}
 					if (image128 != null) {
 						try {
-							Class appClass = Class
-									.forName("com.apple.eawt.Application");
+							Class appClass = Class.forName("com.apple.eawt.Application");
 							if (appClass != null) {
 								Object appInstance = appClass.newInstance();
-								Method setDockImageMethod = appClass
-										.getDeclaredMethod("setDockIconImage",
-												Image.class);
+								Method setDockImageMethod = appClass.getDeclaredMethod(
+										"setDockIconImage", Image.class);
 								if (setDockImageMethod != null) {
-									setDockImageMethod.invoke(appInstance,
-											image128);
+									setDockImageMethod.invoke(appInstance, image128);
 								}
 							}
 						} catch (Throwable t) {

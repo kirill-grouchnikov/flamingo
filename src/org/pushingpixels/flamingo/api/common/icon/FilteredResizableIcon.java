@@ -36,6 +36,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.pushingpixels.flamingo.api.common.AsynchronousLoading;
+import org.pushingpixels.flamingo.internal.hidpi.UIUtil;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
 /**
@@ -68,8 +69,7 @@ public class FilteredResizableIcon implements ResizableIcon {
 	 * @param operation
 	 *            Filter operation.
 	 */
-	public FilteredResizableIcon(ResizableIcon delegate,
-			BufferedImageOp operation) {
+	public FilteredResizableIcon(ResizableIcon delegate, BufferedImageOp operation) {
 		super();
 		this.delegate = delegate;
 		this.operation = operation;
@@ -129,14 +129,20 @@ public class FilteredResizableIcon implements ResizableIcon {
 				if (asyncDelegate.isLoading())
 					return;
 			}
-			BufferedImage offscreen = FlamingoUtilities.getBlankImage(this
-					.getIconWidth(), this.getIconHeight());
+			BufferedImage offscreen = FlamingoUtilities.getBlankImage(this.getIconWidth(),
+					this.getIconHeight());
 			Graphics2D g2d = offscreen.createGraphics();
 			this.delegate.paintIcon(c, g2d, 0, 0);
 			g2d.dispose();
 			BufferedImage filtered = this.operation.filter(offscreen, null);
 			this.cachedImages.put(key, filtered);
 		}
-		g.drawImage(this.cachedImages.get(key), x, y, null);
+		int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+		BufferedImage toDraw = this.cachedImages.get(key);
+		Graphics2D g2d = (Graphics2D) g.create();
+		g2d.translate(x, y);
+		g2d.drawImage(toDraw, 0, 0, toDraw.getWidth(null) / scaleFactor, 
+				toDraw.getHeight(null) / scaleFactor, null);
+		g2d.dispose();
 	}
 }

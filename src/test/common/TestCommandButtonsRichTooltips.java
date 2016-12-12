@@ -31,15 +31,19 @@ package test.common;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 
 import test.ribbon.help_browser;
+import test.svg.transcoded.address_book_new;
 
 public class TestCommandButtonsRichTooltips extends TestCommandButtons {
 
@@ -55,15 +59,8 @@ public class TestCommandButtonsRichTooltips extends TestCommandButtons {
 						.getString("Tooltip.textParagraph1"));
 				actionRichTooltip.addDescriptionSection(resourceBundle
 						.getString("Tooltip.textParagraph2"));
-				try {
-					actionRichTooltip
-							.setMainImage(ImageIO
-									.read(TestRichTooltipPanels.class
-											.getResource("/test/resource/address-book-new.png")));
-					actionRichTooltip.setFooterIcon(new help_browser());
-				} catch (Exception exc) {
-					exc.printStackTrace();
-				}
+				actionRichTooltip.setMainImage(new address_book_new(), new Dimension(32, 32));
+				actionRichTooltip.setFooterIcon(new help_browser());
 				actionRichTooltip.addFooterSection(resourceBundle
 						.getString("Tooltip.textFooterParagraph1"));
 
@@ -74,11 +71,7 @@ public class TestCommandButtonsRichTooltips extends TestCommandButtons {
 						.getString("Tooltip.textPopupTitle"));
 				popupRichTooltip.addDescriptionSection(resourceBundle
 						.getString("Tooltip.textParagraph1"));
-				try {
-					popupRichTooltip.setFooterIcon(new help_browser());
-				} catch (Exception exc) {
-					exc.printStackTrace();
-				}
+				popupRichTooltip.setFooterIcon(new help_browser());
 				popupRichTooltip.addFooterSection(resourceBundle
 						.getString("Tooltip.textFooterParagraph1"));
 

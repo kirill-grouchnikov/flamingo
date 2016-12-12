@@ -29,8 +29,11 @@
  */
 package org.pushingpixels.flamingo.api.common;
 
+import java.awt.Dimension;
 import java.awt.Image;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
@@ -160,9 +163,18 @@ public class RichTooltip {
 	 * The main image of this tooltip. Can be <code>null</code>.
 	 * 
 	 * @see #getMainImage()
+	 * @see #setMainImage(ResizableIcon, Dimension)
+	 */
+	protected ResizableIcon mainImage;
+	
+	/**
+	 * The dimension of the main image of this tooltip. Can be <code>null</code> only if 
+	 * {@link #mainImage} is null.
+	 * 
+	 * @see #getMainImage()
 	 * @see #setMainImage(Image)
 	 */
-	protected Image mainImage;
+	protected Dimension mainImageDimension;
 
 	/**
 	 * The description sections of this tooltip.
@@ -224,10 +236,12 @@ public class RichTooltip {
 	 * @param image
 	 *            The main image for this tooltip.
 	 * @see #getMainImage()
+	 * @see #getMainImageDimension()
 	 * @see #addDescriptionSection(String)
 	 */
-	public void setMainImage(Image image) {
+	public void setMainImage(ResizableIcon image, Dimension imageDimension) {
 		this.mainImage = image;
+		this.mainImageDimension = imageDimension;
 	}
 
 	/**
@@ -289,10 +303,24 @@ public class RichTooltip {
 	 * 
 	 * @return The main image of this tooltip.
 	 * @see #setMainImage(Image)
+	 * @see #getMainImageDimension()
 	 * @see #getDescriptionSections()
 	 */
-	public Image getMainImage() {
+	public ResizableIcon getMainImage() {
 		return this.mainImage;
+	}
+	
+	/**
+	 * Returns the main image of this tooltip. Can return <code>null</code> only if 
+	 * {@link #getMainImage()} returns <code>null</code>.
+	 * 
+	 * @return The dimension of the main image of this tooltip.
+	 * @see #setMainImage(ResizableIcon, Dimension)
+	 * @see #getMainImage()
+	 * @see #getDescriptionSections()
+	 */
+	public Dimension getMainImageDimension() {
+		return this.mainImageDimension;
 	}
 
 	/**

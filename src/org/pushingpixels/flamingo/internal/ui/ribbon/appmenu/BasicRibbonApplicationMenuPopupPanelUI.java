@@ -59,11 +59,10 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 
 	protected JPanel footerPanel;
 
-	protected static final CommandButtonDisplayState MENU_TILE_LEVEL_1 = new CommandButtonDisplayState(
-			"Ribbon application menu tile level 1", 32) {
+	protected static final CommandButtonDisplayState MENU_TILE_LEVEL_1 = 
+			new CommandButtonDisplayState("Ribbon application menu tile level 1", 32) {
 		@Override
-		public CommandButtonLayoutManager createLayoutManager(
-				AbstractCommandButton commandButton) {
+		public CommandButtonLayoutManager createLayoutManager(AbstractCommandButton commandButton) {
 			return new CommandButtonLayoutManagerMenuTileLevel1();
 		}
 	};
@@ -117,11 +116,6 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 	}
 
 	@Override
-	protected void installDefaults() {
-		super.installDefaults();
-	}
-
-	@Override
 	protected void installComponents() {
 		super.installComponents();
 
@@ -148,8 +142,7 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 				}
 
 				Insets ins = parent.getInsets();
-				return new Dimension(width + ins.left + ins.right, height
-						+ ins.top + ins.bottom);
+				return new Dimension(width + ins.left + ins.right, height + ins.top + ins.bottom);
 			}
 
 			@Override
@@ -165,8 +158,8 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 				for (int i = 0; i < parent.getComponentCount(); i++) {
 					Component comp = parent.getComponent(i);
 					Dimension pref = comp.getPreferredSize();
-					comp.setBounds(ins.left, topY, parent.getWidth() - ins.left
-							- ins.right, pref.height);
+					comp.setBounds(ins.left, topY, parent.getWidth() - ins.left - ins.right,
+							pref.height);
 					topY += pref.height;
 				}
 			}
@@ -180,52 +173,43 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 					.getPrimaryEntries();
 			int primaryGroupCount = primaryEntries.size();
 			for (int i = 0; i < primaryGroupCount; i++) {
-				for (final RibbonApplicationMenuEntryPrimary menuEntry : primaryEntries
-						.get(i)) {
+				for (final RibbonApplicationMenuEntryPrimary menuEntry : primaryEntries.get(i)) {
 					final JCommandMenuButton commandButton = new JCommandMenuButton(
 							menuEntry.getText(), menuEntry.getIcon());
-					commandButton
-							.setCommandButtonKind(menuEntry.getEntryKind());
-					commandButton.addActionListener(menuEntry
-							.getMainActionListener());
+					commandButton.setCommandButtonKind(menuEntry.getEntryKind());
+					commandButton.addActionListener(menuEntry.getMainActionListener());
 					commandButton.setActionKeyTip(menuEntry.getActionKeyTip());
 					commandButton.setPopupKeyTip(menuEntry.getPopupKeyTip());
 					if (menuEntry.getDisabledIcon() != null) {
-						commandButton.setDisabledIcon(menuEntry
-								.getDisabledIcon());
+						commandButton.setDisabledIcon(menuEntry.getDisabledIcon());
 					}
 					if (menuEntry.getSecondaryGroupCount() == 0) {
 						// if there are no secondary menu items, register the
 						// application rollover callback to populate the
 						// second level panel
-						commandButton
-								.addRolloverActionListener(new RolloverActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent e) {
-										// System.out.println("Rollover action");
-										PrimaryRolloverCallback callback = menuEntry
-												.getRolloverCallback();
-										if (callback != null) {
-											callback
-													.menuEntryActivated(panelLevel2);
-										} else {
-											// default callback?
-											PrimaryRolloverCallback defaultCallback = ribbonAppMenu
-													.getDefaultCallback();
-											if (defaultCallback != null) {
-												defaultCallback
-														.menuEntryActivated(panelLevel2);
-											} else {
-												panelLevel2.removeAll();
-												panelLevel2.revalidate();
-												panelLevel2.repaint();
-											}
-										}
-										panelLevel2
-												.applyComponentOrientation(applicationMenuPopupPanel
-														.getComponentOrientation());
+						commandButton.addRolloverActionListener(new RolloverActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								// System.out.println("Rollover action");
+								PrimaryRolloverCallback callback = menuEntry.getRolloverCallback();
+								if (callback != null) {
+									callback.menuEntryActivated(panelLevel2);
+								} else {
+									// default callback?
+									PrimaryRolloverCallback defaultCallback = ribbonAppMenu
+											.getDefaultCallback();
+									if (defaultCallback != null) {
+										defaultCallback.menuEntryActivated(panelLevel2);
+									} else {
+										panelLevel2.removeAll();
+										panelLevel2.revalidate();
+										panelLevel2.repaint();
 									}
-								});
+								}
+								panelLevel2.applyComponentOrientation(
+										applicationMenuPopupPanel.getComponentOrientation());
+							}
+						});
 					} else {
 						// register a core callback to populate the second level
 						// panel with secondary menu items
@@ -239,32 +223,26 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 									@Override
 									public void removeNotify() {
 										super.removeNotify();
-										commandButton.getPopupModel()
-												.setPopupShowing(false);
+										commandButton.getPopupModel().setPopupShowing(false);
 									}
 								};
-								secondary
-										.applyComponentOrientation(applicationMenuPopupPanel
-												.getComponentOrientation());
+								secondary.applyComponentOrientation(
+										applicationMenuPopupPanel.getComponentOrientation());
 								targetPanel.add(secondary, BorderLayout.CENTER);
 							}
 						};
-						commandButton
-								.addRolloverActionListener(new RolloverActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent e) {
-										coreCallback
-												.menuEntryActivated(panelLevel2);
-										// emulate showing the popup so the
-										// button remains "selected"
-										commandButton.getPopupModel()
-												.setPopupShowing(true);
-									}
-								});
+						commandButton.addRolloverActionListener(new RolloverActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								coreCallback.menuEntryActivated(panelLevel2);
+								// emulate showing the popup so the
+								// button remains "selected"
+								commandButton.getPopupModel().setPopupShowing(true);
+							}
+						});
 					}
 					commandButton.setDisplayState(MENU_TILE_LEVEL_1);
-					commandButton
-							.setHorizontalAlignment(SwingUtilities.LEADING);
+					commandButton.setHorizontalAlignment(SwingUtilities.LEADING);
 					commandButton
 							.setPopupOrientationKind(CommandButtonPopupOrientationKind.SIDEWARD);
 					commandButton.setEnabled(menuEntry.isEnabled());
@@ -292,25 +270,22 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 			}
 
 			@Override
-			public void paintBorder(Component c, Graphics g, int x, int y,
-					int width, int height) {
-				g.setColor(FlamingoUtilities.getColor(Color.gray,
-						"Label.disabledForeground"));
+			public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+				g.setColor(FlamingoUtilities.getColor(Color.gray, "Label.disabledForeground"));
 				boolean ltr = c.getComponentOrientation().isLeftToRight();
 				int xToPaint = ltr ? x : x + width - 1;
 				g.drawLine(xToPaint, y, xToPaint, y + height);
 			}
 		});
 		this.panelLevel2.setPreferredSize(new Dimension(30 * FlamingoUtilities
-				.getFont(this.panelLevel1, "Ribbon.font", "Button.font",
-						"Panel.font").getSize() - 30, 10));
+				.getFont(this.panelLevel1, "Ribbon.font", "Button.font", "Panel.font").getSize()
+				- 30, 10));
 
 		mainPanel.add(this.panelLevel2, BorderLayout.CENTER);
 
 		if (ribbonAppMenu != null) {
 			if (ribbonAppMenu.getDefaultCallback() != null) {
-				ribbonAppMenu.getDefaultCallback().menuEntryActivated(
-						this.panelLevel2);
+				ribbonAppMenu.getDefaultCallback().menuEntryActivated(this.panelLevel2);
 			}
 		}
 
@@ -319,34 +294,28 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 		this.footerPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING)) {
 			@Override
 			protected void paintComponent(Graphics g) {
-				FlamingoUtilities.renderSurface(g, footerPanel, new Rectangle(
-						0, 0, footerPanel.getWidth(), footerPanel.getHeight()),
-						false, false, false);
+				FlamingoUtilities.renderSurface(g, footerPanel,
+						new Rectangle(0, 0, footerPanel.getWidth(), footerPanel.getHeight()), false,
+						false, false);
 			}
 		};
 		if (ribbonAppMenu != null) {
-			for (RibbonApplicationMenuEntryFooter footerEntry : ribbonAppMenu
-					.getFooterEntries()) {
-				JCommandButton commandFooterButton = new JCommandButton(
-						footerEntry.getText(), footerEntry.getIcon());
+			for (RibbonApplicationMenuEntryFooter footerEntry : ribbonAppMenu.getFooterEntries()) {
+				JCommandButton commandFooterButton = new JCommandButton(footerEntry.getText(),
+						footerEntry.getIcon());
 				if (footerEntry.getDisabledIcon() != null) {
-					commandFooterButton.setDisabledIcon(footerEntry
-							.getDisabledIcon());
+					commandFooterButton.setDisabledIcon(footerEntry.getDisabledIcon());
 				}
-				commandFooterButton
-						.setCommandButtonKind(CommandButtonKind.ACTION_ONLY);
-				commandFooterButton.addActionListener(footerEntry
-						.getMainActionListener());
-				commandFooterButton
-						.setDisplayState(CommandButtonDisplayState.MEDIUM);
+				commandFooterButton.setCommandButtonKind(CommandButtonKind.ACTION_ONLY);
+				commandFooterButton.addActionListener(footerEntry.getMainActionListener());
+				commandFooterButton.setDisplayState(CommandButtonDisplayState.MEDIUM);
 				commandFooterButton.setFlat(false);
 				commandFooterButton.setEnabled(footerEntry.isEnabled());
 				this.footerPanel.add(commandFooterButton);
 			}
 		}
 
-		this.applicationMenuPopupPanel
-				.add(this.footerPanel, BorderLayout.SOUTH);
+		this.applicationMenuPopupPanel.add(this.footerPanel, BorderLayout.SOUTH);
 
 		this.applicationMenuPopupPanel.setBorder(new Border() {
 			@Override
@@ -360,24 +329,19 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 			}
 
 			@Override
-			public void paintBorder(Component c, Graphics g, int x, int y,
-					int width, int height) {
-				g.setColor(FlamingoUtilities.getColor(Color.gray,
-						"Label.disabledForeground"));
+			public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+				g.setColor(FlamingoUtilities.getColor(Color.gray, "Label.disabledForeground"));
 				g.drawRect(x, y, width - 1, height - 1);
-				g.setColor(FlamingoUtilities.getColor(Color.gray,
-						"Label.disabledForeground").brighter().brighter());
+				g.setColor(FlamingoUtilities.getColor(Color.gray, "Label.disabledForeground")
+						.brighter().brighter());
 				g.drawRect(x + 1, y + 1, width - 3, height - 3);
 				FlamingoUtilities.renderSurface(g, applicationMenuPopupPanel,
-						new Rectangle(x + 2, y + 2, width - 4, 24), false,
-						false, false);
+						new Rectangle(x + 2, y + 2, width - 4, 24), false, false, false);
 
 				// draw the application menu button
-				JRibbonApplicationMenuButton button = applicationMenuPopupPanel
-						.getAppMenuButton();
+				JRibbonApplicationMenuButton button = applicationMenuPopupPanel.getAppMenuButton();
 				JRibbonApplicationMenuButton rendererButton = new JRibbonApplicationMenuButton(
-						applicationMenuPopupPanel.getAppMenuButton()
-								.getRibbon());
+						applicationMenuPopupPanel.getAppMenuButton().getRibbon());
 				rendererButton.setPopupKeyTip(button.getPopupKeyTip());
 				rendererButton.setIcon(button.getIcon());
 				rendererButton.getPopupModel().setRollover(false);
@@ -389,13 +353,11 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 				Point buttonLoc = button.getLocationOnScreen();
 				Point panelLoc = c.getLocationOnScreen();
 
-				buttonRendererPane.setBounds(panelLoc.x - buttonLoc.x,
-						panelLoc.y - buttonLoc.y, button.getWidth(), button
-								.getHeight());
-				buttonRendererPane.paintComponent(g, rendererButton,
-						(Container) c, -panelLoc.x + buttonLoc.x, -panelLoc.y
-								+ buttonLoc.y, button.getWidth(), button
-								.getHeight(), true);
+				buttonRendererPane.setBounds(panelLoc.x - buttonLoc.x, panelLoc.y - buttonLoc.y,
+						button.getWidth(), button.getHeight());
+				buttonRendererPane.paintComponent(g, rendererButton, (Container) c,
+						-panelLoc.x + buttonLoc.x, -panelLoc.y + buttonLoc.y, button.getWidth(),
+						button.getHeight(), true);
 			}
 		});
 	}
@@ -414,13 +376,11 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 			}
 
 			@Override
-			public void paintBorder(Component c, Graphics g, int x, int y,
-					int width, int height) {
-				g.setColor(FlamingoUtilities.getColor(Color.gray,
-						"Label.disabledForeground").brighter().brighter());
+			public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+				g.setColor(FlamingoUtilities.getColor(Color.gray, "Label.disabledForeground")
+						.brighter().brighter());
 				g.drawRect(x, y, width - 1, height - 1);
-				g.setColor(FlamingoUtilities.getColor(Color.gray,
-						"Label.disabledForeground"));
+				g.setColor(FlamingoUtilities.getColor(Color.gray, "Label.disabledForeground"));
 				g.drawRect(x + 1, y + 1, width - 3, height - 3);
 			}
 		});
@@ -447,18 +407,8 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 		super.uninstallListeners();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.jvnet.flamingo.common.ui.BasicCommandButtonUI#paint(java.awt.Graphics
-	 * , javax.swing.JComponent)
-	 */
 	@Override
 	public void paint(Graphics g, JComponent c) {
-		Graphics2D g2d = (Graphics2D) g.create();
-
-		g2d.dispose();
 	}
 
 	public JPanel getPanelLevel1() {
