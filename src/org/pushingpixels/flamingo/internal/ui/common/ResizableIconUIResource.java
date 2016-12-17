@@ -29,7 +29,9 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
 
 import javax.swing.plaf.UIResource;
 

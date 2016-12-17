@@ -29,25 +29,50 @@
  */
 package org.pushingpixels.flamingo.internal.utils;
 
-import java.awt.*;
+import java.awt.AWTEvent;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.annotation.*;
-import java.util.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EventListener;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
 import javax.swing.FocusManager;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupInfo;
-import org.pushingpixels.flamingo.api.ribbon.*;
-import org.pushingpixels.flamingo.internal.ui.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.AbstractRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbon;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonComponent;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
+import org.pushingpixels.flamingo.internal.ui.ribbon.BasicRibbonUI;
+import org.pushingpixels.flamingo.internal.ui.ribbon.JRibbonTaskToggleButton;
+import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonUI;
 import org.pushingpixels.flamingo.internal.ui.ribbon.appmenu.JRibbonApplicationMenuButton;
 import org.pushingpixels.flamingo.internal.ui.ribbon.appmenu.JRibbonApplicationMenuPopupPanel;
 
@@ -187,13 +212,11 @@ public class KeyTipManager {
 		// application menu button
 		final JRibbonApplicationMenuButton appMenuButton = FlamingoUtilities
 				.getApplicationMenuButton(ribbonFrame);
-		if ((appMenuButton != null)
-				&& (ribbon.getApplicationMenuKeyTip() != null)) {
+		if ((appMenuButton != null) && (ribbon.getApplicationMenuKeyTip() != null)) {
 			final KeyTipLink appMenuButtonLink = new KeyTipLink();
 			appMenuButtonLink.comp = appMenuButton;
 			appMenuButtonLink.keyTipString = ribbon.getApplicationMenuKeyTip();
-			appMenuButtonLink.prefAnchorPoint = appMenuButton.getUI()
-					.getKeyTipAnchorCenterPoint();
+			appMenuButtonLink.prefAnchorPoint = appMenuButton.getUI().getKeyTipAnchorCenterPoint();
 			appMenuButtonLink.onActivated = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -201,28 +224,24 @@ public class KeyTipManager {
 				}
 			};
 			appMenuButtonLink.enabled = true;
-			appMenuButtonLink.traversal = new KeyTipLinkTraversal() {
-				@Override
-				public KeyTipChain getNextChain() {
-					// System.out.println("Get next chain");
-					// collect key tips of all controls in the relevant popup
-					// panel
-					List<PopupInfo> popups = PopupPanelManager.defaultManager()
-							.getShownPath();
-					if (popups.size() > 0) {
-						PopupInfo last = popups.get(popups.size() - 1);
-						if (last.getPopupOriginator() == appMenuButton) {
-							JPopupPanel popupPanel = last.getPopupPanel();
-							KeyTipChain chain = new KeyTipChain(popupPanel);
-							chain.parent = appMenuButtonLink.traversal;
-							populateChain(last.getPopupPanel(), chain);
-							// popupPanel.putClientProperty(KEYTIP_MANAGER,
-							// KeyTipManager.this);
-							return chain;
-						}
+			appMenuButtonLink.traversal = () -> {
+				// System.out.println("Get next chain");
+				// collect key tips of all controls in the relevant popup
+				// panel
+				List<PopupInfo> popups = PopupPanelManager.defaultManager().getShownPath();
+				if (popups.size() > 0) {
+					PopupInfo last = popups.get(popups.size() - 1);
+					if (last.getPopupOriginator() == appMenuButton) {
+						JPopupPanel popupPanel = last.getPopupPanel();
+						KeyTipChain chain = new KeyTipChain(popupPanel);
+						chain.parent = appMenuButtonLink.traversal;
+						populateChain(last.getPopupPanel(), chain);
+						// popupPanel.putClientProperty(KEYTIP_MANAGER,
+						// KeyTipManager.this);
+						return chain;
 					}
-					return null;
 				}
+				return null;
 			};
 			root.addLink(appMenuButtonLink);
 		}
@@ -251,16 +270,14 @@ public class KeyTipManager {
 			for (Map.Entry<RibbonTask, JRibbonTaskToggleButton> ttbEntry : ((BasicRibbonUI) ui)
 					.getTaskToggleButtons().entrySet()) {
 				final RibbonTask task = ttbEntry.getKey();
-				final JRibbonTaskToggleButton taskToggleButton = ttbEntry
-						.getValue();
+				final JRibbonTaskToggleButton taskToggleButton = ttbEntry.getValue();
 				String keyTip = task.getKeyTip();
 				if (keyTip != null) {
 					final KeyTipLink taskToggleButtonLink = new KeyTipLink();
 					taskToggleButtonLink.comp = taskToggleButton;
 					taskToggleButtonLink.keyTipString = keyTip;
 					taskToggleButtonLink.prefAnchorPoint = new Point(
-							taskToggleButton.getWidth() / 2, taskToggleButton
-									.getHeight());
+							taskToggleButton.getWidth() / 2, taskToggleButton.getHeight());
 					taskToggleButtonLink.onActivated = new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -268,18 +285,14 @@ public class KeyTipManager {
 						}
 					};
 					taskToggleButtonLink.enabled = true;
-					taskToggleButtonLink.traversal = new KeyTipLinkTraversal() {
-						@Override
-						public KeyTipChain getNextChain() {
-							KeyTipChain taskChain = new KeyTipChain(
-									taskToggleButton);
-							// collect key tips of all controls from all task
-							// bands
-							for (AbstractRibbonBand band : task.getBands())
-								populateChain(band, taskChain);
-							taskChain.parent = taskToggleButtonLink.traversal;
-							return taskChain;
-						}
+					taskToggleButtonLink.traversal = () -> {
+						KeyTipChain taskChain = new KeyTipChain(taskToggleButton);
+						// collect key tips of all controls from all task
+						// bands
+						for (AbstractRibbonBand band : task.getBands())
+							populateChain(band, taskChain);
+						taskChain.parent = taskToggleButtonLink.traversal;
+						return taskChain;
 					};
 					root.addLink(taskToggleButtonLink);
 				}
@@ -293,8 +306,8 @@ public class KeyTipManager {
 	public Collection<KeyTipLink> getCurrentlyShownKeyTips() {
 		if (this.keyTipChains.isEmpty())
 			return Collections.emptyList();
-		return Collections.unmodifiableCollection(this.keyTipChains
-				.get(this.keyTipChains.size() - 1).links);
+		return Collections
+				.unmodifiableCollection(this.keyTipChains.get(this.keyTipChains.size() - 1).links);
 	}
 
 	public KeyTipChain getCurrentlyShownKeyTipChain() {
@@ -341,8 +354,7 @@ public class KeyTipManager {
 						@Override
 						public void run() {
 							Rectangle compBounds = c.getBounds();
-							if ((compBounds.height > 0)
-									&& (compBounds.width > 0))
+							if ((compBounds.height > 0) && (compBounds.width > 0))
 								addCommandButtonLinks(c, chain);
 						}
 					});
@@ -378,25 +390,20 @@ public class KeyTipManager {
 				}
 			};
 			link.enabled = cb.getActionModel().isEnabled();
-			if (cb.getClass().isAnnotationPresent(
-					KeyTipManager.HasNextKeyTipChain.class)) {
-				link.traversal = new KeyTipLinkTraversal() {
-					@Override
-					public KeyTipChain getNextChain() {
-						// collect key tips of all controls in the relevant
-						// popup panel
-						List<PopupInfo> popups = PopupPanelManager
-								.defaultManager().getShownPath();
-						if (popups.size() > 0) {
-							PopupInfo last = popups.get(popups.size() - 1);
-							JPopupPanel popupPanel = last.getPopupPanel();
-							KeyTipChain chain = new KeyTipChain(popupPanel);
-							populateChain(last.getPopupPanel(), chain);
-							chain.parent = link.traversal;
-							return chain;
-						}
-						return null;
+			if (cb.getClass().isAnnotationPresent(KeyTipManager.HasNextKeyTipChain.class)) {
+				link.traversal = () -> {
+					// collect key tips of all controls in the relevant
+					// popup panel
+					List<PopupInfo> popups = PopupPanelManager.defaultManager().getShownPath();
+					if (popups.size() > 0) {
+						PopupInfo last = popups.get(popups.size() - 1);
+						JPopupPanel popupPanel = last.getPopupPanel();
+						KeyTipChain chain = new KeyTipChain(popupPanel);
+						populateChain(last.getPopupPanel(), chain);
+						chain.parent = link.traversal;
+						return chain;
 					}
+					return null;
 				};
 			} else {
 				link.traversal = null;
@@ -423,8 +430,7 @@ public class KeyTipManager {
 							((JComboBox) mainComponent).showPopup();
 						} else {
 							if (mainComponent instanceof JSpinner) {
-								JComponent editor = ((JSpinner) mainComponent)
-										.getEditor();
+								JComponent editor = ((JSpinner) mainComponent).getEditor();
 								editor.requestFocusInWindow();
 							} else {
 								mainComponent.requestFocusInWindow();
@@ -456,47 +462,40 @@ public class KeyTipManager {
 				}
 			};
 			link.enabled = cb.getPopupModel().isEnabled();
-			link.traversal = new KeyTipLinkTraversal() {
-				@Override
-				public KeyTipChain getNextChain() {
-					// System.out.println("Get next chain");
-					// collect key tips of all controls in the relevant popup
-					// panel
-					List<PopupInfo> popups = PopupPanelManager.defaultManager()
-							.getShownPath();
-					if (popups.size() > 0) {
-						PopupInfo last = popups.get(popups.size() - 1);
-						// if (last.getPopupOriginator() == cb) {
-						JPopupPanel popupPanel = last.getPopupPanel();
-						// special case - application menu
-						if (popupPanel instanceof JRibbonApplicationMenuPopupPanel) {
-							JRibbonApplicationMenuPopupPanel appMenuPopupPanel = (JRibbonApplicationMenuPopupPanel) popupPanel;
-							// check whether there are entries at level 2
-							JPanel level1 = appMenuPopupPanel.getPanelLevel1();
-							JPanel level2 = appMenuPopupPanel.getPanelLevel2();
-							if (level2.getComponentCount() > 0) {
-								KeyTipChain chain = new KeyTipChain(level2);
-								populateChain(level2, chain);
-								chain.parent = link.traversal;
-								return chain;
-							} else {
-								KeyTipChain chain = new KeyTipChain(level1);
-								populateChain(level1, chain);
-								chain.parent = link.traversal;
-								return chain;
-							}
+			link.traversal = () -> {
+				// System.out.println("Get next chain");
+				// collect key tips of all controls in the relevant popup
+				// panel
+				List<PopupInfo> popups = PopupPanelManager.defaultManager().getShownPath();
+				if (popups.size() > 0) {
+					PopupInfo last = popups.get(popups.size() - 1);
+					// if (last.getPopupOriginator() == cb) {
+					JPopupPanel popupPanel = last.getPopupPanel();
+					// special case - application menu
+					if (popupPanel instanceof JRibbonApplicationMenuPopupPanel) {
+						JRibbonApplicationMenuPopupPanel appMenuPopupPanel = (JRibbonApplicationMenuPopupPanel) popupPanel;
+						// check whether there are entries at level 2
+						JPanel level1 = appMenuPopupPanel.getPanelLevel1();
+						JPanel level2 = appMenuPopupPanel.getPanelLevel2();
+						if (level2.getComponentCount() > 0) {
+							KeyTipChain chain = new KeyTipChain(level2);
+							populateChain(level2, chain);
+							chain.parent = link.traversal;
+							return chain;
 						} else {
-							KeyTipChain chain = new KeyTipChain(popupPanel);
-							populateChain(last.getPopupPanel(), chain);
+							KeyTipChain chain = new KeyTipChain(level1);
+							populateChain(level1, chain);
 							chain.parent = link.traversal;
 							return chain;
 						}
-						// popupPanel.putClientProperty(KEYTIP_MANAGER,
-						// KeyTipManager.this);
-						// }
+					} else {
+						KeyTipChain chain = new KeyTipChain(popupPanel);
+						populateChain(last.getPopupPanel(), chain);
+						chain.parent = link.traversal;
+						return chain;
 					}
-					return null;
 				}
+				return null;
 			};
 			return link;
 		}
@@ -536,14 +535,13 @@ public class KeyTipManager {
 		if (this.keyTipChains.isEmpty())
 			return;
 
-		KeyTipChain currChain = this.keyTipChains
-				.get(this.keyTipChains.size() - 1);
+		KeyTipChain currChain = this.keyTipChains.get(this.keyTipChains.size() - 1);
 		// go over the key tip links and see if there is an exact match
 		for (final KeyTipLink link : currChain.links) {
 			String keyTipString = link.keyTipString;
-			if ((Character.toLowerCase(keyTipString
-					.charAt(currChain.keyTipLookupIndex)) == Character
-					.toLowerCase(keyChar))
+			if ((Character
+					.toLowerCase(keyTipString.charAt(currChain.keyTipLookupIndex)) == Character
+							.toLowerCase(keyChar))
 					&& (keyTipString.length() == (currChain.keyTipLookupIndex + 1))) {
 				// exact match
 				if (link.enabled) {
@@ -553,12 +551,10 @@ public class KeyTipManager {
 						SwingUtilities.invokeLater(new Runnable() {
 							@Override
 							public void run() {
-								final KeyTipChain next = link.traversal
-										.getNextChain();
+								final KeyTipChain next = link.traversal.getNextChain();
 								if (next != null) {
 									KeyTipChain prev = (keyTipChains.isEmpty() ? null
-											: keyTipChains.get(keyTipChains
-													.size() - 1));
+											: keyTipChains.get(keyTipChains.size() - 1));
 									keyTipChains.add(next);
 									repaintWindows();
 									if (prev != null) {
@@ -584,14 +580,13 @@ public class KeyTipManager {
 		// go over the key tip links and look for key tips that have
 		// the specified character as the prefix
 		if (currChain.keyTipLookupIndex == 0) {
-			KeyTipChain secondary = new KeyTipChain(
-					currChain.chainParentComponent);
+			KeyTipChain secondary = new KeyTipChain(currChain.chainParentComponent);
 			secondary.keyTipLookupIndex = 1;
 			for (KeyTipLink link : currChain.links) {
 				String keyTipString = link.keyTipString;
-				if ((Character.toLowerCase(keyTipString
-						.charAt(currChain.keyTipLookupIndex)) == Character
-						.toLowerCase(keyChar))
+				if ((Character
+						.toLowerCase(keyTipString.charAt(currChain.keyTipLookupIndex)) == Character
+								.toLowerCase(keyChar))
 						&& (keyTipString.length() == 2)) {
 					KeyTipLink secondaryLink = new KeyTipLink();
 					secondaryLink.comp = link.comp;
@@ -615,12 +610,11 @@ public class KeyTipManager {
 		for (Window window : Window.getWindows()) {
 			window.repaint();
 		}
-		List<PopupInfo> popups = PopupPanelManager.defaultManager()
-				.getShownPath();
+		List<PopupInfo> popups = PopupPanelManager.defaultManager().getShownPath();
 		for (PopupPanelManager.PopupInfo popup : popups) {
 			JPopupPanel popupPanel = popup.getPopupPanel();
-			popupPanel.paintImmediately(new Rectangle(0, 0, popupPanel
-					.getWidth(), popupPanel.getHeight()));
+			popupPanel.paintImmediately(
+					new Rectangle(0, 0, popupPanel.getWidth(), popupPanel.getHeight()));
 		}
 	}
 

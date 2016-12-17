@@ -32,9 +32,13 @@
  */
 package org.pushingpixels.flamingo.api.bcb;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 
 import org.pushingpixels.flamingo.internal.ui.bcb.BasicBreadcrumbBarUI;
 import org.pushingpixels.flamingo.internal.ui.bcb.BreadcrumbBarUI;

@@ -32,7 +32,9 @@ package org.pushingpixels.flamingo.api.common;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.event.ChangeEvent;

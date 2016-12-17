@@ -29,12 +29,20 @@
  */
 package org.pushingpixels.flamingo.api.svg;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -42,13 +50,16 @@ import javax.swing.Icon;
 
 import org.apache.batik.bridge.InterruptedBridgeException;
 import org.apache.batik.bridge.UserAgentAdapter;
-import org.apache.batik.swing.gvt.*;
-import org.apache.batik.transcoder.*;
+import org.apache.batik.swing.gvt.GVTTreeRenderer;
+import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
+import org.apache.batik.swing.gvt.GVTTreeRendererListener;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.util.EventDispatcher;
 import org.apache.batik.util.EventDispatcher.Dispatcher;
 import org.pushingpixels.flamingo.internal.hidpi.UIUtil;
-import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
 /**
  * A Swing Icon that draws an SVG image.

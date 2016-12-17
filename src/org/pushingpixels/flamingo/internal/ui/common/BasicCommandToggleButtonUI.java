@@ -29,7 +29,9 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.JComponent;
+import javax.swing.JToggleButton;
 import javax.swing.plaf.ComponentUI;
 
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;

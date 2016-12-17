@@ -1,6 +1,8 @@
 package utest.ribbon;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -9,16 +11,25 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import org.fest.assertions.Assertions;
-import org.fest.swing.edt.*;
+import org.fest.swing.edt.GuiActionRunner;
+import org.fest.swing.edt.GuiQuery;
+import org.fest.swing.edt.GuiTask;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.Test;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
-import org.pushingpixels.flamingo.api.ribbon.*;
-import org.pushingpixels.flamingo.api.ribbon.resize.*;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
+import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
+import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
+import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
+import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
 import org.pushingpixels.flamingo.internal.ui.ribbon.BasicRibbonBandUI;
 
-import test.svg.transcoded.*;
+import test.svg.transcoded.edit_copy;
+import test.svg.transcoded.edit_cut;
+import test.svg.transcoded.edit_paste;
 
 public class RibbonBandExpandActionListenerTestCase extends
 		FestSwingJUnitTestCase {

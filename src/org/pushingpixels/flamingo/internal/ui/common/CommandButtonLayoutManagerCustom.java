@@ -29,7 +29,9 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Insets;
 
 import javax.swing.JSeparator;
 
@@ -53,7 +55,6 @@ public class CommandButtonLayoutManagerCustom extends
 	public Dimension getPreferredSize(AbstractCommandButton commandButton) {
 		Insets borderInsets = commandButton.getInsets();
 		int bx = borderInsets.left + borderInsets.right;
-		int by = borderInsets.top + borderInsets.bottom;
 		FontMetrics fm = commandButton.getFontMetrics(commandButton.getFont());
 		JSeparator jsep = new JSeparator(JSeparator.HORIZONTAL);
 		int layoutHGap = FlamingoUtilities.getHLayoutGap(commandButton);

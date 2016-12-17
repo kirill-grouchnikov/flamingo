@@ -15,7 +15,12 @@
  */
 package org.pushingpixels.flamingo.internal.hidpi;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
@@ -23,7 +28,6 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 public class GraphicsUtil {
-  @SuppressWarnings("UndesirableClassUsage")
   private static final Graphics2D ourGraphics = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB).createGraphics();
   static {
     setupFractionalMetrics(ourGraphics);

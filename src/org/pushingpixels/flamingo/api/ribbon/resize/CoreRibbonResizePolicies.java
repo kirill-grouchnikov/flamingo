@@ -30,14 +30,22 @@
 package org.pushingpixels.flamingo.api.ribbon.resize;
 
 import java.awt.Insets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JComponent;
 
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
-import org.pushingpixels.flamingo.api.ribbon.*;
-import org.pushingpixels.flamingo.internal.ui.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.JFlowRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonComponent;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
+import org.pushingpixels.flamingo.internal.ui.ribbon.JBandControlPanel;
+import org.pushingpixels.flamingo.internal.ui.ribbon.JFlowBandControlPanel;
+import org.pushingpixels.flamingo.internal.ui.ribbon.JRibbonGallery;
 
 /**
  * The core resize policies. Provides a number of built in resize policies that
@@ -608,12 +616,7 @@ public class CoreRibbonResizePolicies {
 		 *            The control panel of the associated ribbon band.
 		 */
 		public None(JBandControlPanel controlPanel) {
-			super(controlPanel, new Mapping() {
-				@Override
-				public RibbonElementPriority map(RibbonElementPriority priority) {
-					return RibbonElementPriority.TOP;
-				}
-			});
+			super(controlPanel, (RibbonElementPriority priority) -> RibbonElementPriority.TOP);
 		}
 	}
 
@@ -639,19 +642,16 @@ public class CoreRibbonResizePolicies {
 		 *            The control panel of the associated ribbon band.
 		 */
 		public Low2Mid(JBandControlPanel controlPanel) {
-			super(controlPanel, new Mapping() {
-				@Override
-				public RibbonElementPriority map(RibbonElementPriority priority) {
-					switch (priority) {
-					case TOP:
-						return RibbonElementPriority.TOP;
-					case MEDIUM:
-						return RibbonElementPriority.TOP;
-					case LOW:
-						return RibbonElementPriority.MEDIUM;
-					}
-					return null;
+			super(controlPanel, (RibbonElementPriority priority) -> {
+				switch (priority) {
+				case TOP:
+					return RibbonElementPriority.TOP;
+				case MEDIUM:
+					return RibbonElementPriority.TOP;
+				case LOW:
+					return RibbonElementPriority.MEDIUM;
 				}
+				return null;
 			});
 		}
 	}
@@ -678,19 +678,16 @@ public class CoreRibbonResizePolicies {
 		 *            The control panel of the associated ribbon band.
 		 */
 		public Mid2Mid(JBandControlPanel controlPanel) {
-			super(controlPanel, new Mapping() {
-				@Override
-				public RibbonElementPriority map(RibbonElementPriority priority) {
-					switch (priority) {
-					case TOP:
-						return RibbonElementPriority.TOP;
-					case MEDIUM:
-						return RibbonElementPriority.MEDIUM;
-					case LOW:
-						return RibbonElementPriority.MEDIUM;
-					}
-					return null;
+			super(controlPanel, (RibbonElementPriority priority) -> {
+				switch (priority) {
+				case TOP:
+					return RibbonElementPriority.TOP;
+				case MEDIUM:
+					return RibbonElementPriority.MEDIUM;
+				case LOW:
+					return RibbonElementPriority.MEDIUM;
 				}
+				return null;
 			});
 		}
 	}
@@ -709,12 +706,7 @@ public class CoreRibbonResizePolicies {
 		 *            The control panel of the associated ribbon band.
 		 */
 		public Mirror(JBandControlPanel controlPanel) {
-			super(controlPanel, new Mapping() {
-				@Override
-				public RibbonElementPriority map(RibbonElementPriority priority) {
-					return priority;
-				}
-			});
+			super(controlPanel, (RibbonElementPriority priority) -> priority);
 		}
 	}
 
@@ -740,19 +732,16 @@ public class CoreRibbonResizePolicies {
 		 *            The control panel of the associated ribbon band.
 		 */
 		public Mid2Low(JBandControlPanel controlPanel) {
-			super(controlPanel, new Mapping() {
-				@Override
-				public RibbonElementPriority map(RibbonElementPriority priority) {
-					switch (priority) {
-					case TOP:
-						return RibbonElementPriority.TOP;
-					case MEDIUM:
-						return RibbonElementPriority.LOW;
-					case LOW:
-						return RibbonElementPriority.LOW;
-					}
-					return null;
+			super(controlPanel, (RibbonElementPriority priority) -> {
+				switch (priority) {
+				case TOP:
+					return RibbonElementPriority.TOP;
+				case MEDIUM:
+					return RibbonElementPriority.LOW;
+				case LOW:
+					return RibbonElementPriority.LOW;
 				}
+				return null;
 			});
 		}
 	}
@@ -779,19 +768,16 @@ public class CoreRibbonResizePolicies {
 		 *            The control panel of the associated ribbon band.
 		 */
 		public High2Mid(JBandControlPanel controlPanel) {
-			super(controlPanel, new Mapping() {
-				@Override
-				public RibbonElementPriority map(RibbonElementPriority priority) {
-					switch (priority) {
-					case TOP:
-						return RibbonElementPriority.MEDIUM;
-					case MEDIUM:
-						return RibbonElementPriority.LOW;
-					case LOW:
-						return RibbonElementPriority.LOW;
-					}
-					return null;
+			super(controlPanel, (RibbonElementPriority priority) -> {
+				switch (priority) {
+				case TOP:
+					return RibbonElementPriority.MEDIUM;
+				case MEDIUM:
+					return RibbonElementPriority.LOW;
+				case LOW:
+					return RibbonElementPriority.LOW;
 				}
+				return null;
 			});
 		}
 	}
@@ -810,12 +796,7 @@ public class CoreRibbonResizePolicies {
 		 *            The control panel of the associated ribbon band.
 		 */
 		public High2Low(JBandControlPanel controlPanel) {
-			super(controlPanel, new Mapping() {
-				@Override
-				public RibbonElementPriority map(RibbonElementPriority priority) {
-					return RibbonElementPriority.LOW;
-				}
-			});
+			super(controlPanel, (RibbonElementPriority priority) -> RibbonElementPriority.LOW);
 		}
 	}
 

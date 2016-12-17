@@ -29,15 +29,14 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon;
 
-import java.awt.Component;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.UIManager;
 import javax.swing.plaf.UIResource;
 
-import org.pushingpixels.flamingo.api.common.*;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
-import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 
 /**
  * Control panel of a single {@link JRibbonBand}. This class is for internal use

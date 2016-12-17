@@ -33,7 +33,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.batik.bridge.*;
+import org.apache.batik.bridge.BridgeContext;
+import org.apache.batik.bridge.DocumentLoader;
+import org.apache.batik.bridge.GVTBuilder;
+import org.apache.batik.bridge.UserAgentAdapter;
 import org.apache.batik.gvt.GraphicsNode;
 import org.w3c.dom.Document;
 

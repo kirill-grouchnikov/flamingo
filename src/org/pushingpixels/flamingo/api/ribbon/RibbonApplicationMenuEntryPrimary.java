@@ -30,7 +30,9 @@
 package org.pushingpixels.flamingo.api.ribbon;
 
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JPanel;
 

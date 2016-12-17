@@ -29,9 +29,18 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common.popup;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.LayoutManager;
+import java.awt.Rectangle;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.plaf.ComponentUI;
 
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;

@@ -32,15 +32,24 @@
 package test.common;
 
 import java.awt.Dimension;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.filechooser.FileSystemView;
 
 import org.pushingpixels.flamingo.api.bcb.JBreadcrumbBar;
-import org.pushingpixels.flamingo.api.common.*;
-import org.pushingpixels.flamingo.api.common.icon.*;
+import org.pushingpixels.flamingo.api.common.AbstractFileViewPanel;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.ProgressListener;
+import org.pushingpixels.flamingo.api.common.StringValuePair;
+import org.pushingpixels.flamingo.api.common.icon.IcoWrapperResizableIcon;
+import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
+import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.svg.SvgBatikResizableIcon;
 
 /**

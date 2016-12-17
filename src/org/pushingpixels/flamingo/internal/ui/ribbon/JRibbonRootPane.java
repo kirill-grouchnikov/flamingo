@@ -33,7 +33,15 @@ import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JLayeredPane;
+import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.plaf.RootPaneUI;
 
 import org.pushingpixels.flamingo.api.ribbon.JRibbon;

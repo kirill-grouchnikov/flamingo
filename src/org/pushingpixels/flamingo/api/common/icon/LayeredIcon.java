@@ -29,7 +29,9 @@
  */
 package org.pushingpixels.flamingo.api.common.icon;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
 
 /**
  * Decorator icon that layers icons one on top of the other. The original icons

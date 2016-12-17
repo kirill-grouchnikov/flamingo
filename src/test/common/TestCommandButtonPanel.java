@@ -29,13 +29,22 @@
  */
 package test.common;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.ComponentOrientation;
+import java.awt.FlowLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.pushingpixels.flamingo.api.common.JCommandButtonPanel.LayoutKind;

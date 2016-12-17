@@ -29,18 +29,30 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JSeparator;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
 
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
-import org.pushingpixels.flamingo.api.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.AbstractRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonComponent;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
 import org.pushingpixels.flamingo.internal.ui.ribbon.BasicRibbonBandUI.CollapsedButtonPopupPanel;
@@ -272,10 +284,9 @@ public class BasicBandControlPanelUI extends AbstractBandControlPanelUI {
 				if (controlPanelGroupIndex > 0) {
 					int prefW = groupSeparators[controlPanelGroupIndex - 1]
 							.getPreferredSize().width;
-					int sepX = ltr ? x - gap + (gap - prefW) / 2 : x + gap / 2
-							- (gap - prefW) / 2;
-					groupSeparators[controlPanelGroupIndex - 1].setBounds(sepX,
-							ins.top, prefW, availableHeight);
+					int sepX = ltr ? x - gap + (gap - prefW) / 2 : x + gap / 2 - (gap - prefW) / 2;
+					groupSeparators[controlPanelGroupIndex - 1].setBounds(sepX, ins.top, prefW,
+							availableHeight);
 				}
 
 				boolean hasLeadingComponent = false;

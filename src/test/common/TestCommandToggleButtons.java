@@ -29,27 +29,39 @@
  */
 package test.common;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.Window;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.FilteredResizableIcon;
 
-import test.common.LocaleSwitcher.LocaleCallback;
-import test.svg.transcoded.edit_paste;
-
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+
+import test.common.LocaleSwitcher.LocaleCallback;
+import test.svg.transcoded.edit_paste;
 
 public class TestCommandToggleButtons extends JFrame {
 	protected ResourceBundle resourceBundle;

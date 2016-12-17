@@ -29,7 +29,13 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon.appmenu;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
@@ -38,7 +44,9 @@ import java.util.ArrayList;
 
 import javax.swing.JSeparator;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 

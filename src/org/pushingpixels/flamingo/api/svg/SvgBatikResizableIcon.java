@@ -31,7 +31,10 @@ package org.pushingpixels.flamingo.api.svg;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.zip.GZIPInputStream;
 
@@ -171,7 +174,6 @@ public class SvgBatikResizableIcon extends SvgBatikIcon implements
 	 * @throws IOException
 	 *             in case any I/O operation failed.
 	 */
-	@SuppressWarnings("unchecked")
 	private SvgBatikResizableIcon(InputStream inputStream,
 			final Dimension initialDim) throws IOException {
 		super(inputStream, initialDim.width, initialDim.height);
@@ -208,7 +210,6 @@ public class SvgBatikResizableIcon extends SvgBatikIcon implements
 	 * org.jvnet.flamingo.common.AsynchronousLoading#addAsynchronousLoadListener
 	 * (org.jvnet.flamingo.common.AsynchronousLoadListener)
 	 */
-	@SuppressWarnings("unchecked")
 	public void addAsynchronousLoadListener(AsynchronousLoadListener l) {
 		listenerList.add(AsynchronousLoadListener.class, l);
 	}

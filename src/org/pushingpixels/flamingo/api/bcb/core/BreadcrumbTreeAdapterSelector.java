@@ -34,10 +34,14 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.JTree;
 import javax.swing.tree.TreeModel;
 
-import org.pushingpixels.flamingo.api.bcb.*;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbBarCallBack;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+import org.pushingpixels.flamingo.api.bcb.JBreadcrumbBar;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 
 /**

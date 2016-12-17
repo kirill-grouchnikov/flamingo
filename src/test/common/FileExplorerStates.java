@@ -36,9 +36,16 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
-import org.pushingpixels.flamingo.api.bcb.*;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathEvent;
 import org.pushingpixels.flamingo.api.bcb.core.BreadcrumbFileSelector;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
@@ -60,38 +67,30 @@ public class FileExplorerStates extends JFrame {
 				null);
 		JScrollPane fileListScrollPane = new JScrollPane(this.filePanel);
 
-		this.bar.getModel().addPathListener(new BreadcrumbPathListener() {
-			@Override
-			public void breadcrumbPathEvent(BreadcrumbPathEvent event) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						final List<BreadcrumbItem<File>> newPath = bar
-								.getModel().getItems();
-						if (newPath.size() > 0) {
-							SwingWorker<List<StringValuePair<File>>, Void> worker = new SwingWorker<List<StringValuePair<File>>, Void>() {
-								@Override
-								protected List<StringValuePair<File>> doInBackground()
-										throws Exception {
-									return bar.getCallback().getLeafs(newPath);
-								}
-
-								@Override
-								protected void done() {
-									try {
-										filePanel.setFolder(get());
-										// fileList
-										// .setIconDimension(currIconSize);
-									} catch (Exception exc) {
-									}
-								}
-							};
-							worker.execute();
+		this.bar.getModel().addPathListener((BreadcrumbPathEvent event) -> 
+			SwingUtilities.invokeLater(() -> {
+				final List<BreadcrumbItem<File>> newPath = bar.getModel().getItems();
+				if (newPath.size() > 0) {
+					SwingWorker<List<StringValuePair<File>>, Void> worker = 
+							new SwingWorker<List<StringValuePair<File>>, Void>() {
+						@Override
+						protected List<StringValuePair<File>> doInBackground() throws Exception {
+							return bar.getCallback().getLeafs(newPath);
 						}
-						return;
-					}
-				});
-			}
-		});
+	
+						@Override
+						protected void done() {
+							try {
+								filePanel.setFolder(get());
+								// fileList
+								// .setIconDimension(currIconSize);
+							} catch (Exception exc) {
+							}
+						}
+					};
+					worker.execute();
+				}
+			}));
 
 		final JComboBox states = new JComboBox(new DefaultComboBoxModel(
 				new Object[] { CommandButtonDisplayState.BIG, CommandButtonDisplayState.TILE,

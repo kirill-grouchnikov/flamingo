@@ -36,10 +36,18 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import org.pushingpixels.flamingo.api.bcb.*;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathEvent;
 import org.pushingpixels.flamingo.api.bcb.core.BreadcrumbFileSelector;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
@@ -57,43 +65,35 @@ public class BreadCrumbTest extends JFrame {
 		super("BreadCrumb test");
 
 		this.bar = new BreadcrumbFileSelector();
-		this.bar.getModel().addPathListener(new BreadcrumbPathListener() {
-			@Override
-			public void breadcrumbPathEvent(BreadcrumbPathEvent event) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						final List<BreadcrumbItem<File>> newPath = bar
-								.getModel().getItems();
-						System.out.println("New path is ");
-						for (BreadcrumbItem<File> item : newPath) {
-							System.out.println("\t"
-									+ item.getData().getAbsolutePath());
-						}
-
-						if (newPath.size() > 0) {
-							SwingWorker<List<StringValuePair<File>>, Void> worker = new SwingWorker<List<StringValuePair<File>>, Void>() {
-								@Override
-								protected List<StringValuePair<File>> doInBackground()
-										throws Exception {
-									return bar.getCallback().getLeafs(newPath);
-								}
-
-								@Override
-								protected void done() {
-									try {
-										List<StringValuePair<File>> leafs = get();
-										filePanel.setFolder(leafs);
-									} catch (Exception exc) {
-									}
-								}
-							};
-							worker.execute();
-						}
-						return;
+		this.bar.getModel().addPathListener((BreadcrumbPathEvent event) -> 
+			SwingUtilities.invokeLater(() -> {
+					final List<BreadcrumbItem<File>> newPath = bar.getModel().getItems();
+					System.out.println("New path is ");
+					for (BreadcrumbItem<File> item : newPath) {
+						System.out.println("\t" + item.getData().getAbsolutePath());
 					}
-				});
-			}
-		});
+
+					if (newPath.size() > 0) {
+						SwingWorker<List<StringValuePair<File>>, Void> worker = 
+								new SwingWorker<List<StringValuePair<File>>, Void>() {
+							@Override
+							protected List<StringValuePair<File>> doInBackground()
+									throws Exception {
+								return bar.getCallback().getLeafs(newPath);
+							}
+
+							@Override
+							protected void done() {
+								try {
+									List<StringValuePair<File>> leafs = get();
+									filePanel.setFolder(leafs);
+								} catch (Exception exc) {
+								}
+							}
+						};
+						worker.execute();
+					}
+				}));
 
 		this.setLayout(new BorderLayout());
 		this.add(bar, BorderLayout.NORTH);

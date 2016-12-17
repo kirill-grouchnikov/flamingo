@@ -29,8 +29,14 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AWTEvent;
+import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;

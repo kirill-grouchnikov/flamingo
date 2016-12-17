@@ -31,13 +31,21 @@ package org.pushingpixels.flamingo.api.ribbon;
 
 import java.awt.Component;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.internal.ui.ribbon.BasicRibbonUI;
 import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonUI;

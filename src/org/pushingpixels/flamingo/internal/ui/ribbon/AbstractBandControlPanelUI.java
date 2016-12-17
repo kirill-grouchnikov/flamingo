@@ -29,9 +29,16 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.LayoutManager;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.UIResource;

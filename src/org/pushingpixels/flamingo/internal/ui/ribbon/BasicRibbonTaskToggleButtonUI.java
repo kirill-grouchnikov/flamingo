@@ -29,12 +29,27 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.image.BufferedImage;
 
-import javax.swing.*;
+import javax.swing.ButtonModel;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
-import javax.swing.plaf.*;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
@@ -42,7 +57,9 @@ import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
 import org.pushingpixels.flamingo.api.ribbon.JRibbon;
 import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
 import org.pushingpixels.flamingo.internal.ui.common.BasicCommandToggleButtonUI;
-import org.pushingpixels.flamingo.internal.utils.*;
+import org.pushingpixels.flamingo.internal.utils.ColorShiftFilter;
+import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
+import org.pushingpixels.flamingo.internal.utils.RenderingUtils;
 
 /**
  * Basic UI for toggle button of ribbon tasks {@link JRibbonTaskToggleButton}.
@@ -186,9 +203,6 @@ public class BasicRibbonTaskToggleButtonUI extends BasicCommandToggleButtonUI {
 	 */
 	@Override
 	protected void paintButtonBackground(Graphics graphics, Rectangle toFill) {
-		JRibbon ribbon = (JRibbon) SwingUtilities.getAncestorOfClass(
-				JRibbon.class, this.commandButton);
-
 		this.buttonRendererPane.setBounds(toFill.x, toFill.y, toFill.width,
 				toFill.height);
 		ButtonModel model = this.rendererButton.getModel();

@@ -33,12 +33,17 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JPopupMenu.Separator;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
+import org.pushingpixels.flamingo.api.common.JCommandToggleMenuButton;
 import org.pushingpixels.flamingo.internal.ui.common.popup.BasicCommandPopupMenuUI;
 import org.pushingpixels.flamingo.internal.ui.common.popup.PopupPanelUI;
 

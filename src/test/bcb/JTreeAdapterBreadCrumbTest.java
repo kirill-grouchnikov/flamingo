@@ -29,19 +29,39 @@
  */
 package test.bcb;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
-import javax.swing.*;
+import javax.swing.AbstractListModel;
+import javax.swing.Icon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.ListCellRenderer;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeNode;
 
-import org.pushingpixels.flamingo.api.bcb.*;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathEvent;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathListener;
 import org.pushingpixels.flamingo.api.bcb.core.BreadcrumbTreeAdapterSelector;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 

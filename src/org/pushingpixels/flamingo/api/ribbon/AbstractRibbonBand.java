@@ -38,8 +38,12 @@ import javax.swing.UIManager;
 
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-import org.pushingpixels.flamingo.api.ribbon.resize.*;
-import org.pushingpixels.flamingo.internal.ui.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
+import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
+import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
+import org.pushingpixels.flamingo.internal.ui.ribbon.AbstractBandControlPanel;
+import org.pushingpixels.flamingo.internal.ui.ribbon.BasicRibbonBandUI;
+import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonBandUI;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
 /**

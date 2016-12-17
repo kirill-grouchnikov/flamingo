@@ -29,18 +29,41 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common.popup;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 
-import javax.swing.*;
+import javax.swing.CellRendererPane;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
 
-import org.pushingpixels.flamingo.api.common.*;
-import org.pushingpixels.flamingo.api.common.popup.*;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager;
+import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
+import org.pushingpixels.flamingo.api.common.JCommandToggleMenuButton;
+import org.pushingpixels.flamingo.api.common.JScrollablePanel;
+import org.pushingpixels.flamingo.api.common.popup.JColorSelectorPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
 import org.pushingpixels.flamingo.internal.ui.common.BasicCommandButtonPanelUI;
 import org.pushingpixels.flamingo.internal.ui.common.CommandButtonLayoutManagerMedium;
@@ -65,8 +88,7 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 	protected static final CommandButtonDisplayState POPUP_MENU = new CommandButtonDisplayState(
 			"Popup menu", 16) {
 		@Override
-		public CommandButtonLayoutManager createLayoutManager(
-				AbstractCommandButton commandButton) {
+		public CommandButtonLayoutManager createLayoutManager(AbstractCommandButton commandButton) {
 			return new CommandButtonLayoutManagerMedium() {
 				@Override
 				protected float getIconTextGapFactor() {
@@ -113,8 +135,8 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 		 * @param maxVisibleButtonRows
 		 *            The maximum number of visible button rows.
 		 */
-		public ScrollableCommandButtonPanel(JCommandButtonPanel iconPanel,
-				int maxButtonColumns, int maxVisibleButtonRows) {
+		public ScrollableCommandButtonPanel(JCommandButtonPanel iconPanel, int maxButtonColumns,
+				int maxVisibleButtonRows) {
 			this.buttonPanel = iconPanel;
 			this.buttonPanel.setMaxButtonColumns(maxButtonColumns);
 			this.maxVisibleButtonRows = maxVisibleButtonRows;
@@ -123,19 +145,15 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 			int maxButtonHeight = 0;
 			int groupCount = iconPanel.getGroupCount();
 			for (int i = 0; i < groupCount; i++) {
-				for (AbstractCommandButton button : iconPanel
-						.getGroupButtons(i)) {
-					maxButtonWidth = Math.max(maxButtonWidth, button
-							.getPreferredSize().width);
-					maxButtonHeight = Math.max(maxButtonHeight, button
-							.getPreferredSize().height);
+				for (AbstractCommandButton button : iconPanel.getGroupButtons(i)) {
+					maxButtonWidth = Math.max(maxButtonWidth, button.getPreferredSize().width);
+					maxButtonHeight = Math.max(maxButtonHeight, button.getPreferredSize().height);
 				}
 			}
 
 			updateMaxDimension();
 
-			this.scroll = new JScrollPane(this.buttonPanel,
-					JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+			this.scroll = new JScrollPane(this.buttonPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 					JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			this.scroll.setBorder(new EmptyBorder(0, 0, 0, 0));
 			this.buttonPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -157,8 +175,8 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 				}
 
 				@Override
-				public void paintBorder(Component c, Graphics g, int x, int y,
-						int width, int height) {
+				public void paintBorder(Component c, Graphics g, int x, int y, int width,
+						int height) {
 					g.setColor(FlamingoUtilities.getBorderColor());
 					g.drawLine(x, y + height - 1, x + width, y + height - 1);
 				}
@@ -175,12 +193,10 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 			this.buttonPanel.setPreferredSize(null);
 			Dimension prefIconPanelDim = this.buttonPanel.getPreferredSize();
 			// fix for issue 13 - respect the gaps and insets
-			BasicCommandButtonPanelUI panelUI = (BasicCommandButtonPanelUI) buttonPanel
-					.getUI();
+			BasicCommandButtonPanelUI panelUI = (BasicCommandButtonPanelUI) buttonPanel.getUI();
 			int titlePanelCount = buttonPanel.isToShowGroupLabels() ? 1 : 0;
-			this.maxDimension = new Dimension(prefIconPanelDim.width, panelUI
-					.getPreferredHeight(this.maxVisibleButtonRows,
-							titlePanelCount));
+			this.maxDimension = new Dimension(prefIconPanelDim.width,
+					panelUI.getPreferredHeight(this.maxVisibleButtonRows, titlePanelCount));
 			this.setPreferredSize(null);
 		}
 
@@ -247,10 +263,8 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 				Dimension controlPanelDim = buttonPanel.getPreferredSize();
 				if (controlPanelDim == null)
 					controlPanelDim = new Dimension(0, 0);
-				int w = Math.min(controlPanelDim.width, maxDimension.width)
-						+ left + right;
-				int h = Math.min(controlPanelDim.height, maxDimension.height)
-						+ top + bottom;
+				int w = Math.min(controlPanelDim.width, maxDimension.width) + left + right;
+				int h = Math.min(controlPanelDim.height, maxDimension.height) + top + bottom;
 				if (h == (maxDimension.height + top + bottom)) {
 					int scrollBarWidth = UIManager.getInt("ScrollBar.width");
 					if (scrollBarWidth == 0) {
@@ -329,8 +343,7 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 				}
 
 				Insets ins = parent.getInsets();
-				return new Dimension(width + ins.left + ins.right, height
-						+ ins.top + ins.bottom);
+				return new Dimension(width + ins.left + ins.right, height + ins.top + ins.bottom);
 			}
 
 			@Override
@@ -346,17 +359,15 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 				for (int i = 0; i < parent.getComponentCount(); i++) {
 					Component comp = parent.getComponent(i);
 					Dimension pref = comp.getPreferredSize();
-					comp.setBounds(ins.left, topY, parent.getWidth() - ins.left
-							- ins.right, pref.height);
+					comp.setBounds(ins.left, topY, parent.getWidth() - ins.left - ins.right,
+							pref.height);
 					topY += pref.height;
 				}
 			}
 		});
 
-		this.popupMenu.putClientProperty(BasicCommandPopupMenuUI.FORCE_ICON,
-				null);
-		java.util.List<Component> menuComponents = this.popupMenu
-				.getMenuComponents();
+		this.popupMenu.putClientProperty(BasicCommandPopupMenuUI.FORCE_ICON, null);
+		java.util.List<Component> menuComponents = this.popupMenu.getMenuComponents();
 		if (menuComponents != null) {
 			for (Component menuComponent : menuComponents) {
 				menuPanel.add(menuComponent);
@@ -375,21 +386,18 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 				}
 			}
 
-			this.popupMenu.putClientProperty(
-					BasicCommandPopupMenuUI.FORCE_ICON,
+			this.popupMenu.putClientProperty(BasicCommandPopupMenuUI.FORCE_ICON,
 					atLeastOneButtonHasIcon ? Boolean.TRUE : null);
 			for (Component menuComponent : menuComponents) {
 				if (menuComponent instanceof JCommandMenuButton) {
 					JCommandMenuButton menuButton = (JCommandMenuButton) menuComponent;
-					menuButton.putClientProperty(
-							BasicCommandPopupMenuUI.FORCE_ICON,
+					menuButton.putClientProperty(BasicCommandPopupMenuUI.FORCE_ICON,
 							atLeastOneButtonHasIcon ? Boolean.TRUE : null);
 					menuButton.setDisplayState(POPUP_MENU);
 				}
 				if (menuComponent instanceof JCommandToggleMenuButton) {
 					JCommandToggleMenuButton menuButton = (JCommandToggleMenuButton) menuComponent;
-					menuButton.putClientProperty(
-							BasicCommandPopupMenuUI.FORCE_ICON, Boolean.TRUE);
+					menuButton.putClientProperty(BasicCommandPopupMenuUI.FORCE_ICON, Boolean.TRUE);
 					menuButton.setDisplayState(POPUP_MENU);
 				}
 			}
@@ -422,13 +430,12 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 				int singleHeight = menuPanel.getComponent(0).getPreferredSize().height;
 				int width = 0;
 				for (int i = 0; i < menuPanel.getComponentCount(); i++) {
-					width = Math.max(width, menuPanel.getComponent(i)
-							.getPreferredSize().width);
+					width = Math.max(width, menuPanel.getComponent(i).getPreferredSize().width);
 				}
 				Insets ins = parent.getInsets();
 				// add two for scroller buttons
-				return new Dimension(width + ins.left + ins.right, singleHeight
-						* (maxMenuButtonCount + 2) + ins.top + ins.bottom);
+				return new Dimension(width + ins.left + ins.right,
+						singleHeight * (maxMenuButtonCount + 2) + ins.top + ins.bottom);
 			}
 
 			@Override
@@ -445,9 +452,8 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 	}
 
 	protected ScrollableCommandButtonPanel createScrollableButtonPanel() {
-		return new ScrollableCommandButtonPanel(this.popupMenu
-				.getMainButtonPanel(), this.popupMenu.getMaxButtonColumns(),
-				this.popupMenu.getMaxVisibleButtonRows());
+		return new ScrollableCommandButtonPanel(this.popupMenu.getMainButtonPanel(),
+				this.popupMenu.getMaxButtonColumns(), this.popupMenu.getMaxVisibleButtonRows());
 	}
 
 	/*
@@ -465,12 +471,9 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 	protected void installListeners() {
 		super.installListeners();
 
-		this.popupMenuChangeListener = new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				popupMenu.removeAll();
-				syncComponents();
-			}
+		this.popupMenuChangeListener = (ChangeEvent e) -> {
+			popupMenu.removeAll();
+			syncComponents();
 		};
 		this.popupMenu.addChangeListener(this.popupMenuChangeListener);
 
@@ -482,8 +485,8 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 			@Override
 			public void popupHidden(PopupEvent event) {
 				if (event.getSource() instanceof JColorSelectorPopupMenu) {
-					((JColorSelectorPopupMenu) event.getSource())
-							.getColorSelectorCallback().onColorRollover(null);
+					((JColorSelectorPopupMenu) event.getSource()).getColorSelectorCallback()
+							.onColorRollover(null);
 				}
 			}
 		};
@@ -537,15 +540,14 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 				width = commandButtonPanel.getPreferredSize().width;
 				height = commandButtonPanel.getPreferredSize().height;
 			}
-			Dimension menuItemsPref = (popupMenu.getMaxVisibleMenuButtons() > 0) ? menuItemsPanel
-					.getPreferredSize()
+			Dimension menuItemsPref = (popupMenu.getMaxVisibleMenuButtons() > 0)
+					? menuItemsPanel.getPreferredSize()
 					: menuItemsPanel.getView().getPreferredSize();
 			width = Math.max(menuItemsPref.width, width);
 			height += menuItemsPref.height;
 
 			Insets ins = parent.getInsets();
-			return new Dimension(width + ins.left + ins.right, height + ins.top
-					+ ins.bottom);
+			return new Dimension(width + ins.left + ins.right, height + ins.top + ins.bottom);
 		}
 
 		@Override
@@ -553,19 +555,17 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 			Insets ins = parent.getInsets();
 
 			int bottomY = parent.getHeight() - ins.bottom;
-			Dimension menuItemsPref = (popupMenu.getMaxVisibleMenuButtons() > 0) ? menuItemsPanel
-					.getPreferredSize()
+			Dimension menuItemsPref = (popupMenu.getMaxVisibleMenuButtons() > 0)
+					? menuItemsPanel.getPreferredSize()
 					: menuItemsPanel.getView().getPreferredSize();
 			menuItemsPanel.setBounds(ins.left, bottomY - menuItemsPref.height,
-					parent.getWidth() - ins.left - ins.right,
-					menuItemsPref.height);
+					parent.getWidth() - ins.left - ins.right, menuItemsPref.height);
 			menuItemsPanel.doLayout();
 			bottomY -= menuItemsPref.height;
 
 			if (commandButtonPanel != null) {
-				commandButtonPanel.setBounds(ins.left, ins.top, parent
-						.getWidth()
-						- ins.left - ins.right, bottomY - ins.top);
+				commandButtonPanel.setBounds(ins.left, ins.top,
+						parent.getWidth() - ins.left - ins.right, bottomY - ins.top);
 				commandButtonPanel.invalidate();
 				commandButtonPanel.validate();
 				commandButtonPanel.doLayout();
@@ -597,51 +597,48 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 					if (menuComponent instanceof JCommandMenuButton
 							|| menuComponent instanceof JCommandToggleMenuButton) {
 						AbstractCommandButton button = (AbstractCommandButton) menuComponent;
-						if (!Boolean.TRUE.equals(button
-								.getClientProperty(FORCE_ICON))) {
+						if (!Boolean.TRUE.equals(button.getClientProperty(FORCE_ICON))) {
 							continue;
 						}
-						boolean ltr = button.getComponentOrientation()
-								.isLeftToRight();
+						boolean ltr = button.getComponentOrientation().isLeftToRight();
 						CommandButtonLayoutManager.CommandButtonLayoutInfo layoutInfo = button
 								.getUI().getLayoutInfo();
 						if (ltr) {
-							int iconRight = layoutInfo.iconRect.x
-									+ layoutInfo.iconRect.width;
+							int iconRight = layoutInfo.iconRect.x + layoutInfo.iconRect.width;
 							int textLeft = button.getWidth();
-							for (CommandButtonLayoutManager.TextLayoutInfo tli : layoutInfo.textLayoutInfoList) {
+							for (CommandButtonLayoutManager.TextLayoutInfo tli : 
+									layoutInfo.textLayoutInfoList) {
 								textLeft = Math.min(textLeft, tli.textRect.x);
 							}
 							return (iconRight + textLeft) / 2;
 						} else {
 							int iconLeft = layoutInfo.iconRect.x;
 							int textRight = 0;
-							for (CommandButtonLayoutManager.TextLayoutInfo tli : layoutInfo.textLayoutInfoList) {
-								textRight = Math.max(textRight, tli.textRect.x
-										+ tli.textRect.width);
+							for (CommandButtonLayoutManager.TextLayoutInfo tli : 
+									layoutInfo.textLayoutInfoList) {
+								textRight = Math.max(textRight,
+										tli.textRect.x + tli.textRect.width);
 							}
 							return (iconLeft + textRight) / 2;
 						}
 					}
 				}
 			}
-			throw new IllegalStateException(
-					"Menu marked to show icons but no menu buttons in it");
+			throw new IllegalStateException("Menu marked to show icons but no menu buttons in it");
 		}
 
 		protected void paintIconGutterSeparator(Graphics g) {
 			CellRendererPane buttonRendererPane = new CellRendererPane();
 			JSeparator rendererSeparator = new JSeparator(JSeparator.VERTICAL);
 
-			buttonRendererPane.setBounds(0, 0, this.getWidth(), this
-					.getHeight());
+			buttonRendererPane.setBounds(0, 0, this.getWidth(), this.getHeight());
 			int sepX = this.getSeparatorX();
 			if (this.getComponentOrientation().isLeftToRight()) {
-				buttonRendererPane.paintComponent(g, rendererSeparator, this,
-						sepX, 2, 2, this.getHeight() - 4, true);
+				buttonRendererPane.paintComponent(g, rendererSeparator, this, sepX, 2, 2,
+						this.getHeight() - 4, true);
 			} else {
-				buttonRendererPane.paintComponent(g, rendererSeparator, this,
-						sepX, 2, 2, this.getHeight() - 4, true);
+				buttonRendererPane.paintComponent(g, rendererSeparator, this, sepX, 2, 2,
+						this.getHeight() - 4, true);
 			}
 		}
 
@@ -652,23 +649,20 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 			int sepX = this.getSeparatorX();
 			if (this.getComponentOrientation().isLeftToRight()) {
 				g2d.clipRect(0, 0, sepX + 2, this.getHeight());
-				AffineTransform at = AffineTransform.getTranslateInstance(0,
-						this.getHeight());
+				AffineTransform at = AffineTransform.getTranslateInstance(0, this.getHeight());
 				at.rotate(-Math.PI / 2);
 				g2d.transform(at);
 
-				FlamingoUtilities.renderSurface(g2d, this, new Rectangle(0, 0,
-						this.getHeight(), 50), false, false, false);
+				FlamingoUtilities.renderSurface(g2d, this,
+						new Rectangle(0, 0, this.getHeight(), 50), false, false, false);
 			} else {
-				g2d.clipRect(this.getWidth() - sepX, 0, sepX + 2, this
-						.getHeight());
-				AffineTransform at = AffineTransform.getTranslateInstance(0,
-						this.getHeight());
+				g2d.clipRect(this.getWidth() - sepX, 0, sepX + 2, this.getHeight());
+				AffineTransform at = AffineTransform.getTranslateInstance(0, this.getHeight());
 				at.rotate(-Math.PI / 2);
 				g2d.transform(at);
 
-				FlamingoUtilities.renderSurface(g2d, this, new Rectangle(0,
-						sepX, this.getHeight(), this.getWidth() - sepX), false,
+				FlamingoUtilities.renderSurface(g2d, this,
+						new Rectangle(0, sepX, this.getHeight(), this.getWidth() - sepX), false,
 						false, false);
 			}
 

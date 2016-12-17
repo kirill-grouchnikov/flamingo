@@ -1,26 +1,55 @@
 package utest.ribbon;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import junit.framework.TestCase;
-
-import org.pushingpixels.flamingo.api.common.*;
-import org.pushingpixels.flamingo.api.common.icon.*;
-import org.pushingpixels.flamingo.api.common.popup.*;
-import org.pushingpixels.flamingo.api.ribbon.*;
-import org.pushingpixels.flamingo.api.ribbon.resize.*;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
+import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
+import org.pushingpixels.flamingo.api.common.RichTooltip;
+import org.pushingpixels.flamingo.api.common.icon.DecoratedResizableIcon;
+import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
+import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
+import org.pushingpixels.flamingo.api.ribbon.JRibbon;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
+import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
+import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
+import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
+import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
 import org.pushingpixels.flamingo.internal.ui.ribbon.JRibbonTaskToggleButton;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 import org.pushingpixels.flamingo.internal.utils.RenderingUtils;
 
+import junit.framework.TestCase;
 import test.common.SamplePopupMenu;
-import test.svg.transcoded.*;
+import test.svg.transcoded.edit_copy;
+import test.svg.transcoded.edit_cut;
+import test.svg.transcoded.edit_paste;
+import test.svg.transcoded.font_x_generic;
 
 public class RibbonMinimizedTestCase extends TestCase {
 	private JRibbonFrame ribbonFrame;

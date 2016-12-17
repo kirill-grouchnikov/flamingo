@@ -29,19 +29,40 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon.appmenu;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.CellRendererPane;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonPopupOrientationKind;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
+import org.pushingpixels.flamingo.api.common.RolloverActionListener;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
-import org.pushingpixels.flamingo.api.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryFooter;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryPrimary;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryPrimary.PrimaryRolloverCallback;
 import org.pushingpixels.flamingo.internal.ui.common.popup.BasicPopupPanelUI;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;

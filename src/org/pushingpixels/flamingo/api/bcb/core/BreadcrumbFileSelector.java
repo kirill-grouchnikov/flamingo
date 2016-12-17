@@ -29,12 +29,21 @@
  */
 package org.pushingpixels.flamingo.api.bcb.core;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.filechooser.FileSystemView;
 
-import org.pushingpixels.flamingo.api.bcb.*;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbBarCallBack;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+import org.pushingpixels.flamingo.api.bcb.JBreadcrumbBar;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 
 /**

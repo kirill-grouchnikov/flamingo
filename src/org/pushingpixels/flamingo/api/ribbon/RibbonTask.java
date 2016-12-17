@@ -29,7 +29,9 @@
  */
 package org.pushingpixels.flamingo.api.ribbon;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizeSequencingPolicies;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizeSequencingPolicy;

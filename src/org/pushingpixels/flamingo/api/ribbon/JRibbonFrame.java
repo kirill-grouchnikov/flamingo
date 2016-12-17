@@ -29,23 +29,60 @@
  */
 package org.pushingpixels.flamingo.api.ribbon;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.LayoutManager;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
+import javax.swing.JMenuBar;
+import javax.swing.JPopupMenu;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 
 import org.pushingpixels.flamingo.api.common.AsynchronousLoadListener;
 import org.pushingpixels.flamingo.api.common.AsynchronousLoading;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
-import org.pushingpixels.flamingo.internal.ui.ribbon.*;
-import org.pushingpixels.flamingo.internal.utils.*;
+import org.pushingpixels.flamingo.internal.ui.ribbon.AbstractBandControlPanel;
+import org.pushingpixels.flamingo.internal.ui.ribbon.BasicBandControlPanelUI;
+import org.pushingpixels.flamingo.internal.ui.ribbon.JRibbonRootPane;
+import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
+import org.pushingpixels.flamingo.internal.utils.KeyTipManager;
 import org.pushingpixels.flamingo.internal.utils.KeyTipManager.KeyTipEvent;
+import org.pushingpixels.flamingo.internal.utils.KeyTipRenderingUtilities;
+import org.pushingpixels.flamingo.internal.utils.RenderingUtils;
 
 /**
  * <p>
@@ -577,17 +614,6 @@ public class JRibbonFrame extends JFrame {
 
 	private void setApplicationAndMenuButtonIcon(final ResizableIcon icon) {
 		if (System.getProperty("os.name").startsWith("Mac")) {
-			class MacImages {
-				Image icon16;
-
-				Image icon128;
-
-				public MacImages(Image icon16, Image icon128) {
-					this.icon16 = icon16;
-					this.icon128 = icon128;
-				}
-			}
-
 			final Image image16 = getImage(icon, 16);
 			final Image image128 = getImage(icon, 128);
 			SwingUtilities.invokeLater(new Runnable() {

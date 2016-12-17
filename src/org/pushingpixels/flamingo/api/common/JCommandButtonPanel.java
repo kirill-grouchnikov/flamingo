@@ -31,9 +31,13 @@ package org.pushingpixels.flamingo.api.common;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.Scrollable;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 

@@ -1,6 +1,9 @@
 package test.svg;
 
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.concurrent.CountDownLatch;
 
 import org.pushingpixels.flamingo.api.svg.SvgTranscoder;

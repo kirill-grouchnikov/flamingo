@@ -31,7 +31,12 @@ package org.pushingpixels.flamingo.api.common.popup;
 
 import java.awt.Component;
 import java.awt.event.ComponentEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.Popup;
@@ -203,6 +208,7 @@ public class PopupPanelManager {
 	 */
 	public void addPopup(JComponent popupOriginator, Popup popup,
 			JPopupPanel popupInitiator) {
+		popupInitiator.setInvoker(popupOriginator);
 		popupPanels.put(popupInitiator, popup);
 		shownPath.addLast(new PopupInfo(popupOriginator, popupInitiator));
 		popup.show();
@@ -229,6 +235,7 @@ public class PopupPanelManager {
 		}
 
 		// KeyTipManager.defaultManager().showChainBefore(last.popupPanel);
+		last.popupPanel.setInvoker(null);
 		this.firePopupHidden(last.popupPanel, last.popupOriginator);
 	}
 
@@ -242,14 +249,6 @@ public class PopupPanelManager {
 	 *            Component.
 	 */
 	public void hidePopups(Component comp) {
-		// System.out.println("Hiding all popups");
-		// try {
-		// throw new Exception();
-		// }
-		// catch (Exception exc) {
-		// exc.printStackTrace(System.out);
-		// System.out.println("At " + System.currentTimeMillis() + "\n");
-		// }
 		boolean foundAndDismissed = false;
 		if (comp != null) {
 			Component c = comp;
@@ -269,8 +268,8 @@ public class PopupPanelManager {
 							((JCommandButton) last.popupOriginator)
 									.getPopupModel().setPopupShowing(false);
 						}
-						this.firePopupHidden(last.popupPanel,
-								last.popupOriginator);
+						last.popupPanel.setInvoker(null);
+						this.firePopupHidden(last.popupPanel, last.popupOriginator);
 						popupPanels.remove(last.popupPanel);
 					}
 				}
@@ -286,6 +285,7 @@ public class PopupPanelManager {
 					((JCommandButton) last.popupOriginator).getPopupModel()
 							.setPopupShowing(false);
 				}
+				last.popupPanel.setInvoker(null);
 				this.firePopupHidden(last.popupPanel, last.popupOriginator);
 				popupPanels.remove(last.popupPanel);
 			}

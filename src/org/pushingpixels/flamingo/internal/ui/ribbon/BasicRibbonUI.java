@@ -29,34 +29,84 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AlphaComposite;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.Paint;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.*;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
+import org.pushingpixels.flamingo.api.common.JScrollablePanel;
+import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
-import org.pushingpixels.flamingo.api.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.AbstractRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbon;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
+import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizeSequencingPolicy;
 import org.pushingpixels.flamingo.internal.ui.common.BasicCommandButtonUI;
 import org.pushingpixels.flamingo.internal.ui.ribbon.appmenu.JRibbonApplicationMenuButton;
-import org.pushingpixels.flamingo.internal.utils.*;
+import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
+import org.pushingpixels.flamingo.internal.utils.KeyTipManager;
+import org.pushingpixels.flamingo.internal.utils.RenderingUtils;
 
 /**
  * Basic UI for ribbon {@link JRibbon}.
@@ -1013,8 +1063,6 @@ public class BasicRibbonUI extends RibbonUI {
 				g2d.drawLine(0, height - 1, minX, height - 1);
 			}
 
-			int contourMaxX = (contour != null) ? (int) contour.getBounds2D()
-					.getMaxX() + 6 : 6;
 			int contourMinX = (contour != null) ? (int) contour.getBounds2D()
 					.getMinX() - 6 : 6;
 

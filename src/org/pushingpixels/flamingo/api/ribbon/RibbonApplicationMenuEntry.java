@@ -31,8 +31,8 @@ package org.pushingpixels.flamingo.api.ribbon;
 
 import java.awt.event.ActionListener;
 
-import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
 /**

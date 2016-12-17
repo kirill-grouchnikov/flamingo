@@ -4,7 +4,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Locale;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 public class LookAndFeelSwitcher {

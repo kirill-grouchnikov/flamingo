@@ -31,6 +31,7 @@ package org.pushingpixels.flamingo.api.common.popup;
 
 import java.awt.Rectangle;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
@@ -57,6 +58,8 @@ public abstract class JPopupPanel extends JPanel {
 	 * @see #setCustomizer(PopupPanelCustomizer)
 	 */
 	protected PopupPanelCustomizer customizer;
+	
+	private JComponent invoker;
 
 	/**
 	 * Allows providing custom application logic for computing the screen bounds
@@ -142,5 +145,19 @@ public abstract class JPopupPanel extends JPanel {
 	 */
 	public PopupPanelCustomizer getCustomizer() {
 		return this.customizer;
+	}
+	
+	/**
+	 * Sets the invoker of this popup panel.
+	 */
+	public void setInvoker(JComponent invoker) {
+		this.invoker = invoker;
+	}
+
+	/**
+	 * Returns the invoker of this popup panel.
+	 */
+	public JComponent getInvoker() {
+		return invoker;
 	}
 }

@@ -15,11 +15,11 @@
  */
 package org.pushingpixels.flamingo.internal.hidpi;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
-import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 import java.util.Hashtable;
 

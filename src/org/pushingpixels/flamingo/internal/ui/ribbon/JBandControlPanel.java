@@ -29,15 +29,24 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.UIResource;
 
-import org.pushingpixels.flamingo.api.common.*;
-import org.pushingpixels.flamingo.api.ribbon.*;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonComponent;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 
 /**
  * Control panel of a single {@link JRibbonBand}. This class is for internal use

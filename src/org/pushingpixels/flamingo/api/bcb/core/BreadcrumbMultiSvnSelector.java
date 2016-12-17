@@ -37,7 +37,12 @@ import java.util.concurrent.CountDownLatch;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
-import org.pushingpixels.flamingo.api.bcb.*;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbBarCallBack;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbBarException;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbBarExceptionHandler;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathEvent;
+import org.pushingpixels.flamingo.api.bcb.JBreadcrumbBar;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
@@ -51,10 +56,10 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 /**
  * Breadcrumb bar that allows browsing multiple local and remote SVN
- * repositories. The implementation uses <a
- * href="http://www.svnkit.com">SVNKit</a> library. Make sure to read the <a
- * href="http://www.svnkit.com/licensing/index.html">licensing terms</a> before
- * using this component in your application.
+ * repositories. The implementation uses
+ * <a href="http://www.svnkit.com">SVNKit</a> library. Make sure to read the
+ * <a href="http://www.svnkit.com/licensing/index.html">licensing terms</a>
+ * before using this component in your application.
  * 
  * @author Kirill Grouchnikov
  */
@@ -97,8 +102,7 @@ public class BreadcrumbMultiSvnSelector extends JBreadcrumbBar<String> {
 		 * @param password
 		 *            Password.
 		 */
-		public SvnRepositoryInfo(String name, String url, String user,
-				String password) {
+		public SvnRepositoryInfo(String name, String url, String user, String password) {
 			this.name = name;
 			this.url = url;
 			this.user = user;
@@ -157,8 +161,7 @@ public class BreadcrumbMultiSvnSelector extends JBreadcrumbBar<String> {
 		 * @param repoList
 		 *            List of all SVN repositories.
 		 */
-		public PathCallback(
-				BreadcrumbMultiSvnSelector.SvnRepositoryInfo... repoList) {
+		public PathCallback(BreadcrumbMultiSvnSelector.SvnRepositoryInfo... repoList) {
 			this.repositories = new ArrayList<SvnRepositoryInfo>();
 			if (repoList != null) {
 				for (BreadcrumbMultiSvnSelector.SvnRepositoryInfo repository : repoList) {
@@ -166,70 +169,60 @@ public class BreadcrumbMultiSvnSelector extends JBreadcrumbBar<String> {
 				}
 			}
 
-			getModel().addPathListener(new BreadcrumbPathListener() {
-				@Override
-				public void breadcrumbPathEvent(BreadcrumbPathEvent event) {
-					final List<BreadcrumbItem<String>> newPath = getModel()
-							.getItems();
+			getModel().addPathListener((BreadcrumbPathEvent event) -> {
+				final List<BreadcrumbItem<String>> newPath = getModel().getItems();
+				// If one element - an SVN repository has been
+				// selected. Need to connect to it and update the
+				// currRepository field.
+				if (newPath.size() == 1)
+					connectionLatch = new CountDownLatch(1);
+
+				SwingUtilities.invokeLater(() -> {
 					// If one element - an SVN repository has been
-					// selected. Need to connect to it and update the
-					// currRepository field.
-					if (newPath.size() == 1)
-						connectionLatch = new CountDownLatch(1);
-
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							// If one element - an SVN repository has been
-							// selected. Need to connect to it and update
-							// the currRepository field.
-							if (newPath.size() != 1)
-								return;
-							final String newSvnName = newPath.get(0).getData();
-							// System.out.println("Connecting to " +
-							// newSvnName);
-							// find the connection params
-							for (final SvnRepositoryInfo repoInfo : repositories) {
-								if (newSvnName.equals(repoInfo.name)) {
-									// connect
-									SwingWorker<SVNRepository, Void> worker = new SwingWorker<SVNRepository, Void>() {
-										@Override
-										protected SVNRepository doInBackground()
-												throws Exception {
-											try {
-												SVNRepository repository = SVNRepositoryFactory
-														.create(SVNURL
-																.parseURIEncoded(repoInfo.url));
-												ISVNAuthenticationManager authManager = SVNWCUtil
-														.createDefaultAuthenticationManager(
-																repoInfo.user,
-																repoInfo.password);
-												repository
-														.setAuthenticationManager(authManager);
-												return repository;
-											} catch (SVNException svne) {
-												List<BreadcrumbBarExceptionHandler> handlers = getExceptionHandlers();
-												for (BreadcrumbBarExceptionHandler handler : handlers) {
-													handler.onException(svne);
-												}
-												return null;
-											}
+					// selected. Need to connect to it and update
+					// the currRepository field.
+					if (newPath.size() != 1)
+						return;
+					final String newSvnName = newPath.get(0).getData();
+					// System.out.println("Connecting to " +
+					// newSvnName);
+					// find the connection params
+					for (final SvnRepositoryInfo repoInfo : repositories) {
+						if (newSvnName.equals(repoInfo.name)) {
+							// connect
+							SwingWorker<SVNRepository, Void> worker = new SwingWorker<SVNRepository, Void>() {
+								@Override
+								protected SVNRepository doInBackground() throws Exception {
+									try {
+										SVNRepository repository = SVNRepositoryFactory
+												.create(SVNURL.parseURIEncoded(repoInfo.url));
+										ISVNAuthenticationManager authManager = SVNWCUtil
+												.createDefaultAuthenticationManager(repoInfo.user,
+														repoInfo.password);
+										repository.setAuthenticationManager(authManager);
+										return repository;
+									} catch (SVNException svne) {
+										List<BreadcrumbBarExceptionHandler> handlers = getExceptionHandlers();
+										for (BreadcrumbBarExceptionHandler handler : handlers) {
+											handler.onException(svne);
 										}
-
-										@Override
-										protected void done() {
-											try {
-												currRepository = get();
-												connectionLatch.countDown();
-											} catch (Exception exc) {
-											}
-										}
-									};
-									worker.execute();
+										return null;
+									}
 								}
-							}
+
+								@Override
+								protected void done() {
+									try {
+										currRepository = get();
+										connectionLatch.countDown();
+									} catch (Exception exc) {
+									}
+								}
+							};
+							worker.execute();
 						}
-					});
-				}
+					}
+				});
 			});
 		}
 
@@ -262,8 +255,7 @@ public class BreadcrumbMultiSvnSelector extends JBreadcrumbBar<String> {
 		 * util.List)
 		 */
 		@Override
-		public List<StringValuePair<String>> getPathChoices(
-				List<BreadcrumbItem<String>> path)
+		public List<StringValuePair<String>> getPathChoices(List<BreadcrumbItem<String>> path)
 				throws BreadcrumbBarException {
 			try {
 				if (connectionLatch != null)
@@ -275,20 +267,18 @@ public class BreadcrumbMultiSvnSelector extends JBreadcrumbBar<String> {
 				// root - list all the repositories.
 				List<StringValuePair<String>> result = new ArrayList<StringValuePair<String>>();
 				for (SvnRepositoryInfo repoInfo : repositories) {
-					StringValuePair<String> toAdd = new StringValuePair<String>(
-							repoInfo.name, repoInfo.name);
+					StringValuePair<String> toAdd = new StringValuePair<String>(repoInfo.name,
+							repoInfo.name);
 					result.add(toAdd);
 				}
 				return result;
 			}
 
-			String lastPath = (path.size() == 1) ? "" : path.get(
-					path.size() - 1).getData();
+			String lastPath = (path.size() == 1) ? "" : path.get(path.size() - 1).getData();
 			// System.out.println("Last path is " + lastPath + ", repo "
 			// + this.currRepository);
 			try {
-				return BreadcrumbSvnSelector.getPathChoices(
-						this.currRepository, lastPath);
+				return BreadcrumbSvnSelector.getPathChoices(this.currRepository, lastPath);
 			} catch (SVNException svne) {
 				if (this.throwsExceptions) {
 					throw new BreadcrumbBarException(svne);
@@ -304,8 +294,7 @@ public class BreadcrumbMultiSvnSelector extends JBreadcrumbBar<String> {
 		 * org.jvnet.flamingo.bcb.BreadcrumbBarCallBack#getLeafs(java.util.List)
 		 */
 		@Override
-		public List<StringValuePair<String>> getLeafs(
-				List<BreadcrumbItem<String>> path)
+		public List<StringValuePair<String>> getLeafs(List<BreadcrumbItem<String>> path)
 				throws BreadcrumbBarException {
 			if (path == null) {
 				// root - no leafs, only repositories.
@@ -317,11 +306,9 @@ public class BreadcrumbMultiSvnSelector extends JBreadcrumbBar<String> {
 					connectionLatch.await();
 			} catch (InterruptedException ie) {
 			}
-			String lastPath = (path.size() == 1) ? "" : path.get(
-					path.size() - 1).getData();
+			String lastPath = (path.size() == 1) ? "" : path.get(path.size() - 1).getData();
 			try {
-				return BreadcrumbSvnSelector.getLeafs(this.currRepository,
-						lastPath);
+				return BreadcrumbSvnSelector.getLeafs(this.currRepository, lastPath);
 			} catch (SVNException svne) {
 				if (this.throwsExceptions) {
 					throw new BreadcrumbBarException(svne);
@@ -338,11 +325,9 @@ public class BreadcrumbMultiSvnSelector extends JBreadcrumbBar<String> {
 		 * lang.Object)
 		 */
 		@Override
-		public InputStream getLeafContent(String leaf)
-				throws BreadcrumbBarException {
+		public InputStream getLeafContent(String leaf) throws BreadcrumbBarException {
 			try {
-				return BreadcrumbSvnSelector.getLeafContent(
-						this.currRepository, leaf);
+				return BreadcrumbSvnSelector.getLeafContent(this.currRepository, leaf);
 			} catch (SVNException svne) {
 				if (this.throwsExceptions) {
 					throw new BreadcrumbBarException(svne);

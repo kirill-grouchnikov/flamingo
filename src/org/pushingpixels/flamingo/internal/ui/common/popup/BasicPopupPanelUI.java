@@ -30,13 +30,38 @@
 package org.pushingpixels.flamingo.internal.ui.common.popup;
 
 import java.applet.Applet;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AWTEvent;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.AWTEventListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.List;
 
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.plaf.*;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
+import javax.swing.LookAndFeel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.plaf.ActionMapUIResource;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.ComponentInputMapUIResource;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.ComboPopup;
 
 import org.pushingpixels.flamingo.api.common.JCommandButton;

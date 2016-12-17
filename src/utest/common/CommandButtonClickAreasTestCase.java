@@ -1,11 +1,16 @@
 package utest.common;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 
 import org.fest.assertions.Assertions;
-import org.fest.swing.edt.*;
+import org.fest.swing.edt.GuiActionRunner;
+import org.fest.swing.edt.GuiQuery;
+import org.fest.swing.edt.GuiTask;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.Before;
 import org.junit.Test;

@@ -37,7 +37,6 @@ public class TracingRepaintManager extends RepaintManager {
 	public void addDirtyRegion(JComponent c, int x, int y, int w, int h) {
 		StringBuffer sb = new StringBuffer();
 		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-		int count = 0;
 		for (StackTraceElement stackEntry : stack) {
 			// if (count++ > 25)
 			// break;

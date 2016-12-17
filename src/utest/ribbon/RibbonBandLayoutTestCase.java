@@ -8,13 +8,20 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import org.fest.assertions.Assertions;
-import org.fest.swing.edt.*;
+import org.fest.swing.edt.GuiActionRunner;
+import org.fest.swing.edt.GuiQuery;
+import org.fest.swing.edt.GuiTask;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.Test;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
-import org.pushingpixels.flamingo.api.ribbon.*;
-import org.pushingpixels.flamingo.api.ribbon.resize.*;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
+import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
+import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
+import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
+import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
 
 public class RibbonBandLayoutTestCase extends FestSwingJUnitTestCase {
 	private JCommandToggleButton findButton;

@@ -29,7 +29,9 @@
  */
 package org.pushingpixels.flamingo.api.common.icon;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 import org.pushingpixels.flamingo.api.common.AsynchronousLoadListener;

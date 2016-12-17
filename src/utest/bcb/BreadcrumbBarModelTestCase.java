@@ -3,10 +3,10 @@ package utest.bcb;
 import java.io.File;
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
 import org.pushingpixels.flamingo.api.bcb.BreadcrumbBarModel;
 import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+
+import junit.framework.TestCase;
 
 public class BreadcrumbBarModelTestCase extends TestCase {
 	public void testEmptyStringModel() {

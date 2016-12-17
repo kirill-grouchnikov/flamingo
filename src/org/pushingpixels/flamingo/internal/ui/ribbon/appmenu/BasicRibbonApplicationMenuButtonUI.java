@@ -29,17 +29,29 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon.appmenu;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
-import javax.swing.*;
+import javax.swing.ButtonModel;
+import javax.swing.CellRendererPane;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
-import javax.swing.plaf.*;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 
 import org.pushingpixels.flamingo.api.common.JCommandButton;
-import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
-import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
-import org.pushingpixels.flamingo.api.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.JRibbon;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
 import org.pushingpixels.flamingo.internal.ui.common.BasicCommandButtonUI;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
@@ -82,11 +94,9 @@ public class BasicRibbonApplicationMenuButtonUI extends BasicCommandButtonUI {
 
 		Border border = this.commandButton.getBorder();
 		if (border == null || border instanceof UIResource) {
-			Border toInstall = UIManager
-					.getBorder("RibbonApplicationMenuButton.border");
+			Border toInstall = UIManager.getBorder("RibbonApplicationMenuButton.border");
 			if (toInstall == null)
-				toInstall = new BorderUIResource.EmptyBorderUIResource(4, 4, 4,
-						4);
+				toInstall = new BorderUIResource.EmptyBorderUIResource(4, 4, 4, 4);
 			this.commandButton.setBorder(toInstall);
 		}
 
@@ -111,55 +121,39 @@ public class BasicRibbonApplicationMenuButtonUI extends BasicCommandButtonUI {
 	protected void installComponents() {
 		super.installComponents();
 
-		final JRibbonApplicationMenuButton appMenuButton = (JRibbonApplicationMenuButton) this.commandButton;
-		appMenuButton.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(final JCommandButton commandButton) {
-				JRibbonFrame ribbonFrame = (JRibbonFrame) SwingUtilities
-						.getWindowAncestor(commandButton);
-				final JRibbon ribbon = ribbonFrame.getRibbon();
-				RibbonApplicationMenu ribbonMenu = ribbon.getApplicationMenu();
-				final JRibbonApplicationMenuPopupPanel menuPopupPanel = new JRibbonApplicationMenuPopupPanel(
-						appMenuButton, ribbonMenu);
-				menuPopupPanel.applyComponentOrientation(appMenuButton
-						.getComponentOrientation());
-				menuPopupPanel
-						.setCustomizer(new JPopupPanel.PopupPanelCustomizer() {
-							@Override
-							public Rectangle getScreenBounds() {
-								boolean ltr = commandButton
-										.getComponentOrientation()
-										.isLeftToRight();
+		final JRibbonApplicationMenuButton appMenuButton = 
+				(JRibbonApplicationMenuButton) this.commandButton;
+		appMenuButton.setPopupCallback((JCommandButton commandButton) -> {
+			JRibbonFrame ribbonFrame = (JRibbonFrame) SwingUtilities
+					.getWindowAncestor(commandButton);
+			final JRibbon ribbon = ribbonFrame.getRibbon();
+			RibbonApplicationMenu ribbonMenu = ribbon.getApplicationMenu();
+			final JRibbonApplicationMenuPopupPanel menuPopupPanel = 
+					new JRibbonApplicationMenuPopupPanel(appMenuButton, ribbonMenu);
+			menuPopupPanel.applyComponentOrientation(appMenuButton.getComponentOrientation());
+			menuPopupPanel.setCustomizer(() -> {
+				boolean ltr = commandButton.getComponentOrientation().isLeftToRight();
 
-								int pw = menuPopupPanel.getPreferredSize().width;
-								int x = ltr ? ribbon.getLocationOnScreen().x
-										: ribbon.getLocationOnScreen().x
-												+ ribbon.getWidth() - pw;
-								int y = commandButton.getLocationOnScreen().y
-										+ commandButton.getSize().height / 2
-										+ 2;
+				int pw = menuPopupPanel.getPreferredSize().width;
+				int x = ltr ? ribbon.getLocationOnScreen().x
+						: ribbon.getLocationOnScreen().x + ribbon.getWidth() - pw;
+				int y = commandButton.getLocationOnScreen().y + commandButton.getSize().height / 2
+						+ 2;
 
-								// make sure that the menu popup stays
-								// in bounds
-								Rectangle scrBounds = commandButton
-										.getGraphicsConfiguration().getBounds();
-								if ((x + pw) > (scrBounds.x + scrBounds.width)) {
-									x = scrBounds.x + scrBounds.width - pw;
-								}
-								int ph = menuPopupPanel.getPreferredSize().height;
-								if ((y + ph) > (scrBounds.y + scrBounds.height)) {
-									y = scrBounds.y + scrBounds.height - ph;
-								}
+				// make sure that the menu popup stays in bounds
+				Rectangle scrBounds = commandButton.getGraphicsConfiguration().getBounds();
+				if ((x + pw) > (scrBounds.x + scrBounds.width)) {
+					x = scrBounds.x + scrBounds.width - pw;
+				}
+				int ph = menuPopupPanel.getPreferredSize().height;
+				if ((y + ph) > (scrBounds.y + scrBounds.height)) {
+					y = scrBounds.y + scrBounds.height - ph;
+				}
 
-								return new Rectangle(
-										x,
-										y,
-										menuPopupPanel.getPreferredSize().width,
-										menuPopupPanel.getPreferredSize().height);
-							}
-						});
-				return menuPopupPanel;
-			}
+				return new Rectangle(x, y, menuPopupPanel.getPreferredSize().width,
+						menuPopupPanel.getPreferredSize().height);
+			});
+			return menuPopupPanel;
 		});
 	}
 
@@ -177,12 +171,10 @@ public class BasicRibbonApplicationMenuButtonUI extends BasicCommandButtonUI {
 		// g2d.fillRect(0, 0, c.getWidth(), c.getHeight());
 		Insets ins = c.getInsets();
 		// System.out.println(c.getWidth() + ":" + c.getHeight());
-		this.paintButtonBackground(g2d, new Rectangle(ins.left, ins.top, c
-				.getWidth()
-				- ins.left - ins.right, c.getHeight() - ins.top - ins.bottom));
+		this.paintButtonBackground(g2d, new Rectangle(ins.left, ins.top,
+				c.getWidth() - ins.left - ins.right, c.getHeight() - ins.top - ins.bottom));
 
-		this.layoutInfo = this.layoutManager.getLayoutInfo(this.commandButton,
-				g);
+		this.layoutInfo = this.layoutManager.getLayoutInfo(this.commandButton, g);
 		commandButton.putClientProperty("icon.bounds", layoutInfo.iconRect);
 
 		this.paintButtonIcon(g2d, layoutInfo.iconRect);
@@ -209,14 +201,11 @@ public class BasicRibbonApplicationMenuButtonUI extends BasicCommandButtonUI {
 		// return;
 		//
 		// System.out.println(toFill);
-		this.buttonRendererPane.setBounds(toFill.x, toFill.y, toFill.width,
-				toFill.height);
+		this.buttonRendererPane.setBounds(toFill.x, toFill.y, toFill.width, toFill.height);
 		ButtonModel model = this.rendererButton.getModel();
 		model.setEnabled(true);
-		model.setSelected(this.applicationMenuButton.getPopupModel()
-				.isSelected());
-		model.setRollover(this.applicationMenuButton.getPopupModel()
-				.isRollover());
+		model.setSelected(this.applicationMenuButton.getPopupModel().isSelected());
+		model.setRollover(this.applicationMenuButton.getPopupModel().isRollover());
 		model.setPressed(this.applicationMenuButton.getPopupModel().isPressed()
 				|| this.applicationMenuButton.getPopupModel().isPopupShowing());
 		model.setArmed(this.applicationMenuButton.getActionModel().isArmed());
@@ -227,13 +216,11 @@ public class BasicRibbonApplicationMenuButtonUI extends BasicCommandButtonUI {
 		Shape clip = g2d.getClip();
 		g2d.clip(new Ellipse2D.Double(0, 0, toFill.width, toFill.height));
 		this.rendererButton.setBorderPainted(false);
-		this.buttonRendererPane.paintComponent(g2d, this.rendererButton,
-				this.applicationMenuButton, -toFill.width / 2,
-				-toFill.height / 2, 2 * toFill.width, 2 * toFill.height, true);
+		this.buttonRendererPane.paintComponent(g2d, this.rendererButton, this.applicationMenuButton,
+				-toFill.width / 2, -toFill.height / 2, 2 * toFill.width, 2 * toFill.height, true);
 		g2d.setColor(FlamingoUtilities.getBorderColor().darker());
 		g2d.setClip(clip);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.draw(new Ellipse2D.Double(0, 0, toFill.width, toFill.height));
 		g2d.dispose();
 	}

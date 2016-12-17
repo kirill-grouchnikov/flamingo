@@ -3,13 +3,26 @@ package test.common;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
-import org.pushingpixels.flamingo.api.common.popup.*;
+import org.pushingpixels.flamingo.api.common.JCommandToggleMenuButton;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
 
-import test.svg.transcoded.*;
+import test.svg.transcoded.format_justify_center;
+import test.svg.transcoded.format_justify_fill;
+import test.svg.transcoded.format_justify_left;
+import test.svg.transcoded.format_justify_right;
+import test.svg.transcoded.format_text_bold;
+import test.svg.transcoded.format_text_italic;
+import test.svg.transcoded.format_text_strikethrough;
+import test.svg.transcoded.format_text_underline;
 
 public class TestToggleMenuButtons extends JFrame {
 	public TestToggleMenuButtons() {
@@ -33,18 +46,15 @@ public class TestToggleMenuButtons extends JFrame {
 		group.add(b13);
 		group.add(b14);
 
-		singleChoice.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-				JCommandPopupMenu result = new JCommandPopupMenu();
+		singleChoice.setPopupCallback((JCommandButton commandButton) -> {
+			JCommandPopupMenu result = new JCommandPopupMenu();
 
-				result.addMenuButton(b11);
-				result.addMenuButton(b12);
-				result.addMenuButton(b13);
-				result.addMenuButton(b14);
+			result.addMenuButton(b11);
+			result.addMenuButton(b12);
+			result.addMenuButton(b13);
+			result.addMenuButton(b14);
 
-				return result;
-			}
+			return result;
 		});
 
 		JCommandButton multiChoice = new JCommandButton("multi");
@@ -61,20 +71,17 @@ public class TestToggleMenuButtons extends JFrame {
 		final JCommandToggleMenuButton b24 = new JCommandToggleMenuButton(
 				"strike", new format_text_strikethrough());
 
-		multiChoice.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-				JCommandPopupMenu result = new JCommandPopupMenu();
+		multiChoice.setPopupCallback((JCommandButton commandButton) -> {
+			JCommandPopupMenu result = new JCommandPopupMenu();
 
-				result.addMenuButton(b21);
-				result.addMenuButton(b22);
-				result.addMenuButton(b23);
-				result.addMenuButton(b24);
+			result.addMenuButton(b21);
+			result.addMenuButton(b22);
+			result.addMenuButton(b23);
+			result.addMenuButton(b24);
 
-				result.setToDismissOnChildClick(false);
+			result.setToDismissOnChildClick(false);
 
-				return result;
-			}
+			return result;
 		});
 
 		JPanel main = new JPanel(new FlowLayout());

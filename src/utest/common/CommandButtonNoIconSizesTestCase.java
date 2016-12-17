@@ -7,17 +7,15 @@ import javax.swing.JFrame;
 import javax.swing.JSeparator;
 
 import org.fest.assertions.Assertions;
-import org.fest.swing.edt.*;
+import org.fest.swing.edt.GuiActionRunner;
+import org.fest.swing.edt.GuiQuery;
+import org.fest.swing.edt.GuiTask;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
-import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-
-import test.svg.transcoded.edit_cut;
-import test.svg.transcoded.edit_paste;
 
 public class CommandButtonNoIconSizesTestCase extends FestSwingJUnitTestCase {
 	JFrame buttonFrame;
@@ -27,9 +25,6 @@ public class CommandButtonNoIconSizesTestCase extends FestSwingJUnitTestCase {
 	@Override
 	@Before
 	public void onSetUp() {
-		final ResizableIcon icon1 = new edit_paste();
-		final ResizableIcon icon2 = new edit_cut();
-
 		GuiActionRunner.execute(new GuiTask() {
 			@Override
 			protected void executeInEDT() throws Throwable {

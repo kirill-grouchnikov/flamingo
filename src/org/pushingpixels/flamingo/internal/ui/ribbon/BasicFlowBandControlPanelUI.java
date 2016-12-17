@@ -29,7 +29,11 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.LayoutManager;
 import java.util.List;
 
 import javax.swing.JComponent;

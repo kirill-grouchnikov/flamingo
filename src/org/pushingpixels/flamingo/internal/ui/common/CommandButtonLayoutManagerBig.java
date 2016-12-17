@@ -29,7 +29,13 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
@@ -37,13 +43,15 @@ import java.util.StringTokenizer;
 
 import javax.swing.JSeparator;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
-public class CommandButtonLayoutManagerBig implements
-		CommandButtonLayoutManager {
+public class CommandButtonLayoutManagerBig implements CommandButtonLayoutManager {
 	protected AbstractCommandButton commandButton;
 
 	/**
@@ -82,19 +90,14 @@ public class CommandButtonLayoutManagerBig implements
 		boolean hasText = (this.titlePart1 != null);
 		boolean hasPopupIcon = FlamingoUtilities.hasPopupAction(commandButton);
 
-		int title1Width = (this.titlePart1 == null) ? 0 : fm
-				.stringWidth(this.titlePart1);
-		int title2Width = (this.titlePart2 == null) ? 0 : fm
-				.stringWidth(this.titlePart2);
+		int title1Width = (this.titlePart1 == null) ? 0 : fm.stringWidth(this.titlePart1);
+		int title2Width = (this.titlePart2 == null) ? 0 : fm.stringWidth(this.titlePart2);
 
 		int prefIconSize = hasIcon ? this.getPreferredIconSize() : 0;
 
-		int width = Math.max(prefIconSize, Math.max(title1Width, title2Width
-				+ 4
-				* layoutHGap
+		int width = Math.max(prefIconSize, Math.max(title1Width, title2Width + 4 * layoutHGap
 				+ jsep.getPreferredSize().height
-				+ (FlamingoUtilities.hasPopupAction(commandButton) ? 1 + fm
-						.getHeight() / 2 : 0)));
+				+ (FlamingoUtilities.hasPopupAction(commandButton) ? 1 + fm.getHeight() / 2 : 0)));
 
 		// start height with the top inset
 		int height = borderInsets.top;
@@ -132,8 +135,7 @@ public class CommandButtonLayoutManagerBig implements
 			CommandButtonKind buttonKind = jcb.getCommandButtonKind();
 			if (hasIcon && buttonKind.hasAction() && buttonKind.hasPopup()) {
 				// space for a horizontal separator
-				height += new JSeparator(JSeparator.HORIZONTAL)
-						.getPreferredSize().height;
+				height += new JSeparator(JSeparator.HORIZONTAL).getPreferredSize().height;
 			}
 		}
 
@@ -148,8 +150,7 @@ public class CommandButtonLayoutManagerBig implements
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if ("text".equals(evt.getPropertyName())
-				|| "font".equals(evt.getPropertyName())) {
+		if ("text".equals(evt.getPropertyName()) || "font".equals(evt.getPropertyName())) {
 			this.updateTitleStrings();
 		}
 	}
@@ -164,15 +165,13 @@ public class CommandButtonLayoutManagerBig implements
 		// character that breaks the title in two parts, such that the maximal
 		// length of the first part and the second part + action label icon
 		// is minimal between all possible space characters
-		BufferedImage tempImage = new BufferedImage(30, 30,
-				BufferedImage.TYPE_INT_ARGB);
+		BufferedImage tempImage = new BufferedImage(30, 30, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = (Graphics2D) tempImage.getGraphics();
-		g.setFont(FlamingoUtilities.getFont(this.commandButton, "Ribbon.font",
-				"Button.font", "Panel.font"));
+		g.setFont(FlamingoUtilities.getFont(this.commandButton, "Ribbon.font", "Button.font",
+				"Panel.font"));
 		FontMetrics fm = g.getFontMetrics();
 
-		String title = (this.commandButton == null) ? null : this.commandButton
-				.getText();
+		String title = (this.commandButton == null) ? null : this.commandButton.getText();
 		if (title != null) {
 			StringTokenizer tokenizer = new StringTokenizer(title, " _-", true);
 			if (tokenizer.countTokens() <= 1) {
@@ -180,12 +179,11 @@ public class CommandButtonLayoutManagerBig implements
 				this.titlePart1 = title;
 				this.titlePart2 = null;
 			} else {
-				int currMaxLength = (int) fm.getStringBounds(
-						this.commandButton.getText(), g).getWidth();
-				int actionIconWidth = FlamingoUtilities
-						.hasPopupAction(this.commandButton) ? 0 : 2
-						* FlamingoUtilities.getHLayoutGap(commandButton)
-						+ (fm.getAscent() + fm.getDescent()) / 2;
+				int currMaxLength = (int) fm.getStringBounds(this.commandButton.getText(), g)
+						.getWidth();
+				int actionIconWidth = FlamingoUtilities.hasPopupAction(this.commandButton) ? 0
+						: 2 * FlamingoUtilities.getHLayoutGap(commandButton)
+								+ (fm.getAscent() + fm.getDescent()) / 2;
 
 				String currLeading = "";
 				while (tokenizer.hasMoreTokens()) {
@@ -194,8 +192,7 @@ public class CommandButtonLayoutManagerBig implements
 					String part2 = title.substring(currLeading.length());
 
 					int len1 = (int) fm.getStringBounds(part1, g).getWidth();
-					int len2 = (int) fm.getStringBounds(part2, g).getWidth()
-							+ actionIconWidth;
+					int len2 = (int) fm.getStringBounds(part2, g).getWidth() + actionIconWidth;
 					int len = Math.max(len1, len2);
 
 					if (currMaxLength > len) {
@@ -214,13 +211,11 @@ public class CommandButtonLayoutManagerBig implements
 	@Override
 	public Point getKeyTipAnchorCenterPoint(AbstractCommandButton commandButton) {
 		// center of the bottom edge
-		return new Point(commandButton.getWidth() / 2, commandButton
-				.getHeight());
+		return new Point(commandButton.getWidth() / 2, commandButton.getHeight());
 	}
 
 	@Override
-	public CommandButtonLayoutInfo getLayoutInfo(
-			AbstractCommandButton commandButton, Graphics g) {
+	public CommandButtonLayoutInfo getLayoutInfo(AbstractCommandButton commandButton, Graphics g) {
 		CommandButtonLayoutInfo result = new CommandButtonLayoutInfo();
 
 		result.actionClickArea = new Rectangle(0, 0, 0, 0);
@@ -241,8 +236,8 @@ public class CommandButtonLayoutManagerBig implements
 		FontMetrics fm = g.getFontMetrics();
 		int labelHeight = fm.getAscent() + fm.getDescent();
 
-		JCommandButton.CommandButtonKind buttonKind = (commandButton instanceof JCommandButton) ? ((JCommandButton) commandButton)
-				.getCommandButtonKind()
+		JCommandButton.CommandButtonKind buttonKind = (commandButton instanceof JCommandButton)
+				? ((JCommandButton) commandButton).getCommandButtonKind()
 				: JCommandButton.CommandButtonKind.ACTION_ONLY;
 
 		ResizableIcon buttonIcon = commandButton.getIcon();
@@ -281,14 +276,15 @@ public class CommandButtonLayoutManagerBig implements
 		if (commandButton instanceof JCommandButton) {
 			// horizontal separator is always after the icon
 			if (hasIcon && buttonKind.hasAction() && buttonKind.hasPopup()) {
-				result.separatorOrientation = CommandButtonLayoutManager.CommandButtonSeparatorOrientation.HORIZONTAL;
+				result.separatorOrientation = 
+						CommandButtonLayoutManager.CommandButtonSeparatorOrientation.HORIZONTAL;
 
 				result.separatorArea = new Rectangle(0, 0, 0, 0);
 				result.separatorArea.x = 0;
 				result.separatorArea.y = y;
 				result.separatorArea.width = width;
-				result.separatorArea.height = new JSeparator(
-						JSeparator.HORIZONTAL).getPreferredSize().height;
+				result.separatorArea.height = new JSeparator(JSeparator.HORIZONTAL)
+						.getPreferredSize().height;
 
 				y += result.separatorArea.height;
 			}
@@ -298,8 +294,9 @@ public class CommandButtonLayoutManagerBig implements
 		// text
 		if (hasText) {
 			y += layoutVGap;
-			lastTextLineWidth = (this.titlePart1 != null) ? (int) fm
-					.getStringBounds(this.titlePart1, g).getWidth() : 0;
+			lastTextLineWidth = (this.titlePart1 != null)
+					? (int) fm.getStringBounds(this.titlePart1, g).getWidth()
+					: 0;
 
 			TextLayoutInfo line1LayoutInfo = new TextLayoutInfo();
 			line1LayoutInfo.text = this.titlePart1;
@@ -315,23 +312,18 @@ public class CommandButtonLayoutManagerBig implements
 				y += labelHeight;
 			}
 
-			lastTextLineWidth = (this.titlePart2 != null) ? (int) fm
-					.getStringBounds(this.titlePart2, g).getWidth() : 0;
-
-			int extraWidth = hasPopupIcon ? 4 * layoutHGap + labelHeight / 2
+			lastTextLineWidth = (this.titlePart2 != null)
+					? (int) fm.getStringBounds(this.titlePart2, g).getWidth()
 					: 0;
 
+			int extraWidth = hasPopupIcon ? 4 * layoutHGap + labelHeight / 2 : 0;
+
 			if (ltr) {
-				x = ins.left
-						+ (width - lastTextLineWidth - extraWidth - ins.left - ins.right)
-						/ 2;
+				x = ins.left + (width - lastTextLineWidth - extraWidth - ins.left - ins.right) / 2;
 			}
 			if (!ltr) {
-				x = width
-						- ins.right
-						- lastTextLineWidth
-						- +(width - lastTextLineWidth - extraWidth - ins.left - ins.right)
-						/ 2;
+				x = width - ins.right - lastTextLineWidth
+						- +(width - lastTextLineWidth - extraWidth - ins.left - ins.right) / 2;
 			}
 
 			TextLayoutInfo line2LayoutInfo = new TextLayoutInfo();
@@ -387,8 +379,8 @@ public class CommandButtonLayoutManagerBig implements
 			// 1. break after icon if button has icon
 			// 2. no break (all popup) if button has no icon
 			if (hasIcon) {
-				int yBorderBetweenActionAndPopupAreas = result.iconRect.y
-						+ result.iconRect.height + layoutVGap;
+				int yBorderBetweenActionAndPopupAreas = result.iconRect.y + result.iconRect.height
+						+ layoutVGap;
 
 				result.actionClickArea.x = 0;
 				result.actionClickArea.y = 0;
@@ -398,8 +390,7 @@ public class CommandButtonLayoutManagerBig implements
 				result.popupClickArea.x = 0;
 				result.popupClickArea.y = yBorderBetweenActionAndPopupAreas;
 				result.popupClickArea.width = width;
-				result.popupClickArea.height = height
-						- yBorderBetweenActionAndPopupAreas;
+				result.popupClickArea.height = height - yBorderBetweenActionAndPopupAreas;
 
 				result.isTextInActionArea = false;
 			} else {

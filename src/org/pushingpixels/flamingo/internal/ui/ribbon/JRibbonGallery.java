@@ -32,14 +32,25 @@ package org.pushingpixels.flamingo.internal.ui.ribbon;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
+import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
+import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
+import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
-import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand.RibbonGalleryPopupCallback;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 
 /**
  * In-ribbon gallery. This class is for internal use only and should not be

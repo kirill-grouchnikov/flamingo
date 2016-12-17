@@ -31,13 +31,24 @@ package test.bcb;
 
 import java.awt.BorderLayout;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.AbstractListModel;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
-import org.pushingpixels.flamingo.api.bcb.*;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathEvent;
 import org.pushingpixels.flamingo.api.bcb.core.BreadcrumbMultiSvnSelector;
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
 import test.MessageListDialog;
@@ -82,51 +93,40 @@ public class MultiSvnBreadCrumbTest extends JFrame {
 						"http://svn.apache.org/repos/asf", "anonymous",
 						"anonymous"));
 		this.bar.setThrowsExceptions(true);
-		this.bar.addExceptionHandler(new BreadcrumbBarExceptionHandler() {
-			public void onException(Throwable t) {
+		this.bar.addExceptionHandler((Throwable t) ->
 				MessageListDialog.showMessageDialog(
-						MultiSvnBreadCrumbTest.this, "Error", t);
-			}
-		});
+						MultiSvnBreadCrumbTest.this, "Error", t));
 
-		this.bar.getModel().addPathListener(new BreadcrumbPathListener() {
-			@Override
-			public void breadcrumbPathEvent(BreadcrumbPathEvent event) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						final List<BreadcrumbItem<String>> newPath = bar
-								.getModel().getItems();
-						System.out.println("New path is ");
-						for (BreadcrumbItem<String> item : newPath) {
-							System.out.println("\t" + item.getData());
+		this.bar.getModel().addPathListener((BreadcrumbPathEvent event) -> 
+			SwingUtilities.invokeLater(() -> {
+				final List<BreadcrumbItem<String>> newPath = bar.getModel().getItems();
+				System.out.println("New path is ");
+				for (BreadcrumbItem<String> item : newPath) {
+					System.out.println("\t" + item.getData());
+				}
+	
+				if (newPath.size() > 0) {
+					SwingWorker<List<StringValuePair<String>>, Void> worker = 
+							new SwingWorker<List<StringValuePair<String>>, Void>() {
+						@Override
+						protected List<StringValuePair<String>> doInBackground() {
+							return bar.getCallback().getLeafs(newPath);
 						}
-
-						if (newPath.size() > 0) {
-							SwingWorker<List<StringValuePair<String>>, Void> worker = new SwingWorker<List<StringValuePair<String>>, Void>() {
-								@Override
-								protected List<StringValuePair<String>> doInBackground() {
-									return bar.getCallback().getLeafs(newPath);
-								}
-
-								@Override
-								protected void done() {
-									try {
-										List<StringValuePair<String>> leafs = get();
-										filePanel.setFolder(leafs);
-									} catch (Exception exc) {
-										MessageListDialog.showMessageDialog(
-												MultiSvnBreadCrumbTest.this,
-												exc.getMessage(), exc);
-									}
-								}
-							};
-							worker.execute();
+	
+						@Override
+						protected void done() {
+							try {
+								List<StringValuePair<String>> leafs = get();
+								filePanel.setFolder(leafs);
+							} catch (Exception exc) {
+								MessageListDialog.showMessageDialog(MultiSvnBreadCrumbTest.this,
+										exc.getMessage(), exc);
+							}
 						}
-						return;
-					}
-				});
-			}
-		});
+					};
+					worker.execute();
+				}
+			}));
 
 		JToolBar toolbar = new JToolBar();
 		toolbar.setLayout(new BorderLayout(3, 0));

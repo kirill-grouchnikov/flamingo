@@ -27,85 +27,96 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
-package test.ribbon;
+package org.pushingpixels.flamingo.api.common.icon;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 
-import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-import org.pushingpixels.flamingo.internal.utils.RenderingUtils;
+/**
+ * Implementation of {@link ResizableIcon} that fills the icon with a solid
+ * color.
+ * 
+ * @author Kirill Grouchnikov
+ */
+public class ColorResizableIcon implements ResizableIcon {
+	/**
+	 * The current icon width.
+	 */
+	protected int width;
 
-public class NumberedResizableIcon implements ResizableIcon {
-	private int currWidth;
+	/**
+	 * The current icon height.
+	 */
+	protected int height;
 
-	private int currHeight;
+	/** Fill color */
+	private final Color color;
 
-	private int origWidth;
-
-	private int origHeight;
-
-	private int count;
-
-	public NumberedResizableIcon(int count, int startWidth, int startHeight) {
-		this.origWidth = startWidth;
-		this.origHeight = startHeight;
-		this.currWidth = startWidth;
-		this.currHeight = startHeight;
-		this.count = count;
+	/**
+	 * Creates a new empty color icon of the specified size and color.
+	 * 
+	 * @param initialDim
+	 *            Initial dimension of the icon.
+	 * @param color
+	 *            fill color.
+	 */
+	public ColorResizableIcon(Dimension initialDim, Color color) {
+		this.width = initialDim.width;
+		this.height = initialDim.height;
+		this.color = color;
 	}
 
+	/**
+	 * Creates a new empty color icon of the specified size and color.
+	 * 
+	 * @param initialDim
+	 *            Initial dimension of the icon.
+	 * @param color
+	 *            fill color.
+	 */
+	public ColorResizableIcon(int initialDim, Color color) {
+		this(new Dimension(initialDim, initialDim), color);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jvnet.flamingo.common.icon.ResizableIcon#setDimension(java.awt.
+	 * Dimension )
+	 */
 	public void setDimension(Dimension newDimension) {
-		this.currWidth = newDimension.width;
-		this.currHeight = newDimension.height;
+		this.width = newDimension.width;
+		this.height = newDimension.height;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.Icon#getIconHeight()
+	 */
 	public int getIconHeight() {
-		return this.currHeight;
+		return this.height;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.Icon#getIconWidth()
+	 */
 	public int getIconWidth() {
-		return this.currWidth;
+		return this.width;
 	}
 
-	public void setHeight(int height) {
-		double coef = (double) height / (double) this.currHeight;
-		this.currWidth = (int) (coef * this.currWidth);
-		this.currHeight = height;
-	}
-
-	public void setWidth(int width) {
-		double coef = (double) width / (double) this.currWidth;
-		this.currHeight = (int) (coef * this.currHeight);
-		this.currWidth = width;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics,
+	 * int, int)
+	 */
 	public void paintIcon(Component c, Graphics g, int x, int y) {
-		Graphics2D graphics = (Graphics2D) g.create();
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		RenderingUtils.installDesktopHints(graphics);
-
-		graphics.setColor(new Color(40, 70, 20));
-		graphics.setFont(new Font("Tahoma", Font.BOLD, 14));
-		String toPrint = "" + this.count;
-		int strWidth = graphics.getFontMetrics().stringWidth(toPrint);
-		int strHeight = graphics.getFontMetrics().getHeight();
-
-		graphics.drawString(toPrint, x + (this.currWidth - strWidth) / 2, y
-				+ (this.currHeight + strHeight) / 2);
-
-		graphics.drawRect(x, y, this.currWidth - 2, this.currHeight - 2);
-
-		graphics.dispose();
-	}
-
-	public void revertToOriginalDimension() {
-		this.currHeight = this.origHeight;
-		this.currWidth = this.origWidth;
+		g.setColor(this.color);
+		g.fillRect(x, y, this.getIconWidth(), this.getIconHeight());
 	}
 }

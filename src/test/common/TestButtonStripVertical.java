@@ -1,19 +1,32 @@
 package test.common;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.ComponentOrientation;
+import java.awt.FlowLayout;
+import java.awt.Window;
 import java.util.Locale;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButtonStrip;
 import org.pushingpixels.flamingo.api.common.JCommandButtonStrip.StripOrientation;
 
-import test.common.LocaleSwitcher.LocaleCallback;
-import test.svg.transcoded.*;
-
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+
+import test.common.LocaleSwitcher.LocaleCallback;
+import test.svg.transcoded.format_justify_center;
+import test.svg.transcoded.format_justify_left;
+import test.svg.transcoded.format_justify_right;
+import test.svg.transcoded.format_text_bold;
+import test.svg.transcoded.format_text_italic;
+import test.svg.transcoded.format_text_strikethrough;
+import test.svg.transcoded.format_text_underline;
 
 public class TestButtonStripVertical extends JFrame {
 	protected Locale currLocale;

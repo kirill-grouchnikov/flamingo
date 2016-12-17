@@ -29,9 +29,16 @@
  */
 package org.pushingpixels.flamingo.internal.utils;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.PrintGraphics;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.print.PrinterGraphics;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Utilities to install desktop rendering hints for correctly rasterizing texts.

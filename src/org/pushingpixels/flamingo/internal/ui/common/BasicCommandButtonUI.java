@@ -29,7 +29,17 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,20 +47,44 @@ import java.awt.image.ColorConvertOp;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonModel;
+import javax.swing.CellRendererPane;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JSeparator;
+import javax.swing.JToggleButton;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
-import javax.swing.plaf.*;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.AsynchronousLoading;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager;
 import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager.CommandButtonLayoutInfo;
 import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager.CommandButtonSeparatorOrientation;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.JCommandButtonStrip;
 import org.pushingpixels.flamingo.api.common.JCommandButtonStrip.StripOrientation;
+import org.pushingpixels.flamingo.api.common.PopupActionListener;
 import org.pushingpixels.flamingo.api.common.icon.FilteredResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.model.PopupButtonModel;
-import org.pushingpixels.flamingo.api.common.popup.*;
-import org.pushingpixels.flamingo.internal.utils.*;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
+import org.pushingpixels.flamingo.internal.utils.ButtonSizingUtils;
+import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
+import org.pushingpixels.flamingo.internal.utils.RenderingUtils;
 
 /**
  * Basic UI for command button {@link JCommandButton}.
@@ -239,13 +273,10 @@ public class BasicCommandButtonUI extends CommandButtonUI {
 
 		ResizableIcon buttonIcon = this.commandButton.getIcon();
 		if (buttonIcon instanceof AsynchronousLoading) {
-			((AsynchronousLoading) buttonIcon)
-					.addAsynchronousLoadListener(new AsynchronousLoadListener() {
-						public void completed(boolean success) {
-							if (success && (commandButton != null))
-								commandButton.repaint();
-						}
-					});
+			((AsynchronousLoading) buttonIcon).addAsynchronousLoadListener((boolean success) -> {
+				if (success && (commandButton != null))
+					commandButton.repaint();
+			});
 		}
 
 		if (this.commandButton instanceof JCommandButton) {
@@ -273,18 +304,15 @@ public class BasicCommandButtonUI extends CommandButtonUI {
 					Icon newIcon = (Icon) evt.getNewValue();
 					if (newIcon instanceof AsynchronousLoading) {
 						AsynchronousLoading async = (AsynchronousLoading) newIcon;
-						async
-								.addAsynchronousLoadListener(new AsynchronousLoadListener() {
-									public void completed(boolean success) {
-										if (success) {
-											if (commandButton != null) {
-												syncIconDimension();
-												syncDisabledIcon();
-												commandButton.repaint();
-											}
-										}
-									}
-								});
+						async.addAsynchronousLoadListener((boolean success) -> {
+							if (success) {
+								if (commandButton != null) {
+									syncIconDimension();
+									syncDisabledIcon();
+									commandButton.repaint();
+								}
+							}
+						});
 						if (!async.isLoading()) {
 							syncIconDimension();
 							syncDisabledIcon();
@@ -353,41 +381,29 @@ public class BasicCommandButtonUI extends CommandButtonUI {
 		this.commandButton
 				.addPropertyChangeListener(this.propertyChangeListener);
 
-		this.disposePopupsActionListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				boolean toDismiss = !Boolean.TRUE.equals(commandButton
-						.getClientProperty(DONT_DISPOSE_POPUPS));
-				if (toDismiss) {
-					JCommandPopupMenu menu = (JCommandPopupMenu) SwingUtilities
-							.getAncestorOfClass(JCommandPopupMenu.class,
-									commandButton);
-					if (menu != null) {
-						toDismiss = menu.isToDismissOnChildClick();
-					}
+		this.disposePopupsActionListener = (ActionEvent e) -> {
+			boolean toDismiss = !Boolean.TRUE
+					.equals(commandButton.getClientProperty(DONT_DISPOSE_POPUPS));
+			if (toDismiss) {
+				JCommandPopupMenu menu = (JCommandPopupMenu) SwingUtilities
+						.getAncestorOfClass(JCommandPopupMenu.class, commandButton);
+				if (menu != null) {
+					toDismiss = menu.isToDismissOnChildClick();
 				}
-				if (toDismiss) {
-					if (SwingUtilities.getAncestorOfClass(JPopupPanel.class,
-							commandButton) != null) {
-						SwingUtilities.invokeLater(new Runnable() {
-							@Override
-							public void run() {
-								// command button may be cleared if the
-								// button click resulted in LAF switch
-								if (commandButton != null) {
-									// clear the active states
-									commandButton.getActionModel().setPressed(
-											false);
-									commandButton.getActionModel().setRollover(
-											false);
-									commandButton.getActionModel().setArmed(
-											false);
-								}
-							}
-						});
-					}
-					PopupPanelManager.defaultManager().hidePopups(null);
+			}
+			if (toDismiss) {
+				if (SwingUtilities.getAncestorOfClass(JPopupPanel.class, commandButton) != null) {
+					SwingUtilities.invokeLater(() -> {
+						// command button may be cleared if the button click resulted in LAF switch
+						if (commandButton != null) {
+							// clear the active states
+							commandButton.getActionModel().setPressed(false);
+							commandButton.getActionModel().setRollover(false);
+							commandButton.getActionModel().setArmed(false);
+						}
+					});
 				}
+				PopupPanelManager.defaultManager().hidePopups(null);
 			}
 		};
 		this.commandButton.addActionListener(this.disposePopupsActionListener);
@@ -517,8 +533,7 @@ public class BasicCommandButtonUI extends CommandButtonUI {
 	public void paint(Graphics g, JComponent c) {
 		g.setFont(FlamingoUtilities.getFont(commandButton, "Ribbon.font",
 				"Button.font", "Panel.font"));
-		this.layoutInfo = this.layoutManager.getLayoutInfo(this.commandButton,
-				g);
+		this.layoutInfo = this.layoutManager.getLayoutInfo(this.commandButton, g);
 		commandButton.putClientProperty("icon.bounds", layoutInfo.iconRect);
 
 		if (this.isPaintingBackground()) {
@@ -770,6 +785,7 @@ public class BasicCommandButtonUI extends CommandButtonUI {
 	 * @param modelToUse
 	 *            Button models to use for computing the background fill.
 	 */
+	@SuppressWarnings("incomplete-switch")
 	protected void paintButtonBackground(Graphics graphics, Rectangle toFill,
 			ButtonModel... modelToUse) {
 		if (modelToUse.length == 0)
@@ -1067,12 +1083,7 @@ public class BasicCommandButtonUI extends CommandButtonUI {
 	 * @return Popup action listener for this command button.
 	 */
 	protected PopupActionListener createPopupActionListener() {
-		return new PopupActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				processPopupAction();
-			}
-		};
+		return (ActionEvent e) -> processPopupAction();
 	}
 
 	protected void processPopupAction() {

@@ -34,7 +34,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import javax.swing.UIManager;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.HorizontalAlignment;
+import org.pushingpixels.flamingo.api.common.RichToolTipManager;
+import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.internal.ui.ribbon.BasicRibbonComponentUI;
 import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonComponentUI;

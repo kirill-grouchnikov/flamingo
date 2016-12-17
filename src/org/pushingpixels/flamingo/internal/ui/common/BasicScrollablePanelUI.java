@@ -29,12 +29,26 @@
  */
 package org.pushingpixels.flamingo.internal.ui.common;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.plaf.ComponentUI;
 
 import org.pushingpixels.flamingo.api.common.JCommandButton;
@@ -264,18 +278,6 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 			this.scrollablePanel.revalidate();
 			this.scrollablePanel.repaint();
 		}
-	}
-
-	private void addScrollers() {
-		this.scrollablePanel.add(this.leadingScroller);
-		this.scrollablePanel.add(this.trailingScroller);
-		this.scrollablePanel.revalidate();
-		JComponent view = this.scrollablePanel.getView();
-		view.setPreferredSize(view.getMinimumSize());
-		view.setSize(view.getMinimumSize());
-		this.scrollablePanel.doLayout();
-
-		this.scrollablePanel.repaint();
 	}
 
 	protected void configureLeftScrollerButtonAction() {

@@ -38,7 +38,6 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -59,9 +58,9 @@ import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -83,9 +82,10 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
 import org.pushingpixels.flamingo.api.common.HorizontalAlignment;
@@ -98,12 +98,12 @@ import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.JCommandToggleMenuButton;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
+import org.pushingpixels.flamingo.api.common.icon.ColorResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.DecoratedResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
+import org.pushingpixels.flamingo.api.common.popup.JColorSelectorPopupMenu;
 import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
-import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
-import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupListener;
@@ -260,116 +260,43 @@ public class BasicCheckRibbon extends JRibbonFrame {
 					.getString("TestMenuItem.text"));
 			mf.setLocale(currLocale);
 
-			JCommandMenuButton menuButton1 = new JCommandMenuButton(mf
-					.format(new Object[] { "1" }), new EmptyResizableIcon(16));
-			menuButton1.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					System.out.println("Test menu item 1 activated");
-				}
-			});
+			JCommandMenuButton menuButton1 = new JCommandMenuButton(mf.format(new Object[] { "1" }), 
+					new ColorResizableIcon(16, new Color(0xFF80DEEA)));
+			menuButton1.addActionListener((ActionEvent e) ->
+					System.out.println("Test menu item 1 activated"));
 			menuButton1.setActionKeyTip("1");
 			this.addMenuButton(menuButton1);
 
-			JCommandMenuButton menuButton2 = new JCommandMenuButton(mf
-					.format(new Object[] { "2" }), new EmptyResizableIcon(16));
-			menuButton2.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					System.out.println("Test menu item 2 activated");
-				}
-			});
+			JCommandMenuButton menuButton2 = new JCommandMenuButton(mf.format(new Object[] { "2" }), 
+					new ColorResizableIcon(16, new Color(0xFF80CBC4)));
+			menuButton2.addActionListener((ActionEvent e) ->
+					System.out.println("Test menu item 2 activated"));
 			menuButton2.setActionKeyTip("2");
 			this.addMenuButton(menuButton2);
 
-			JCommandMenuButton menuButton3 = new JCommandMenuButton(mf
-					.format(new Object[] { "3" }), new EmptyResizableIcon(16));
-			menuButton3.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					System.out.println("Test menu item 3 activated");
-				}
-			});
+			JCommandMenuButton menuButton3 = new JCommandMenuButton(mf.format(new Object[] { "3" }), 
+					new ColorResizableIcon(16, new Color(0xFFA5D6A7)));
+			menuButton3.addActionListener((ActionEvent e) ->
+					System.out.println("Test menu item 3 activated"));
 			menuButton3.setActionKeyTip("3");
 			this.addMenuButton(menuButton3);
 
 			this.addMenuSeparator();
 
-			JCommandMenuButton menuButton4 = new JCommandMenuButton(mf
-					.format(new Object[] { "4" }), new EmptyResizableIcon(16));
-			menuButton4.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					System.out.println("Test menu item 4 activated");
-				}
-			});
+			JCommandMenuButton menuButton4 = new JCommandMenuButton(mf.format(new Object[] { "4" }), 
+					new ColorResizableIcon(16, new Color(0xFFC5E1A5)));
+			menuButton4.addActionListener((ActionEvent e) ->
+					System.out.println("Test menu item 4 activated"));
 			menuButton4.setActionKeyTip("4");
 			this.addMenuButton(menuButton4);
 
-			JCommandMenuButton menuButton5 = new JCommandMenuButton(mf
-					.format(new Object[] { "5" }), new EmptyResizableIcon(16));
-			menuButton5.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					System.out.println("Test menu item 5 activated");
-				}
-			});
+			JCommandMenuButton menuButton5 = new JCommandMenuButton(mf.format(new Object[] { "5" }), 
+					new ColorResizableIcon(16, new Color(0xFFE6EE9C)));
+			menuButton5.addActionListener((ActionEvent e) ->
+					System.out.println("Test menu item 5 activated"));
 			menuButton5.setActionKeyTip("5");
 			this.addMenuButton(menuButton5);
 		}
-	}
-
-	private AbstractCommandButton getIconButton(final Icon icon,
-			boolean isToggle, boolean isSelected, boolean hasPopup) {
-		ResizableIcon resizableIcon = new ResizableIcon() {
-			int width = icon.getIconWidth();
-			int height = icon.getIconHeight();
-
-			@Override
-			public int getIconHeight() {
-				return this.height;
-			}
-
-			@Override
-			public int getIconWidth() {
-				return this.width;
-			}
-
-			@Override
-			public void paintIcon(Component c, Graphics g, int x, int y) {
-				icon.paintIcon(c, g, x, y);
-			}
-
-			@Override
-			public void setDimension(Dimension newDimension) {
-				this.width = newDimension.width;
-				this.height = newDimension.height;
-			}
-		};
-		AbstractCommandButton button = isToggle ? new JCommandToggleButton("",
-				resizableIcon) : new JCommandButton("", resizableIcon);
-		button.setDisplayState(CommandButtonDisplayState.SMALL);
-		button.setGapScaleFactor(0.5);
-		if (isSelected)
-			button.getActionModel().setSelected(true);
-
-		// make the button narrower by stripping away some of the right-left
-		// insets
-		Insets currInsets = button.getInsets();
-		button.setBorder(new EmptyBorder(currInsets.top, currInsets.top / 2,
-				currInsets.bottom, currInsets.bottom / 2));
-
-		if (hasPopup) {
-			((JCommandButton) button)
-					.setPopupCallback(new PopupPanelCallback() {
-						@Override
-						public JPopupPanel getPopupPanel(
-								JCommandButton commandButton) {
-							return new SamplePopupMenu();
-						}
-					});
-		}
-		return button;
 	}
 
 	protected JRibbonBand getActionBand() {
@@ -450,12 +377,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
 		keyboardShortcuts.setPopupKeyTip("H");
 		keyboardShortcuts
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
-		keyboardShortcuts.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-				return new SamplePopupMenu();
-			}
-		});
+		keyboardShortcuts.setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu());
 		preferencesBand.addCommandButton(keyboardShortcuts,
 				RibbonElementPriority.MEDIUM);
 
@@ -692,12 +614,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
 				System.out.println("Pasted!");
 			}
 		});
-		mainButton.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-				return new SamplePopupMenu();
-			}
-		});
+		mainButton.setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu());
 		mainButton
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
 		RichTooltip mainRichTooltip = new RichTooltip();
@@ -717,12 +634,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
 		JCommandButton cutButton = new JCommandButton(resourceBundle
 				.getString("Cut.text"), new edit_cut());
-		cutButton.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-				return new SamplePopupMenu();
-			}
-		});
+		cutButton.setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu());
 		cutButton
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
 		RichTooltip cutRichTooltip = new RichTooltip();
@@ -736,12 +648,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
 		JCommandButton copyButton = new JCommandButton(resourceBundle
 				.getString("Copy.text"), new edit_copy());
-		copyButton.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-				return new SamplePopupMenu();
-			}
-		});
+		copyButton.setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu());
 		copyButton
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
 		copyButton.setPopupKeyTip("C");
@@ -751,51 +658,34 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
 		JCommandButton formatButton = new JCommandButton(resourceBundle
 				.getString("Format.text"), new edit_paste());
-		formatButton.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
+		formatButton.setPopupCallback((JCommandButton commandButton) -> {
 				JCommandPopupMenu popupMenu = new JCommandPopupMenu(
 						new QuickStylesPanel(), 5, 3);
 				JCommandMenuButton saveSelectionButton = new JCommandMenuButton(
-						resourceBundle
-								.getString("Format.menuSaveSelection.text"),
-						new EmptyResizableIcon(16));
-				saveSelectionButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("Save Selection activated");
-					}
-				});
+						resourceBundle.getString("Format.menuSaveSelection.text"),
+						new ColorResizableIcon(16, new Color(0xFFFBC02D)));
+				saveSelectionButton.addActionListener((ActionEvent e) ->
+						System.out.println("Save Selection activated"));
 				saveSelectionButton.setActionKeyTip("SS");
 				popupMenu.addMenuButton(saveSelectionButton);
 
 				JCommandMenuButton clearSelectionButton = new JCommandMenuButton(
-						resourceBundle
-								.getString("Format.menuClearSelection.text"),
-						new EmptyResizableIcon(16));
-				clearSelectionButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("Clear Selection activated");
-					}
-				});
+						resourceBundle.getString("Format.menuClearSelection.text"),
+						new ColorResizableIcon(16, new Color(0xFFFFA000)));
+				clearSelectionButton.addActionListener((ActionEvent e) ->
+						System.out.println("Clear Selection activated"));
 				clearSelectionButton.setActionKeyTip("SC");
 				popupMenu.addMenuButton(clearSelectionButton);
 
 				popupMenu.addMenuSeparator();
 				JCommandMenuButton applyStylesButton = new JCommandMenuButton(
 						resourceBundle.getString("Format.applyStyles.text"),
-						new EmptyResizableIcon(16));
-				applyStylesButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("Apply Styles activated");
-					}
-				});
+						new ColorResizableIcon(16, new Color(0xFFF57C00)));
+				applyStylesButton.addActionListener((ActionEvent e) ->
+						System.out.println("Apply Styles activated"));
 				applyStylesButton.setActionKeyTip("SA");
 				popupMenu.addMenuButton(applyStylesButton);
 				return popupMenu;
-			}
 		});
 
 		formatButton
@@ -921,56 +811,31 @@ public class BasicCheckRibbon extends JRibbonFrame {
 		quickStylesBand.addRibbonGallery("Styles", stylesGalleryButtons,
 				stylesGalleryVisibleButtonCounts, 3, 3,
 				JRibbonBand.BIG_FIXED_LANDSCAPE, RibbonElementPriority.TOP);
-		quickStylesBand.setRibbonGalleryPopupCallback("Styles",
-				new JRibbonBand.RibbonGalleryPopupCallback() {
-					public void popupToBeShown(JCommandPopupMenu menu) {
-						JCommandMenuButton saveSelectionButton = new JCommandMenuButton(
-								resourceBundle
-										.getString("Format.menuSaveSelection.text"),
-								new EmptyResizableIcon(16));
-						saveSelectionButton
-								.addActionListener(new ActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent e) {
-										System.out
-												.println("Save Selection activated");
-									}
-								});
-						saveSelectionButton.setActionKeyTip("SS");
-						menu.addMenuButton(saveSelectionButton);
+		quickStylesBand.setRibbonGalleryPopupCallback("Styles", (JCommandPopupMenu menu) -> {
+			JCommandMenuButton saveSelectionButton = new JCommandMenuButton(
+					resourceBundle.getString("Format.menuSaveSelection.text"),
+					new EmptyResizableIcon(16));
+			saveSelectionButton.addActionListener(
+					(ActionEvent e) -> System.out.println("Save Selection activated"));
+			saveSelectionButton.setActionKeyTip("SS");
+			menu.addMenuButton(saveSelectionButton);
 
-						JCommandMenuButton clearSelectionButton = new JCommandMenuButton(
-								resourceBundle
-										.getString("Format.menuClearSelection.text"),
-								new EmptyResizableIcon(16));
-						clearSelectionButton
-								.addActionListener(new ActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent e) {
-										System.out
-												.println("Clear Selection activated");
-									}
-								});
-						clearSelectionButton.setActionKeyTip("SC");
-						menu.addMenuButton(clearSelectionButton);
+			JCommandMenuButton clearSelectionButton = new JCommandMenuButton(
+					resourceBundle.getString("Format.menuClearSelection.text"),
+					new EmptyResizableIcon(16));
+			clearSelectionButton.addActionListener(
+					(ActionEvent e) -> System.out.println("Clear Selection activated"));
+			clearSelectionButton.setActionKeyTip("SC");
+			menu.addMenuButton(clearSelectionButton);
 
-						menu.addMenuSeparator();
-						JCommandMenuButton applyStylesButton = new JCommandMenuButton(
-								resourceBundle
-										.getString("Format.applyStyles.text"),
-								new font_x_generic());
-						applyStylesButton
-								.addActionListener(new ActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent e) {
-										System.out
-												.println("Apply Styles activated");
-									}
-								});
-						applyStylesButton.setActionKeyTip("SA");
-						menu.addMenuButton(applyStylesButton);
-					}
-				});
+			menu.addMenuSeparator();
+			JCommandMenuButton applyStylesButton = new JCommandMenuButton(
+					resourceBundle.getString("Format.applyStyles.text"), new font_x_generic());
+			applyStylesButton.addActionListener(
+					(ActionEvent e) -> System.out.println("Apply Styles activated"));
+			applyStylesButton.setActionKeyTip("SA");
+			menu.addMenuButton(applyStylesButton);
+		});
 		quickStylesBand.setRibbonGalleryExpandKeyTip("Styles", "L");
 
 		JCommandButton stylesButton1 = new JCommandButton(resourceBundle
@@ -988,9 +853,95 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
 		JCommandButton styles3Button = new JCommandButton(resourceBundle
 				.getString("Styles3.text"), new text_html());
+		styles3Button.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
 		styles3Button.setActionKeyTip("SC");
-		quickStylesBand.addCommandButton(styles3Button,
-				RibbonElementPriority.MEDIUM);
+		
+		final JColorSelectorPopupMenu.ColorSelectorCallback callback = new JColorSelectorPopupMenu.ColorSelectorCallback() {
+			@Override
+			public void onColorSelected(Color color) {
+				System.out.println("Selected color " + color);
+			}
+
+			@Override
+			public void onColorRollover(Color color) {
+				System.out.println("Rollover color " + color);
+			}
+		};
+
+		styles3Button.setPopupCallback((JCommandButton commandButton) -> {
+			JColorSelectorPopupMenu result = new JColorSelectorPopupMenu(
+					callback);
+			final Color defaultColor = new Color(0xFFEEEEEE);
+			final JCommandMenuButton automaticColor = new JCommandMenuButton(
+					resourceBundle.getString("ColorSelector.textAutomatic"),
+					new ColorResizableIcon(16, defaultColor));
+			automaticColor.getActionModel().addActionListener((ActionEvent e) -> {
+				callback.onColorSelected(defaultColor);
+				JColorSelectorPopupMenu.addColorToRecentlyUsed(defaultColor);
+			});
+			automaticColor.getActionModel().addChangeListener(
+					new ChangeListener() {
+						boolean wasRollover = automaticColor
+								.getActionModel().isRollover();
+
+						@Override
+						public void stateChanged(ChangeEvent e) {
+							boolean isRollover = automaticColor
+									.getActionModel().isRollover();
+							if (wasRollover && !isRollover) {
+								callback.onColorRollover(null);
+							}
+							if (!wasRollover && isRollover) {
+								callback.onColorRollover(Color.black);
+							}
+							wasRollover = isRollover;
+						}
+					});
+			result.addMenuButton(automaticColor);
+
+			result.addColorSectionWithDerived(
+					resourceBundle.getString("ColorSelector.textThemeCaption"),
+					new Color[] { new Color(255, 255, 255),
+							new Color(0, 0, 0),
+							new Color(160, 160, 160),
+							new Color(16, 64, 128),
+							new Color(80, 128, 192),
+							new Color(180, 80, 80),
+							new Color(160, 192, 80),
+							new Color(128, 92, 160),
+							new Color(80, 160, 208),
+							new Color(255, 144, 64) });
+
+			result.addColorSection(
+					resourceBundle.getString("ColorSelector.textStandardCaption"),
+					new Color[] { new Color(140, 0, 0),
+							new Color(253, 0, 0),
+							new Color(255, 160, 0),
+							new Color(255, 255, 0),
+							new Color(144, 240, 144),
+							new Color(0, 128, 0),
+							new Color(160, 224, 224),
+							new Color(0, 0, 255), new Color(0, 0, 128),
+							new Color(128, 0, 128) });
+			result.addRecentSection(resourceBundle
+					.getString("ColorSelector.textRecentCaption"));
+
+			JCommandMenuButton moreButton = new JCommandMenuButton(
+					resourceBundle.getString("ColorSelector.textMoreColor"),
+					null);
+			moreButton.getActionModel().addActionListener(
+					(ActionEvent e) -> SwingUtilities.invokeLater(() -> {
+						Color color = JColorChooser.showDialog(BasicCheckRibbon.this,
+								"Color chooser", defaultColor);
+						if (color != null) {
+							callback.onColorSelected(color);
+							JColorSelectorPopupMenu.addColorToRecentlyUsed(color);
+						}
+					}));
+			result.addMenuButton(moreButton);
+			return result;
+		});
+		quickStylesBand.addCommandButton(styles3Button, RibbonElementPriority.MEDIUM);
 
 		return quickStylesBand;
 	}
@@ -1425,18 +1376,14 @@ public class BasicCheckRibbon extends JRibbonFrame {
 				System.out.println("Taskbar Paste activated");
 			}
 		});
-		taskbarButtonPaste.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-				return new SamplePopupMenu();
-			}
-		});
-		taskbarButtonPaste.setActionRichTooltip(new RichTooltip(resourceBundle
-				.getString("Paste.text"), resourceBundle
-				.getString("Paste.tooltip.actionParagraph1")));
-		taskbarButtonPaste.setPopupRichTooltip(new RichTooltip(resourceBundle
-				.getString("Paste.text"), resourceBundle
-				.getString("Paste.tooltip.popupParagraph1")));
+		taskbarButtonPaste.setPopupCallback(
+				(JCommandButton commandButton) -> new SamplePopupMenu());
+		taskbarButtonPaste.setActionRichTooltip(
+				new RichTooltip(resourceBundle.getString("Paste.text"),
+						resourceBundle.getString("Paste.tooltip.actionParagraph1")));
+		taskbarButtonPaste.setPopupRichTooltip(
+				new RichTooltip(resourceBundle.getString("Paste.text"),
+						resourceBundle.getString("Paste.tooltip.popupParagraph1")));
 		taskbarButtonPaste.setActionKeyTip("1");
 		this.getRibbon().addTaskbarComponent(taskbarButtonPaste);
 
@@ -1480,160 +1427,125 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
 	protected void configureApplicationMenu() {
 		RibbonApplicationMenuEntryPrimary amEntryNew = new RibbonApplicationMenuEntryPrimary(
-				new document_new(),
-				resourceBundle.getString("AppMenuNew.text"),
-				new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("Invoked creating new document");
-					}
-				}, CommandButtonKind.ACTION_ONLY);
+				new document_new(), resourceBundle.getString("AppMenuNew.text"),
+				(ActionEvent e) -> System.out.println("Invoked creating new document"),
+				CommandButtonKind.ACTION_ONLY);
 		amEntryNew.setActionKeyTip("N");
 
 		RibbonApplicationMenuEntryPrimary amEntryOpen = new RibbonApplicationMenuEntryPrimary(
-				new document_open(), resourceBundle
-						.getString("AppMenuOpen.text"), new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("Invoked opening document");
-					}
-				}, CommandButtonKind.ACTION_ONLY);
-		amEntryOpen
-				.setRolloverCallback(new RibbonApplicationMenuEntryPrimary.PrimaryRolloverCallback() {
-					@Override
-					public void menuEntryActivated(JPanel targetPanel) {
-						targetPanel.removeAll();
-						JCommandButtonPanel openHistoryPanel = new JCommandButtonPanel(
-								CommandButtonDisplayState.MEDIUM);
-						String groupName = resourceBundle
-								.getString("AppMenuOpen.secondary.textGroupTitle1");
-						openHistoryPanel.addButtonGroup(groupName);
+				new document_open(), resourceBundle.getString("AppMenuOpen.text"),
+				(ActionEvent e) -> System.out.println("Invoked opening document"),
+				CommandButtonKind.ACTION_ONLY);
+		amEntryOpen.setRolloverCallback((JPanel targetPanel) -> {
+			targetPanel.removeAll();
+			JCommandButtonPanel openHistoryPanel = new JCommandButtonPanel(
+					CommandButtonDisplayState.MEDIUM);
+			String groupName = resourceBundle.getString("AppMenuOpen.secondary.textGroupTitle1");
+			openHistoryPanel.addButtonGroup(groupName);
 
-						MessageFormat mf = new MessageFormat(resourceBundle
-								.getString("AppMenuOpen.secondary.textButton"));
-						mf.setLocale(currLocale);
-						for (int i = 0; i < 5; i++) {
-							JCommandButton historyButton = new JCommandButton(
-									mf.format(new Object[] { i }),
-									new text_html());
-							historyButton
-									.setHorizontalAlignment(SwingUtilities.LEFT);
-							openHistoryPanel
-									.addButtonToLastGroup(historyButton);
-						}
-						openHistoryPanel.setMaxButtonColumns(1);
-						targetPanel.setLayout(new BorderLayout());
-						targetPanel.add(openHistoryPanel, BorderLayout.CENTER);
-					}
-				});
+			MessageFormat mf = new MessageFormat(
+					resourceBundle.getString("AppMenuOpen.secondary.textButton"));
+			mf.setLocale(currLocale);
+			for (int i = 0; i < 5; i++) {
+				JCommandButton historyButton = new JCommandButton(mf.format(new Object[] { i }),
+						new text_html());
+				historyButton.setHorizontalAlignment(SwingUtilities.LEFT);
+				openHistoryPanel.addButtonToLastGroup(historyButton);
+			}
+			openHistoryPanel.setMaxButtonColumns(1);
+			targetPanel.setLayout(new BorderLayout());
+			targetPanel.add(openHistoryPanel, BorderLayout.CENTER);
+		});
 		amEntryOpen.setActionKeyTip("O");
 
 		RibbonApplicationMenuEntryPrimary amEntrySave = new RibbonApplicationMenuEntryPrimary(
-				new document_save(), resourceBundle
-						.getString("AppMenuSave.text"), new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("Invoked saving document");
-					}
-				}, CommandButtonKind.ACTION_ONLY);
+				new document_save(), resourceBundle.getString("AppMenuSave.text"),
+				(ActionEvent e) -> System.out.println("Invoked saving document"),
+				CommandButtonKind.ACTION_ONLY);
 		amEntrySave.setEnabled(false);
 		amEntrySave.setActionKeyTip("S");
 
 		RibbonApplicationMenuEntryPrimary amEntrySaveAs = new RibbonApplicationMenuEntryPrimary(
-				new document_save_as(), resourceBundle
-						.getString("AppMenuSaveAs.text"), new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("Invoked saving document as");
-					}
-				}, CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
+				new document_save_as(), resourceBundle.getString("AppMenuSaveAs.text"),
+				(ActionEvent e) -> System.out.println("Invoked saving document as"),
+				CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
 		amEntrySaveAs.setActionKeyTip("A");
 		amEntrySaveAs.setPopupKeyTip("F");
 
-		RibbonApplicationMenuEntrySecondary amEntrySaveAsWord = new RibbonApplicationMenuEntrySecondary(
-				new x_office_document(), resourceBundle
-						.getString("AppMenuSaveAs.word.text"), null,
+		RibbonApplicationMenuEntrySecondary amEntrySaveAsWord = 
+				new RibbonApplicationMenuEntrySecondary(
+				new x_office_document(), resourceBundle.getString("AppMenuSaveAs.word.text"), null,
 				CommandButtonKind.ACTION_ONLY);
-		amEntrySaveAsWord.setDescriptionText(resourceBundle
-				.getString("AppMenuSaveAs.word.description"));
+		amEntrySaveAsWord
+				.setDescriptionText(resourceBundle.getString("AppMenuSaveAs.word.description"));
 		amEntrySaveAsWord.setActionKeyTip("W");
-		RibbonApplicationMenuEntrySecondary amEntrySaveAsHtml = new RibbonApplicationMenuEntrySecondary(
-				new text_html(), resourceBundle
-						.getString("AppMenuSaveAs.html.text"), null,
+		RibbonApplicationMenuEntrySecondary amEntrySaveAsHtml = 
+				new RibbonApplicationMenuEntrySecondary(
+				new text_html(), resourceBundle.getString("AppMenuSaveAs.html.text"), null,
 				CommandButtonKind.ACTION_ONLY);
-		amEntrySaveAsHtml.setDescriptionText(resourceBundle
-				.getString("AppMenuSaveAs.html.description"));
+		amEntrySaveAsHtml
+				.setDescriptionText(resourceBundle.getString("AppMenuSaveAs.html.description"));
 		amEntrySaveAsHtml.setEnabled(false);
 		amEntrySaveAsHtml.setActionKeyTip("H");
-		RibbonApplicationMenuEntrySecondary amEntrySaveAsOtherFormats = new RibbonApplicationMenuEntrySecondary(
-				new document_save_as(), resourceBundle
-						.getString("AppMenuSaveAs.other.text"), null,
-				CommandButtonKind.ACTION_ONLY);
-		amEntrySaveAsOtherFormats.setDescriptionText(resourceBundle
-				.getString("AppMenuSaveAs.other.description"));
+		RibbonApplicationMenuEntrySecondary amEntrySaveAsOtherFormats = 
+				new RibbonApplicationMenuEntrySecondary(
+					new document_save_as(), resourceBundle.getString("AppMenuSaveAs.other.text"), 
+					null, CommandButtonKind.ACTION_ONLY);
+		amEntrySaveAsOtherFormats
+				.setDescriptionText(resourceBundle.getString("AppMenuSaveAs.other.description"));
 		amEntrySaveAsOtherFormats.setActionKeyTip("O");
 
-		amEntrySaveAs
-				.addSecondaryMenuGroup(resourceBundle
-						.getString("AppMenuSaveAs.secondary.textGroupTitle1"),
-						amEntrySaveAsWord, amEntrySaveAsHtml,
-						amEntrySaveAsOtherFormats);
+		amEntrySaveAs.addSecondaryMenuGroup(
+				resourceBundle.getString("AppMenuSaveAs.secondary.textGroupTitle1"),
+				amEntrySaveAsWord, amEntrySaveAsHtml, amEntrySaveAsOtherFormats);
 
 		RibbonApplicationMenuEntryPrimary amEntryPrint = new RibbonApplicationMenuEntryPrimary(
-				new document_print(), resourceBundle
-						.getString("AppMenuPrint.text"), new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("Invoked printing document");
-					}
-				}, CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
+				new document_print(), resourceBundle.getString("AppMenuPrint.text"),
+				(ActionEvent e) -> System.out.println("Invoked printing document"),
+				CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
 		amEntryPrint.setActionKeyTip("P");
 		amEntryPrint.setPopupKeyTip("W");
 
-		RibbonApplicationMenuEntrySecondary amEntryPrintSelect = new RibbonApplicationMenuEntrySecondary(
-				new printer(), resourceBundle
-						.getString("AppMenuPrint.print.text"), null,
-				CommandButtonKind.ACTION_ONLY);
-		amEntryPrintSelect.setDescriptionText(resourceBundle
-				.getString("AppMenuPrint.print.description"));
+		RibbonApplicationMenuEntrySecondary amEntryPrintSelect = 
+				new RibbonApplicationMenuEntrySecondary(
+					new printer(), resourceBundle.getString("AppMenuPrint.print.text"), null,
+					CommandButtonKind.ACTION_ONLY);
+		amEntryPrintSelect
+				.setDescriptionText(resourceBundle.getString("AppMenuPrint.print.description"));
 		amEntryPrintSelect.setActionKeyTip("P");
-		RibbonApplicationMenuEntrySecondary amEntryPrintDefault = new RibbonApplicationMenuEntrySecondary(
-				new document_print(), resourceBundle
-						.getString("AppMenuPrint.quick.text"), null,
-				CommandButtonKind.ACTION_ONLY);
-		amEntryPrintDefault.setDescriptionText(resourceBundle
-				.getString("AppMenuPrint.quick.description"));
+		RibbonApplicationMenuEntrySecondary amEntryPrintDefault = 
+				new RibbonApplicationMenuEntrySecondary(
+					new document_print(), resourceBundle.getString("AppMenuPrint.quick.text"), null,
+					CommandButtonKind.ACTION_ONLY);
+		amEntryPrintDefault
+				.setDescriptionText(resourceBundle.getString("AppMenuPrint.quick.description"));
 		amEntryPrintDefault.setActionKeyTip("Q");
-		RibbonApplicationMenuEntrySecondary amEntryPrintPreview = new RibbonApplicationMenuEntrySecondary(
-				new document_print_preview(), resourceBundle
-						.getString("AppMenuPrint.preview.text"), null,
-				CommandButtonKind.ACTION_ONLY);
-		amEntryPrintPreview.setDescriptionText(resourceBundle
-				.getString("AppMenuPrint.preview.description"));
+		RibbonApplicationMenuEntrySecondary amEntryPrintPreview = 
+				new RibbonApplicationMenuEntrySecondary(
+					new document_print_preview(), 
+					resourceBundle.getString("AppMenuPrint.preview.text"),
+					null, CommandButtonKind.ACTION_ONLY);
+		amEntryPrintPreview
+				.setDescriptionText(resourceBundle.getString("AppMenuPrint.preview.description"));
 		amEntryPrintPreview.setActionKeyTip("V");
 
-		amEntryPrint.addSecondaryMenuGroup(resourceBundle
-				.getString("AppMenuPrint.secondary.textGroupTitle1"),
+		amEntryPrint.addSecondaryMenuGroup(
+				resourceBundle.getString("AppMenuPrint.secondary.textGroupTitle1"),
 				amEntryPrintSelect, amEntryPrintDefault, amEntryPrintPreview);
 
-		RibbonApplicationMenuEntrySecondary amEntryPrintMemo = new RibbonApplicationMenuEntrySecondary(
-				new text_x_generic(), resourceBundle
-						.getString("AppMenuPrint.memo.text"), null,
-				CommandButtonKind.ACTION_ONLY);
+		RibbonApplicationMenuEntrySecondary amEntryPrintMemo = 
+				new RibbonApplicationMenuEntrySecondary(
+					new text_x_generic(), resourceBundle.getString("AppMenuPrint.memo.text"), null,
+					CommandButtonKind.ACTION_ONLY);
 		amEntryPrintMemo.setActionKeyTip("M");
 
-		amEntryPrint.addSecondaryMenuGroup(resourceBundle
-				.getString("AppMenuPrint.secondary.textGroupTitle2"),
+		amEntryPrint.addSecondaryMenuGroup(resourceBundle.getString("AppMenuPrint.secondary.textGroupTitle2"),
 				amEntryPrintMemo);
 
 		RibbonApplicationMenuEntryPrimary amEntrySend = new RibbonApplicationMenuEntryPrimary(
-				new mail_forward(), resourceBundle
-						.getString("AppMenuSend.text"), new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("Invoked sending document");
-					}
-				}, CommandButtonKind.POPUP_ONLY);
+				new mail_forward(), resourceBundle.getString("AppMenuSend.text"),
+				(ActionEvent e) -> System.out.println("Invoked sending document"),
+				CommandButtonKind.POPUP_ONLY);
 		amEntrySend.setPopupKeyTip("D");
 
 		RibbonApplicationMenuEntrySecondary amEntrySendMail = new RibbonApplicationMenuEntrySecondary(
@@ -1663,38 +1575,25 @@ public class BasicCheckRibbon extends JRibbonFrame {
 				CommandButtonKind.POPUP_ONLY);
 		amEntrySendWireless.setPopupKeyTip("X");
 
-		amEntrySendWireless.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-				JCommandPopupMenu wirelessChoices = new JCommandPopupMenu();
+		amEntrySendWireless.setPopupCallback((JCommandButton commandButton) -> {
+			JCommandPopupMenu wirelessChoices = new JCommandPopupMenu();
 
-				JCommandMenuButton wiFiMenuButton = new JCommandMenuButton(
-						resourceBundle
-								.getString("AppMenuSend.wireless.wifi.text"),
-						new EmptyResizableIcon(16));
-				wiFiMenuButton.setActionKeyTip("W");
-				wiFiMenuButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("WiFi activated");
-					}
-				});
-				wirelessChoices.addMenuButton(wiFiMenuButton);
+			JCommandMenuButton wiFiMenuButton = new JCommandMenuButton(
+					resourceBundle.getString("AppMenuSend.wireless.wifi.text"),
+					new EmptyResizableIcon(16));
+			wiFiMenuButton.setActionKeyTip("W");
+			wiFiMenuButton.addActionListener(
+					(ActionEvent e) -> System.out.println("WiFi activated"));
+			wirelessChoices.addMenuButton(wiFiMenuButton);
 
-				JCommandMenuButton blueToothMenuButton = new JCommandMenuButton(
-						resourceBundle
-								.getString("AppMenuSend.wireless.bluetooth.text"),
-						new EmptyResizableIcon(16));
-				blueToothMenuButton.setActionKeyTip("B");
-				blueToothMenuButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("BlueTooth activated");
-					}
-				});
-				wirelessChoices.addMenuButton(blueToothMenuButton);
-				return wirelessChoices;
-			}
+			JCommandMenuButton blueToothMenuButton = new JCommandMenuButton(
+					resourceBundle.getString("AppMenuSend.wireless.bluetooth.text"),
+					new EmptyResizableIcon(16));
+			blueToothMenuButton.setActionKeyTip("B");
+			blueToothMenuButton.addActionListener(
+					(ActionEvent e) -> System.out.println("BlueTooth activated"));
+			wirelessChoices.addMenuButton(blueToothMenuButton);
+			return wirelessChoices;
 		});
 
 		amEntrySendWireless.setDescriptionText(resourceBundle
@@ -1706,13 +1605,8 @@ public class BasicCheckRibbon extends JRibbonFrame {
 				amEntrySendWireless);
 
 		RibbonApplicationMenuEntryPrimary amEntryExit = new RibbonApplicationMenuEntryPrimary(
-				new system_log_out(), resourceBundle
-						.getString("AppMenuExit.text"), new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.exit(0);
-					}
-				}, CommandButtonKind.ACTION_ONLY);
+				new system_log_out(), resourceBundle.getString("AppMenuExit.text"),
+				(ActionEvent e) -> System.exit(0), CommandButtonKind.ACTION_ONLY);
 		amEntryExit.setActionKeyTip("X");
 
 		RibbonApplicationMenu applicationMenu = new RibbonApplicationMenu();
@@ -1726,52 +1620,33 @@ public class BasicCheckRibbon extends JRibbonFrame {
 		applicationMenu.addMenuSeparator();
 		applicationMenu.addMenuEntry(amEntryExit);
 
-		applicationMenu
-				.setDefaultCallback(new RibbonApplicationMenuEntryPrimary.PrimaryRolloverCallback() {
-					@Override
-					public void menuEntryActivated(JPanel targetPanel) {
-						targetPanel.removeAll();
-						JCommandButtonPanel openHistoryPanel = new JCommandButtonPanel(
-								CommandButtonDisplayState.MEDIUM);
-						String groupName = resourceBundle
-								.getString("AppMenu.default.textGroupTitle1");
-						openHistoryPanel.addButtonGroup(groupName);
+		applicationMenu.setDefaultCallback((JPanel targetPanel) -> {
+			targetPanel.removeAll();
+			JCommandButtonPanel openHistoryPanel = new JCommandButtonPanel(
+					CommandButtonDisplayState.MEDIUM);
+			String groupName = resourceBundle.getString("AppMenu.default.textGroupTitle1");
+			openHistoryPanel.addButtonGroup(groupName);
 
-						MessageFormat mf = new MessageFormat(resourceBundle
-								.getString("AppMenu.default.textButton"));
-						mf.setLocale(currLocale);
-						for (int i = 0; i < 5; i++) {
-							JCommandButton historyButton = new JCommandButton(
-									mf.format(new Object[] { i }),
-									new text_html());
-							historyButton
-									.setHorizontalAlignment(SwingUtilities.LEFT);
-							openHistoryPanel
-									.addButtonToLastGroup(historyButton);
-						}
-						openHistoryPanel.setMaxButtonColumns(1);
-						targetPanel.setLayout(new BorderLayout());
-						targetPanel.add(openHistoryPanel, BorderLayout.CENTER);
-					}
-				});
+			MessageFormat mf = new MessageFormat(
+					resourceBundle.getString("AppMenu.default.textButton"));
+			mf.setLocale(currLocale);
+			for (int i = 0; i < 5; i++) {
+				JCommandButton historyButton = new JCommandButton(mf.format(new Object[] { i }),
+						new text_html());
+				historyButton.setHorizontalAlignment(SwingUtilities.LEFT);
+				openHistoryPanel.addButtonToLastGroup(historyButton);
+			}
+			openHistoryPanel.setMaxButtonColumns(1);
+			targetPanel.setLayout(new BorderLayout());
+			targetPanel.add(openHistoryPanel, BorderLayout.CENTER);
+		});
 
 		RibbonApplicationMenuEntryFooter amFooterProps = new RibbonApplicationMenuEntryFooter(
-				new document_properties(), resourceBundle
-						.getString("AppMenuOptions.text"),
-				new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("Invoked Options");
-					}
-				});
+				new document_properties(), resourceBundle.getString("AppMenuOptions.text"),
+				(ActionEvent e) -> System.out.println("Invoked Options"));
 		RibbonApplicationMenuEntryFooter amFooterExit = new RibbonApplicationMenuEntryFooter(
-				new system_log_out(), resourceBundle
-						.getString("AppMenuExit.text"), new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.exit(0);
-					}
-				});
+				new system_log_out(), resourceBundle.getString("AppMenuExit.text"),
+				(ActionEvent e) -> System.exit(0));
 		amFooterExit.setEnabled(false);
 		applicationMenu.addFooterEntry(amFooterProps);
 		applicationMenu.addFooterEntry(amFooterExit);

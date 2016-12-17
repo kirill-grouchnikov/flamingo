@@ -2,14 +2,22 @@ package test.common;
 
 import java.awt.FlowLayout;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
-import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
-import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
+import org.pushingpixels.flamingo.api.common.JCommandButtonStrip;
 
-import test.svg.transcoded.*;
+import test.svg.transcoded.format_justify_center;
+import test.svg.transcoded.format_justify_left;
+import test.svg.transcoded.format_justify_right;
+import test.svg.transcoded.format_text_bold;
+import test.svg.transcoded.format_text_italic;
+import test.svg.transcoded.format_text_strikethrough;
+import test.svg.transcoded.format_text_underline;
 
 /**
  * Test application for {@link JCommandButtonStrip} component.
@@ -33,22 +41,14 @@ public class ButtonStripTest extends JFrame {
 		buttonStrip2.add(new JCommandButton("", new format_text_bold()));
 		buttonStrip2.add(new JCommandButton("", new format_text_italic()));
 		buttonStrip2.add(new JCommandButton("", new format_text_underline()));
-		JCommandButton strike = new JCommandButton("",
-				new format_text_strikethrough());
-		strike
-				.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
-		strike.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-				return new SamplePopupMenu(commandButton
-						.getComponentOrientation());
-			}
-		});
+		JCommandButton strike = new JCommandButton("", new format_text_strikethrough());
+		strike.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
+		strike.setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
+				commandButton.getComponentOrientation()));
 		buttonStrip2.add(strike);
 		this.add(buttonStrip2);
 
-		JCommandButton standalone = new JCommandButton("",
-				new format_justify_left()) {
+		JCommandButton standalone = new JCommandButton("", new format_justify_left()) {
 			@Override
 			public java.awt.Dimension getPreferredSize() {
 				return super.getPreferredSize();
@@ -70,15 +70,10 @@ public class ButtonStripTest extends JFrame {
 	 *            Ignored.
 	 */
 	public static void main(String[] args) throws Exception {
-		// UIManager
-		// .setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				ButtonStripTest bst = new ButtonStripTest();
-				bst.setVisible(true);
-			}
+		SwingUtilities.invokeLater(() -> {
+			ButtonStripTest bst = new ButtonStripTest();
+			bst.setVisible(true);
 		});
 	}
 }

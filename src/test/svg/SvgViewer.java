@@ -35,12 +35,21 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileSystemView;
 
-import org.pushingpixels.flamingo.api.bcb.*;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathEvent;
 import org.pushingpixels.flamingo.api.bcb.core.BreadcrumbFileSelector;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 
@@ -83,56 +92,44 @@ public class SvgViewer extends JFrame {
 
 		this.bar = new BreadcrumbFileSelector();
 
-		this.bar.getModel().addPathListener(new BreadcrumbPathListener() {
-			@Override
-			public void breadcrumbPathEvent(BreadcrumbPathEvent event) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						final List<BreadcrumbItem<File>> newPath = bar
-								.getModel().getItems();
-						svgFileViewPanel.cancelMainWorker();
-						System.out.println("New path is ");
-						for (BreadcrumbItem<File> item : newPath) {
-							System.out.println("\t"
-									+ FileSystemView.getFileSystemView()
-											.getSystemDisplayName(
-													item.getData()));
+		this.bar.getModel().addPathListener((BreadcrumbPathEvent event) -> 
+			SwingUtilities.invokeLater(() -> {
+				final List<BreadcrumbItem<File>> newPath = bar.getModel().getItems();
+				svgFileViewPanel.cancelMainWorker();
+				System.out.println("New path is ");
+				for (BreadcrumbItem<File> item : newPath) {
+					System.out.println("\t"
+							+ FileSystemView.getFileSystemView().getSystemDisplayName(item.getData()));
+				}
+	
+				if (newPath.size() > 0) {
+					SwingWorker<List<StringValuePair<File>>, Void> worker = 
+							new SwingWorker<List<StringValuePair<File>>, Void>() {
+						@Override
+						protected List<StringValuePair<File>> doInBackground() {
+							return bar.getCallback().getLeafs(newPath);
 						}
-
-						if (newPath.size() > 0) {
-							SwingWorker<List<StringValuePair<File>>, Void> worker = new SwingWorker<List<StringValuePair<File>>, Void>() {
-								@Override
-								protected List<StringValuePair<File>> doInBackground() {
-									return bar.getCallback().getLeafs(newPath);
-								}
-
-								@Override
-								protected void done() {
-									try {
-										svgFileViewPanel.setFolder(get());
-										svgFileViewPanel
-												.setIconDimension(currIconSize);
-									} catch (Exception exc) {
-									}
-								}
-							};
-							worker.execute();
+	
+						@Override
+						protected void done() {
+							try {
+								svgFileViewPanel.setFolder(get());
+								svgFileViewPanel.setIconDimension(currIconSize);
+							} catch (Exception exc) {
+							}
 						}
-						return;
-					}
-				});
-			}
-		});
+					};
+					worker.execute();
+				}
+			}));
 
 		this.setLayout(new BorderLayout());
 		this.add(bar, BorderLayout.NORTH);
 
 		int initialSize = 32;
-		this.svgFileViewPanel = new SvgFileViewPanel(bar.getCallback(),
-				initialSize);
+		this.svgFileViewPanel = new SvgFileViewPanel(bar.getCallback(), initialSize);
 		JScrollPane jsp = new JScrollPane(this.svgFileViewPanel,
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		this.add(jsp, BorderLayout.CENTER);
 
 		this.iconSizeSlider = new JSlider();
@@ -164,8 +161,7 @@ public class SvgViewer extends JFrame {
 
 		JMenuBar jmb = new JMenuBar();
 		JMenu menu = new JMenu("Look-and-feel");
-		menu.add(LafChanger.getMenuItem(this, "Metal",
-				"javax.swing.plaf.metal.MetalLookAndFeel"));
+		menu.add(LafChanger.getMenuItem(this, "Metal", "javax.swing.plaf.metal.MetalLookAndFeel"));
 		menu.add(LafChanger.getMenuItem(this, "Windows",
 				"com.sun.java.swing.plaf.windows.WindowsLookAndFeel"));
 		menu.add(LafChanger.getMenuItem(this, "Windows Classic",
@@ -197,8 +193,7 @@ public class SvgViewer extends JFrame {
 
 		private String lafClassName;
 
-		public static JMenuItem getMenuItem(JFrame frame, String lafName,
-				String lafClassName) {
+		public static JMenuItem getMenuItem(JFrame frame, String lafName, String lafClassName) {
 			JMenuItem result = new JMenuItem(lafName);
 			result.addActionListener(new LafChanger(frame, lafClassName));
 			return result;
@@ -211,16 +206,12 @@ public class SvgViewer extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					boolean was_wm_decorated = !frame.isUndecorated();
-
-					try {
-						UIManager.setLookAndFeel(lafClassName);
-						SwingUtilities.updateComponentTreeUI(frame);
-					} catch (Exception exc) {
-						exc.printStackTrace();
-					}
+			SwingUtilities.invokeLater(() -> {
+				try {
+					UIManager.setLookAndFeel(lafClassName);
+					SwingUtilities.updateComponentTreeUI(frame);
+				} catch (Exception exc) {
+					exc.printStackTrace();
 				}
 			});
 		}

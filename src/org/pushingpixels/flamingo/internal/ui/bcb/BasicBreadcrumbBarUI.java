@@ -32,27 +32,55 @@
  */
 package org.pushingpixels.flamingo.internal.ui.bcb;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 
-import org.pushingpixels.flamingo.api.bcb.*;
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbBarModel;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathEvent;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathListener;
+import org.pushingpixels.flamingo.api.bcb.JBreadcrumbBar;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonPopupOrientationKind;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
+import org.pushingpixels.flamingo.api.common.JScrollablePanel;
+import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.model.PopupButtonModel;
-import org.pushingpixels.flamingo.api.common.popup.*;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
 /**
@@ -117,8 +145,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 		if (this.breadcrumbBar.getCallback() != null) {
 			SwingWorker<List<StringValuePair>, Void> worker = new SwingWorker<List<StringValuePair>, Void>() {
 				@Override
-				protected List<StringValuePair> doInBackground()
-						throws Exception {
+				protected List<StringValuePair> doInBackground() throws Exception {
 					return breadcrumbBar.getCallback().getPathChoices(null);
 				}
 
@@ -135,8 +162,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 
 		this.dummy = new JCommandButton("Dummy", new EmptyResizableIcon(16));
 		this.dummy.setDisplayState(CommandButtonDisplayState.MEDIUM);
-		this.dummy
-				.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
+		this.dummy.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
 	}
 
 	/*
@@ -157,8 +183,8 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 	protected void installDefaults(JBreadcrumbBar bar) {
 		Font currFont = bar.getFont();
 		if ((currFont == null) || (currFont instanceof UIResource)) {
-			Font font = FlamingoUtilities.getFont(null, "BreadcrumbBar.font",
-					"Button.font", "Panel.font");
+			Font font = FlamingoUtilities.getFont(null, "BreadcrumbBar.font", "Button.font",
+					"Panel.font");
 			bar.setFont(font);
 		}
 	}
@@ -191,8 +217,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 			public void breadcrumbPathEvent(BreadcrumbPathEvent event) {
 				final int indexOfFirstChange = event.getIndexOfFirstChange();
 
-				if ((this.pathChangeWorker != null)
-						&& !this.pathChangeWorker.isDone()) {
+				if ((this.pathChangeWorker != null) && !this.pathChangeWorker.isDone()) {
 					this.pathChangeWorker.cancel(true);
 				}
 				this.pathChangeWorker = new SwingWorker<Void, Object>() {
@@ -219,17 +244,16 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 						});
 
 						if (indexOfFirstChange == 0) {
-							List<StringValuePair> rootChoices = breadcrumbBar
-									.getCallback().getPathChoices(null);
-							BreadcrumbItemChoices bic = new BreadcrumbItemChoices(
-									null, rootChoices);
+							List<StringValuePair> rootChoices = breadcrumbBar.getCallback()
+									.getPathChoices(null);
+							BreadcrumbItemChoices bic = new BreadcrumbItemChoices(null,
+									rootChoices);
 							if (!this.isCancelled()) {
 								publish(bic);
 							}
 						}
 
-						List<BreadcrumbItem> items = breadcrumbBar.getModel()
-								.getItems();
+						List<BreadcrumbItem> items = breadcrumbBar.getModel().getItems();
 						if (items != null) {
 							for (int itemIndex = indexOfFirstChange; itemIndex < items
 									.size(); itemIndex++) {
@@ -244,11 +268,9 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 								for (int j = 0; j <= itemIndex; j++) {
 									subPath.add(items.get(j));
 								}
-								BreadcrumbItemChoices bic = new BreadcrumbItemChoices(
-										item, breadcrumbBar.getCallback()
-												.getPathChoices(subPath));
-								if ((bic.getChoices() != null)
-										&& (bic.getChoices().length > 0)) {
+								BreadcrumbItemChoices bic = new BreadcrumbItemChoices(item,
+										breadcrumbBar.getCallback().getPathChoices(subPath));
+								if ((bic.getChoices() != null) && (bic.getChoices().length > 0)) {
 									// add the selector - the current item has
 									// children
 									publish(bic);
@@ -262,13 +284,11 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 					protected void process(List<Object> chunks) {
 						if (chunks != null) {
 							for (Object chunk : chunks) {
-								if (this.isCancelled()
-										|| atomicCounter.get() > 1)
+								if (this.isCancelled() || atomicCounter.get() > 1)
 									break;
 
 								if (chunk instanceof BreadcrumbItemChoices) {
-									pushChoices((BreadcrumbItemChoices) chunk,
-											false);
+									pushChoices((BreadcrumbItemChoices) chunk, false);
 								}
 								if (chunk instanceof BreadcrumbItem) {
 									pushChoice((BreadcrumbItem) chunk, false);
@@ -361,8 +381,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 			int buttonHeight = dummy.getPreferredSize().height;
 
 			Insets ins = c.getInsets();
-			return new Dimension(c.getWidth(), buttonHeight + ins.top
-					+ ins.bottom);
+			return new Dimension(c.getWidth(), buttonHeight + ins.top + ins.bottom);
 		}
 
 		/*
@@ -408,9 +427,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 					buttonStack.add(button);
 				} else {
 					JCommandButton button = buttonStack.getLast();
-					int oldW = button.getPreferredSize().width;
-					button
-							.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
+					button.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
 					configurePopupAction(button, bic);
 					configurePopupRollover(button);
 				}
@@ -427,8 +444,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 						int ih = icon.getIconHeight();
 
 						@Override
-						public void paintIcon(Component c, Graphics g, int x,
-								int y) {
+						public void paintIcon(Component c, Graphics g, int x, int y) {
 							int dx = (iw - icon.getIconWidth()) / 2;
 							int dy = (ih - icon.getIconHeight()) / 2;
 							icon.paintIcon(c, g, x + dx, y + dy);
@@ -453,8 +469,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 				}
 
 				if (i > 0) {
-					BreadcrumbItemChoices lastBic = (BreadcrumbItemChoices) modelStack
-							.get(i - 1);
+					BreadcrumbItemChoices lastBic = (BreadcrumbItemChoices) modelStack.get(i - 1);
 					BreadcrumbItem[] choices = lastBic.getChoices();
 					if (choices != null) {
 						for (int j = 0; j < choices.length; j++) {
@@ -480,15 +495,13 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 			@Override
 			public void run() {
 				// scroll to the last element in the breadcrumb bar
-				scrollerPanel.scrollToIfNecessary(
-						mainPanel.getPreferredSize().width, 0);
+				scrollerPanel.scrollToIfNecessary(mainPanel.getPreferredSize().width, 0);
 				scrollerPanel.repaint();
 			}
 		});
 	}
 
-	private void configureMainAction(JCommandButton button,
-			final BreadcrumbItem bi) {
+	private void configureMainAction(JCommandButton button, final BreadcrumbItem bi) {
 		button.getActionModel().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -509,8 +522,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 		});
 	}
 
-	private void configurePopupAction(JCommandButton button,
-			final BreadcrumbItemChoices bic) {
+	private void configurePopupAction(JCommandButton button, final BreadcrumbItemChoices bic) {
 		button.setPopupCallback(new PopupPanelCallback() {
 			@Override
 			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
@@ -518,8 +530,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 				for (int i = 0; i < bic.getChoices().length; i++) {
 					final BreadcrumbItem bi = bic.getChoices()[i];
 
-					JCommandMenuButton menuButton = new JCommandMenuButton(bi
-							.getKey(), null);
+					JCommandMenuButton menuButton = new JCommandMenuButton(bi.getKey(), null);
 					final Icon icon = bi.getIcon();
 					if (icon != null) {
 						menuButton.setIcon(new ResizableIcon() {
@@ -527,8 +538,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 							int ih = icon.getIconHeight();
 
 							@Override
-							public void paintIcon(Component c, Graphics g,
-									int x, int y) {
+							public void paintIcon(Component c, Graphics g, int x, int y) {
 								int dx = (iw - icon.getIconWidth()) / 2;
 								int dy = (ih - icon.getIconHeight()) / 2;
 								icon.paintIcon(c, g, x + dx, y + dy);
@@ -552,43 +562,33 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 						});
 					}
 					if (i == bic.getSelectedIndex()) {
-						menuButton.setFont(menuButton.getFont().deriveFont(
-								Font.BOLD));
+						menuButton.setFont(menuButton.getFont().deriveFont(Font.BOLD));
 					}
 
 					final int biIndex = i;
-					menuButton.getActionModel().addActionListener(
-							new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									SwingUtilities.invokeLater(new Runnable() {
-										public void run() {
-											if (bi == null)
-												return;
+					menuButton.getActionModel().addActionListener((ActionEvent e) -> {
+						SwingUtilities.invokeLater(() -> {
+							if (bi == null)
+								return;
 
-											BreadcrumbBarModel barModel = breadcrumbBar
-													.getModel();
-											barModel.setCumulative(true);
-											int itemIndex = barModel
-													.indexOf(bic.getAncestor());
-											int toLeave = ((bic.getAncestor() == null) || (itemIndex < 0)) ? 0
-													: itemIndex + 1;
-											while (barModel.getItemCount() > toLeave) {
-												barModel.removeLast();
-											}
-											barModel.addLast(bi);
+							BreadcrumbBarModel barModel = breadcrumbBar.getModel();
+							barModel.setCumulative(true);
+							int itemIndex = barModel.indexOf(bic.getAncestor());
+							int toLeave = ((bic.getAncestor() == null) || (itemIndex < 0)) ? 0
+									: itemIndex + 1;
+							while (barModel.getItemCount() > toLeave) {
+								barModel.removeLast();
+							}
+							barModel.addLast(bi);
 
-											bic.setSelectedIndex(biIndex);
+							bic.setSelectedIndex(biIndex);
 
-											barModel.setCumulative(false);
-										}
-									});
-								}
-							});
+							barModel.setCumulative(false);
+						});
+					});
 
 					popup.addMenuButton(menuButton);
-					menuButton.setCursor(Cursor
-							.getPredefinedCursor(Cursor.HAND_CURSOR));
+					menuButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				}
 				popup.setMaxVisibleMenuButtons(10);
 				return popup;
@@ -605,8 +605,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						boolean isRollover = button.getPopupModel()
-								.isRollover();
+						boolean isRollover = button.getPopupModel().isRollover();
 						if (isRollover == rollover)
 							return;
 
@@ -618,8 +617,8 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 
 								if (bcbButton.getPopupModel().isPopupShowing()) {
 									// scroll to view
-									scrollerPanel.scrollToIfNecessary(button
-											.getBounds().x, button.getWidth());
+									scrollerPanel.scrollToIfNecessary(button.getBounds().x,
+											button.getWidth());
 									// simulate click on the popup area
 									// of *this* button
 									button.doPopupClick();
@@ -636,16 +635,15 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 
 	private void configureBreadcrumbButton(final JCommandButton button) {
 		button.setDisplayState(CommandButtonDisplayState.MEDIUM);
-		button
-				.setPopupOrientationKind(CommandButtonPopupOrientationKind.SIDEWARD);
+		button.setPopupOrientationKind(CommandButtonPopupOrientationKind.SIDEWARD);
 		button.setHGapScaleFactor(0.75);
 		button.getPopupModel().addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				PopupButtonModel model = button.getPopupModel();
-				boolean displayDownwards = model.isRollover()
-						|| model.isPopupShowing();
-				CommandButtonPopupOrientationKind popupOrientationKind = displayDownwards ? CommandButtonPopupOrientationKind.DOWNWARD
+				boolean displayDownwards = model.isRollover() || model.isPopupShowing();
+				CommandButtonPopupOrientationKind popupOrientationKind = displayDownwards
+						? CommandButtonPopupOrientationKind.DOWNWARD
 						: CommandButtonPopupOrientationKind.SIDEWARD;
 				button.setPopupOrientationKind(popupOrientationKind);
 			}
@@ -674,8 +672,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 	 *            Indication whether the bar should be repainted.
 	 * @return The item that has been pushed.
 	 */
-	protected synchronized Object pushChoices(BreadcrumbItemChoices bic,
-			boolean toUpdateUI) {
+	protected synchronized Object pushChoices(BreadcrumbItemChoices bic, boolean toUpdateUI) {
 		if (bic == null)
 			return null;
 		if (modelStack.size() % 2 == 1) {
@@ -698,17 +695,13 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 	 *            Indication whether the bar should be repainted.
 	 * @return The item that has been pushed.
 	 */
-	protected synchronized Object pushChoice(BreadcrumbItem bi,
-			boolean toUpdateUI) {
+	protected synchronized Object pushChoice(BreadcrumbItem bi, boolean toUpdateUI) {
 		assert (bi != null);
-		Object result;
-		// synchronized (stack) {
 		if (!modelStack.isEmpty() && modelStack.size() % 2 == 0) {
 			modelStack.pop();
 		}
 		bi.setIndex(modelStack.size());
 		modelStack.addLast(bi);
-		// }
 		return bi;
 	}
 }

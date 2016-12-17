@@ -7,7 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JSeparator;
 
 import org.fest.assertions.Assertions;
-import org.fest.swing.edt.*;
+import org.fest.swing.edt.GuiActionRunner;
+import org.fest.swing.edt.GuiQuery;
+import org.fest.swing.edt.GuiTask;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.Before;
 import org.junit.Test;

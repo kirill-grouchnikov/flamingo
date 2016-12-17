@@ -1,21 +1,32 @@
 package utest.ribbon;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.event.InputEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import junit.framework.TestCase;
-
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
+import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
-import org.pushingpixels.flamingo.api.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
+import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.internal.ui.ribbon.JRibbonGallery;
+
+import junit.framework.TestCase;
 
 /**
  * Testing the internal {@link JRibbonGallery} class. Each test case operates on

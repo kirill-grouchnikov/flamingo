@@ -29,7 +29,12 @@
  */
 package test.common;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.Window;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,22 +42,39 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonPopupOrientationKind;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.FilteredResizableIcon;
-import org.pushingpixels.flamingo.api.common.popup.*;
-
-import test.common.LocaleSwitcher.LocaleCallback;
-import test.svg.transcoded.*;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+
+import test.common.LocaleSwitcher.LocaleCallback;
+import test.svg.transcoded.address_book_new;
+import test.svg.transcoded.edit_copy;
+import test.svg.transcoded.edit_cut;
+import test.svg.transcoded.edit_paste;
+import test.svg.transcoded.text_x_generic;
+import test.svg.transcoded.x_office_document;
 
 public class TestCommandButtons extends JFrame {
 	private enum PopupKind {

@@ -29,18 +29,44 @@
  */
 package test.bcb;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
-import org.pushingpixels.flamingo.api.bcb.*;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbBarModel;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
+import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathEvent;
 import org.pushingpixels.flamingo.api.bcb.core.BreadcrumbSvnSelector;
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
 import test.MessageListDialog;
@@ -99,12 +125,9 @@ public class SvnBreadCrumbTest extends JFrame {
 
 		this.bar = new BreadcrumbSvnSelector();
 		this.bar.setThrowsExceptions(true);
-		this.bar.addExceptionHandler(new BreadcrumbBarExceptionHandler() {
-			public void onException(Throwable t) {
+		this.bar.addExceptionHandler((Throwable t) ->
 				MessageListDialog.showMessageDialog(SvnBreadCrumbTest.this,
-						"Error", t);
-			}
-		});
+						"Error", t));
 
 		SvnComboListModel svnComboModel = new SvnComboListModel();
 		svnComboModel
@@ -146,41 +169,34 @@ public class SvnBreadCrumbTest extends JFrame {
 		});
 
 		// "http://svn.svnkit.com/repos/svnkit", "anonymous", "anonymous");
-		this.bar.getModel().addPathListener(new BreadcrumbPathListener() {
-			@Override
-			public void breadcrumbPathEvent(BreadcrumbPathEvent event) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						final List<BreadcrumbItem<String>> newPath = bar
-								.getModel().getItems();
-						System.out.println("New path is ");
-						for (BreadcrumbItem<String> item : newPath) {
-							System.out.println("\t" + item.getData());
+		this.bar.getModel().addPathListener((BreadcrumbPathEvent event) -> 
+			SwingUtilities.invokeLater(() -> {
+				final List<BreadcrumbItem<String>> newPath = bar.getModel().getItems();
+				System.out.println("New path is ");
+				for (BreadcrumbItem<String> item : newPath) {
+					System.out.println("\t" + item.getData());
+				}
+	
+				if (newPath.size() > 0) {
+					SwingWorker<List<StringValuePair<String>>, Void> worker = 
+							new SwingWorker<List<StringValuePair<String>>, Void>() {
+						@Override
+						protected List<StringValuePair<String>> doInBackground() {
+							return bar.getCallback().getLeafs(newPath);
 						}
-
-						if (newPath.size() > 0) {
-							SwingWorker<List<StringValuePair<String>>, Void> worker = new SwingWorker<List<StringValuePair<String>>, Void>() {
-								@Override
-								protected List<StringValuePair<String>> doInBackground() {
-									return bar.getCallback().getLeafs(newPath);
-								}
-
-								@Override
-								protected void done() {
-									try {
-										List<StringValuePair<String>> leafs = get();
-										filePanel.setFolder(leafs);
-									} catch (Exception exc) {
-									}
-								}
-							};
-							worker.execute();
+	
+						@Override
+						protected void done() {
+							try {
+								List<StringValuePair<String>> leafs = get();
+								filePanel.setFolder(leafs);
+							} catch (Exception exc) {
+							}
 						}
-						return;
-					}
-				});
-			}
-		});
+					};
+					worker.execute();
+				}
+			}));
 
 		JToolBar toolbar = new JToolBar();
 		toolbar.setLayout(new BorderLayout(3, 0));

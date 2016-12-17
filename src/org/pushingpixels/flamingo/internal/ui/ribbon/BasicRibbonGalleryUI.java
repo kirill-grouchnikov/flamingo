@@ -29,24 +29,50 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
-import javax.swing.plaf.*;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 
-import org.pushingpixels.flamingo.api.common.*;
+import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
+import org.pushingpixels.flamingo.api.common.JCommandButtonStrip;
 import org.pushingpixels.flamingo.api.common.JCommandButtonStrip.StripOrientation;
+import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-import org.pushingpixels.flamingo.api.common.popup.*;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.internal.ui.common.BasicCommandButtonUI;
-import org.pushingpixels.flamingo.internal.utils.*;
+import org.pushingpixels.flamingo.internal.utils.ArrowResizableIcon;
+import org.pushingpixels.flamingo.internal.utils.DoubleArrowResizableIcon;
+import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
+import org.pushingpixels.flamingo.internal.utils.KeyTipManager;
 
 /**
  * Basic UI for ribbon gallery {@link JRibbonGallery}.
@@ -244,8 +270,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
 		result.setFocusable(false);
 		result.setName("RibbonGallery.expandButton");
 		result.setFlat(false);
-		result.putClientProperty(BasicCommandButtonUI.DONT_DISPOSE_POPUPS,
-				Boolean.TRUE);
+		result.putClientProperty(BasicCommandButtonUI.DONT_DISPOSE_POPUPS, Boolean.TRUE);
 		return result;
 	}
 
