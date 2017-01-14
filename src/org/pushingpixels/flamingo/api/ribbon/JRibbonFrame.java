@@ -616,30 +616,28 @@ public class JRibbonFrame extends JFrame {
 		if (System.getProperty("os.name").startsWith("Mac")) {
 			final Image image16 = getImage(icon, 16);
 			final Image image128 = getImage(icon, 128);
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					if (image16 != null) {
-						setLegacyIconImages(Arrays.asList(image16));
-					}
-					if (image128 != null) {
-						try {
-							Class appClass = Class.forName("com.apple.eawt.Application");
-							if (appClass != null) {
-								Object appInstance = appClass.newInstance();
-								Method setDockImageMethod = appClass.getDeclaredMethod(
-										"setDockIconImage", Image.class);
-								if (setDockImageMethod != null) {
-									setDockImageMethod.invoke(appInstance, image128);
-								}
-							}
-						} catch (Throwable t) {
-							t.printStackTrace();
-							// give up
-						}
-					}
-					setMainAppIcon(icon);
-				}
-			});
+            SwingUtilities.invokeLater(() -> {
+                if (image16 != null) {
+                    setLegacyIconImages(Arrays.asList(image16));
+                }
+                if (image128 != null) {
+                    try {
+                        Class appClass = Class.forName("com.apple.eawt.Application");
+                        if (appClass != null) {
+                            Object appInstance = appClass.newInstance();
+                            Method setDockImageMethod = appClass
+                                    .getDeclaredMethod("setDockIconImage", Image.class);
+                            if (setDockImageMethod != null) {
+                                setDockImageMethod.invoke(appInstance, image128);
+                            }
+                        }
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                        // give up
+                    }
+                }
+                setMainAppIcon(icon);
+            });
 		} else {
 			final List<Image> images = new ArrayList<Image>();
 			Image icon16 = getImage(icon, 16);
@@ -651,12 +649,10 @@ public class JRibbonFrame extends JFrame {
 			Image icon64 = getImage(icon, 64);
 			if (icon64 != null)
 				images.add(icon64);
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					if (!images.isEmpty())
-						setLegacyIconImages(images);
-					setMainAppIcon(icon);
-				}
+			SwingUtilities.invokeLater(() -> {
+                if (!images.isEmpty())
+                    setLegacyIconImages(images);
+                setMainAppIcon(icon);
 			});
 		}
 	}

@@ -606,12 +606,8 @@ public class BasicPopupPanelUI extends PopupPanelUI {
 			case MouseEvent.MOUSE_RELEASED:
 				// special case - mouse release on an item in a combo popup
 				if (SwingUtilities.getAncestorOfClass(ComboPopup.class, src) != null) {
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							PopupPanelManager.defaultManager().hidePopups(src);
-						}
-					});
+					SwingUtilities.invokeLater(() -> 
+							PopupPanelManager.defaultManager().hidePopups(src));
 				}
 
 				// pass the event so that it gets processed by the controls
@@ -620,8 +616,7 @@ public class BasicPopupPanelUI extends PopupPanelUI {
 			case MouseEvent.MOUSE_WHEEL:
 				if (popupPanelParent != null) {
 					// close all popups until this parent and return
-					PopupPanelManager.defaultManager().hidePopups(
-							popupPanelParent);
+					PopupPanelManager.defaultManager().hidePopups(popupPanelParent);
 					return;
 				}
 

@@ -693,6 +693,19 @@ public class BasicCheckRibbon extends JRibbonFrame {
 		// pasteButton.addPopupActionListener(new SamplePopupActionListener());
 		formatButton
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
+	      RichTooltip formatRichTooltip = new RichTooltip();
+        formatRichTooltip.setTitle(
+                        "Main title that can go over multiple lines of text even exceeding the bigger");
+        formatRichTooltip.addDescriptionSection(
+                        "Simple description that can go over multiple lines of text even exceeding the bigger");
+        formatRichTooltip.addDescriptionSection(
+                        "Second paragraph that can be multiline as well to test this feature");
+        formatRichTooltip.setMainImage(new address_book_new(), new Dimension(32, 32));
+        formatRichTooltip.setFooterIcon(new help_browser());
+        formatRichTooltip.addFooterSection(
+                        "Multiline footer description to provide a little bit more information on this subject");
+        formatButton.setPopupRichTooltip(formatRichTooltip);
+
 		formatButton.setPopupKeyTip("FP");
 
 		clipboardBand.addCommandButton(formatButton,
