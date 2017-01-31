@@ -132,7 +132,7 @@ public class JTreeAdapterBreadCrumbTest extends JFrame {
 		 * 
 		 * @see javax.swing.tree.TreeNode#children()
 		 */
-		public Enumeration<?> children() {
+		public Enumeration children() {
 			final int elementCount = this.children.length;
 			return new Enumeration<File>() {
 				int count = 0;

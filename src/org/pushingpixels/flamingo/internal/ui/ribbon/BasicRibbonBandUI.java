@@ -904,7 +904,9 @@ public class BasicRibbonBandUI extends RibbonBandUI {
 
     @Override
     public int getPreferredCollapsedWidth() {
-        return this.collapsedButton.getPreferredSize().width + 2;
+        // Don't let long ribbon band titles create collapsed buttons that are too wide
+        Dimension collapsedPreferredSize = this.collapsedButton.getPreferredSize();
+        return Math.min(collapsedPreferredSize.height, collapsedPreferredSize.width + 2);
     }
 
     @Override

@@ -806,11 +806,13 @@ public class BasicRibbonUI extends RibbonUI {
             // the help button
             if (helpButton != null) {
                 Dimension preferred = helpButton.getPreferredSize();
+                // Note that here we're using the height of task toggle buttons so that all the
+                // content in that row has consistent vertical size.
                 if (ltr) {
                     helpButton.setBounds(width - ins.right - preferred.width, y, preferred.width,
-                            preferred.height);
+                            taskToggleButtonHeight);
                 } else {
-                    helpButton.setBounds(ins.left, y, preferred.width, preferred.height);
+                    helpButton.setBounds(ins.left, y, preferred.width, taskToggleButtonHeight);
                 }
             }
 

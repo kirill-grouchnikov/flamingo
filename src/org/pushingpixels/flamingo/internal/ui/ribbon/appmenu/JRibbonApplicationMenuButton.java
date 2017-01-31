@@ -61,11 +61,10 @@ public class JRibbonApplicationMenuButton extends JCommandButton {
 	 */
 	public static final String uiClassID = "RibbonApplicationMenuButtonUI";
 
-	private final static CommandButtonDisplayState APP_MENU_BUTTON_STATE = new CommandButtonDisplayState(
-			"Ribbon Application Menu Button", 24) {
+	private final static CommandButtonDisplayState APP_MENU_BUTTON_STATE = 
+	        new CommandButtonDisplayState("Ribbon Application Menu Button", 24) {
 		@Override
-		public org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager createLayoutManager(
-				org.pushingpixels.flamingo.api.common.AbstractCommandButton commandButton) {
+		public CommandButtonLayoutManager createLayoutManager(AbstractCommandButton commandButton) {
 			return new CommandButtonLayoutManager() {
 				public int getPreferredIconSize() {
 					return 24;
@@ -102,8 +101,7 @@ public class JRibbonApplicationMenuButton extends JCommandButton {
 				public Point getKeyTipAnchorCenterPoint(
 						AbstractCommandButton commandButton) {
 					// dead center
-					return new Point(commandButton.getWidth() / 2,
-							commandButton.getHeight() / 2);
+					return new Point(commandButton.getWidth() / 2, commandButton.getHeight() / 2);
 				}
 			};
 		}
