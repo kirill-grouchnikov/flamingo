@@ -503,7 +503,7 @@ public class BasicCommandPopupMenuUI extends BasicPopupPanelUI {
 		this.popupMenu.removeChangeListener(this.popupMenuChangeListener);
 		this.popupMenuChangeListener = null;
 
-		PopupPanelManager.defaultManager().addPopupListener(this.popupListener);
+		PopupPanelManager.defaultManager().removePopupListener(this.popupListener);
 		this.popupListener = null;
 
 		super.uninstallListeners();

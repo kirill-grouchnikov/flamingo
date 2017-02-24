@@ -52,7 +52,7 @@
 	<property name="flamingo.drop.dir" value="${module.flamingo.basedir}/drop" />
 	<property name="flamingo.lib.dir" value="${module.flamingo.basedir}/lib" />
 	<property name="flamingo.src.dir" value="${module.flamingo.basedir}/src/" />
-	<property name="flamingo.version" value="5.1" />
+	<property name="flamingo.version" value="5.1.01" />
 	<property name="flamingo.versionKey" value="5.1final Jileen" />
 
 	<path id="flamingo.module.bootclasspath">
