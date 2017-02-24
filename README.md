@@ -23,12 +23,12 @@ The core library provides helper classes to expose a variety of navigation sourc
 
 Want to learn more? Browse the following packages:
 
-* org.pushingpixels.flamingo.bcb
-* org.pushingpixels.flamingo.bcb.core
+* `org.pushingpixels.flamingo.bcb`
+* `org.pushingpixels.flamingo.bcb.core`
 
 ### Command buttons
 
-<img src="https://raw.githubusercontent.com/kirill-grouchnikov/flamingo/master/www/images/thumbs/learn/command-button.png" width="372" height="450" border=0 align="right">
+<img src="https://raw.githubusercontent.com/kirill-grouchnikov/flamingo/master/www/images/thumbs/learn/command-button.png" width="372" height="367" border=0 align="right">
 
 The `JCommandButton` and `JCommandToggleButton` provide a broad spectrum of functionality expected from modern UI button components. A short list of features available in Flamingo command buttons includes:
 

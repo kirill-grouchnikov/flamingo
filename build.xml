@@ -74,7 +74,7 @@
 		<pathelement location="${flamingo.lib.dir}/xml-apis-ext.jar" />
 		<pathelement location="${flamingo.lib.dir}/svnkit.jar" />
 		<pathelement location="${flamingo.lib.dir}/forms-1.2.0.jar" />
-		<pathelement location="${flamingo.lib.dir}/trident.jar" />
+		<pathelement location="${flamingo.lib.dir}/trident-1.4.jar" />
 	</path>
 
 	<patternset id="excluded.from.module.flamingo" />
@@ -144,8 +144,8 @@
 
 	<target name="jar-bin" description="create runtime jar">
 		<mkdir dir="${flamingo.drop.dir}" />
-		<delete file="${flamingo.drop.dir}/flamingo.jar" />
-		<jar compress="true" destfile="${flamingo.drop.dir}/flamingo.jar">
+		<delete file="${flamingo.drop.dir}/flamingo-${flamingo.version}.jar" />
+		<jar compress="true" destfile="${flamingo.drop.dir}/flamingo-${flamingo.version}.jar">
 			<fileset dir="${flamingo.output.dir}/" excludes="test/**" />
 			<fileset dir="${module.flamingo.basedir}/" includes="resources/**" />
 			<manifest>
@@ -153,12 +153,11 @@
 				<attribute name="Flamingo-BuildStamp" value="${build.time}" />
 			</manifest>
 		</jar>
-		<copy file="${flamingo.drop.dir}/flamingo.jar" todir="${module.flamingo.basedir}/www/webstart" />
 	</target>
 
 	<target name="jar-bin-tst" description="create test runtime jar">
-		<delete file="${flamingo.drop.dir}/flamingo-tst.jar" />
-		<jar destfile="${flamingo.drop.dir}/flamingo-tst.jar">
+		<delete file="${flamingo.drop.dir}/flamingo-tst-${flamingo.version}.jar" />
+		<jar destfile="${flamingo.drop.dir}/flamingo-tst-${flamingo.version}.jar">
 			<fileset dir="${flamingo.output.dir}/">
 				<include name="test/**/*.class" />
 				<include name="test/**/*.svg*" />
@@ -171,37 +170,16 @@
 				<attribute name="Flamingo-BuildStamp" value="${build.time}" />
 			</manifest>
 		</jar>
-		<copy file="${flamingo.drop.dir}/flamingo-tst.jar" todir="${module.flamingo.basedir}/www/webstart" />
 	</target>
 
 	<target name="distro" description="create distribution">
 		<delete file="${module.flamingo.basedir}/flamingo-all.zip" />
 		<zip destfile="${module.flamingo.basedir}/flamingo-all.zip" compress="true">
 			<fileset dir="${module.flamingo.basedir}">
-				<!--
-				<include name="drop/**" />
-				<include name="docs/**" />
-				<include name="www/*.html" />
-				<include name="www/docs/**" />
-				<include name="www/images/**" />
-				<include name="www/release-info/${flamingo.version}/**.png" />
-				<include name="www/release-info/${flamingo.version}/**.htm*" />
--->
 				<include name="lib/**" />
 				<include name="src/**" />
 				<include name="build.properties" />
 				<include name="build.xml" />
-			</fileset>
-		</zip>
-	</target>
-
-	<target name="flexislider-article" description="create source zip for FlexiSlider java.net article">
-		<delete file="${module.flamingo.basedir}/flexi-slider-src.zip" />
-		<zip destfile="${module.flamingo.basedir}/flexi-slider-src.zip" compress="true">
-			<fileset dir="${module.flamingo.basedir}">
-				<include name="src/org/pushingpixels/flamingo/slider/**" />
-				<include name="src/test/slider/**" />
-				<include name="src/utest/slider/**" />
 			</fileset>
 		</zip>
 	</target>

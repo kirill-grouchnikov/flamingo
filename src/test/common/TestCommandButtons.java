@@ -30,6 +30,7 @@
 package test.common;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
@@ -53,6 +54,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
@@ -507,7 +509,7 @@ public class TestCommandButtons extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UIManager.setLookAndFeel(new MetalLookAndFeel());
+					UIManager.setLookAndFeel(new NimbusLookAndFeel());
 				} catch (Exception e) {
 				}
 				TestCommandButtons frame = new TestCommandButtons();
