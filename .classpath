@@ -17,7 +17,7 @@
 	<classpathentry kind="lib" path="lib/xerces_2_5_0.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis-ext.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
-	<classpathentry kind="lib" path="lib/trident.jar" sourcepath="/trident/src"/>
+	<classpathentry kind="lib" path="lib/trident-1.4.jar" sourcepath="/trident/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
