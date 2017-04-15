@@ -45,7 +45,7 @@ public class TOKEN_CLASSNAME implements Icon, UIResource, IsResizable, IsHiDpiAw
      * 
      * @return The X of the bounding box of the original SVG image.
      */
-    public static int getOrigX() {
+    public static double getOrigX() {
         return TOKEN_ORIG_X;
     }
 
@@ -54,7 +54,7 @@ public class TOKEN_CLASSNAME implements Icon, UIResource, IsResizable, IsHiDpiAw
      * 
      * @return The Y of the bounding box of the original SVG image.
      */
-    public static int getOrigY() {
+    public static double getOrigY() {
         return TOKEN_ORIG_Y;
     }
 
@@ -63,7 +63,7 @@ public class TOKEN_CLASSNAME implements Icon, UIResource, IsResizable, IsHiDpiAw
 	 * 
 	 * @return The width of the bounding box of the original SVG image.
 	 */
-	public static int getOrigWidth() {
+	public static double getOrigWidth() {
 		return TOKEN_ORIG_WIDTH;
 	}
 
@@ -72,7 +72,7 @@ public class TOKEN_CLASSNAME implements Icon, UIResource, IsResizable, IsHiDpiAw
 	 * 
 	 * @return The height of the bounding box of the original SVG image.
 	 */
-	public static int getOrigHeight() {
+	public static double getOrigHeight() {
 		return TOKEN_ORIG_HEIGHT;
 	}
 
@@ -90,8 +90,8 @@ public class TOKEN_CLASSNAME implements Icon, UIResource, IsResizable, IsHiDpiAw
 	 * Creates a new transcoded SVG image.
 	 */
 	public TOKEN_CLASSNAME() {
-        this.width = getOrigWidth();
-        this.height = getOrigHeight();
+        this.width = (int) getOrigWidth();
+        this.height = (int) getOrigHeight();
 	}
 
 	/*

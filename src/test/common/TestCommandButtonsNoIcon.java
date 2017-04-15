@@ -44,7 +44,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 
-import test.svg.transcoded.edit_paste;
+import test.svg.transcoded.Edit_paste;
 
 public class TestCommandButtonsNoIcon extends TestCommandButtons {
 	@Override
@@ -129,7 +129,7 @@ public class TestCommandButtonsNoIcon extends TestCommandButtons {
 						apply(TestCommandButtonsNoIcon.this, new Command() {
 							public void apply(JCommandButton button) {
 								button.setIcon(noIcon.isSelected() ? null
-										: new edit_paste());
+										: new Edit_paste());
 							};
 						});
 						TestCommandButtonsNoIcon.this.getContentPane()

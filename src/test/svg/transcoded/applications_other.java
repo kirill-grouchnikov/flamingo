@@ -1,29 +1,13 @@
 package test.svg.transcoded;
 
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.LinearGradientPaint;
-import java.awt.MultipleGradientPaint;
-import java.awt.Paint;
-import java.awt.RadialGradientPaint;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Point2D;
+import java.awt.*;
+import java.awt.geom.*;
 
 /**
  * This class has been automatically generated using <a
- * href="https://flamingo.dev.java.net">Flamingo SVG transcoder</a>.
+ * href="https://github.com/kirill-grouchnikov/flamingo">Flamingo SVG transcoder</a>.
  */
-public class applications_other implements
+public class Applications_other implements
 		org.pushingpixels.flamingo.api.common.icon.ResizableIcon {
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
@@ -230,13 +214,31 @@ g.setTransform(defaultTransform_);
 
 	}
 
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * 
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public static double getOrigX() {
+        return 0.7116683125495911;
+    }
+
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * 
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public static double getOrigY() {
+        return 2.8262746334075928;
+    }
+
 	/**
 	 * Returns the width of the bounding box of the original SVG image.
 	 * 
 	 * @return The width of the bounding box of the original SVG image.
 	 */
-	public static int getOrigWidth() {
-		return 48;
+	public static double getOrigWidth() {
+		return 47.288330078125;
 	}
 
 	/**
@@ -244,8 +246,8 @@ g.setTransform(defaultTransform_);
 	 * 
 	 * @return The height of the bounding box of the original SVG image.
 	 */
-	public static int getOrigHeight() {
-		return 46;
+	public static double getOrigHeight() {
+		return 45.17372512817383;
 	}
 
 	/**
@@ -261,9 +263,9 @@ g.setTransform(defaultTransform_);
 	/**
 	 * Creates a new transcoded SVG image.
 	 */
-	public applications_other() {
-        this.width = getOrigWidth();
-        this.height = getOrigHeight();
+	public Applications_other() {
+        this.width = (int) getOrigWidth();
+        this.height = (int) getOrigHeight();
 	}
 
 	/*
@@ -273,7 +275,7 @@ g.setTransform(defaultTransform_);
 	 */
     @Override
 	public int getIconHeight() {
-		return width;
+		return height;
 	}
 
 	/*
@@ -283,7 +285,7 @@ g.setTransform(defaultTransform_);
 	 */
     @Override
 	public int getIconWidth() {
-		return height;
+		return width;
 	}
 
 	/*
@@ -312,12 +314,23 @@ g.setTransform(defaultTransform_);
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.translate(x, y);
 
-		double coef1 = (double) this.width / (double) getOrigWidth();
-		double coef2 = (double) this.height / (double) getOrigHeight();
-		double coef = Math.min(coef1, coef2);
-		g2d.scale(coef, coef);
-		paint(g2d);
-		g2d.dispose();
+        double coef1 = (double) this.width / (double) getOrigWidth();
+        double coef2 = (double) this.height / (double) getOrigHeight();
+        double coef = Math.min(coef1, coef2);
+        g2d.clipRect(0, 0, this.width, this.height);
+        g2d.scale(coef, coef);
+        g2d.translate(-getOrigX(), -getOrigY());
+        if (coef1 != coef2) {
+            if (coef1 < coef2) {
+               int extraDy = (int) ((getOrigWidth() - getOrigHeight()) / 2.0);
+               g2d.translate(0, extraDy);
+            } else {
+               int extraDx = (int) ((getOrigHeight() - getOrigWidth()) / 2.0);
+               g2d.translate(extraDx, 0);
+            }
+        }
+        paint(g2d);
+        g2d.dispose();
 	}
 }
 

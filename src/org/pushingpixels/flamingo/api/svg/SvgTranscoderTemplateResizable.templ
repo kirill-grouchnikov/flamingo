@@ -40,7 +40,7 @@ public class TOKEN_CLASSNAME implements
      * 
      * @return The X of the bounding box of the original SVG image.
      */
-    public static int getOrigX() {
+    public static double getOrigX() {
         return TOKEN_ORIG_X;
     }
 
@@ -49,7 +49,7 @@ public class TOKEN_CLASSNAME implements
      * 
      * @return The Y of the bounding box of the original SVG image.
      */
-    public static int getOrigY() {
+    public static double getOrigY() {
         return TOKEN_ORIG_Y;
     }
 
@@ -58,7 +58,7 @@ public class TOKEN_CLASSNAME implements
 	 * 
 	 * @return The width of the bounding box of the original SVG image.
 	 */
-	public static int getOrigWidth() {
+	public static double getOrigWidth() {
 		return TOKEN_ORIG_WIDTH;
 	}
 
@@ -67,7 +67,7 @@ public class TOKEN_CLASSNAME implements
 	 * 
 	 * @return The height of the bounding box of the original SVG image.
 	 */
-	public static int getOrigHeight() {
+	public static double getOrigHeight() {
 		return TOKEN_ORIG_HEIGHT;
 	}
 
@@ -85,8 +85,8 @@ public class TOKEN_CLASSNAME implements
 	 * Creates a new transcoded SVG image.
 	 */
 	public TOKEN_CLASSNAME() {
-        this.width = getOrigWidth();
-        this.height = getOrigHeight();
+        this.width = (int) getOrigWidth();
+        this.height = (int) getOrigHeight();
 	}
 
 	/*
@@ -135,11 +135,22 @@ public class TOKEN_CLASSNAME implements
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.translate(x, y);
 
-		double coef1 = (double) this.width / (double) getOrigWidth();
-		double coef2 = (double) this.height / (double) getOrigHeight();
-		double coef = Math.min(coef1, coef2);
-		g2d.scale(coef, coef);
-		paint(g2d);
-		g2d.dispose();
+        double coef1 = (double) this.width / (double) getOrigWidth();
+        double coef2 = (double) this.height / (double) getOrigHeight();
+        double coef = Math.min(coef1, coef2);
+        g2d.clipRect(0, 0, this.width, this.height);
+        g2d.scale(coef, coef);
+        g2d.translate(-getOrigX(), -getOrigY());
+        if (coef1 != coef2) {
+            if (coef1 < coef2) {
+               int extraDy = (int) ((getOrigWidth() - getOrigHeight()) / 2.0);
+               g2d.translate(0, extraDy);
+            } else {
+               int extraDx = (int) ((getOrigHeight() - getOrigWidth()) / 2.0);
+               g2d.translate(extraDx, 0);
+            }
+        }
+        paint(g2d);
+        g2d.dispose();
 	}
 }

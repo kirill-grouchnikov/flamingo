@@ -52,8 +52,8 @@
 	<property name="flamingo.drop.dir" value="${module.flamingo.basedir}/drop" />
 	<property name="flamingo.lib.dir" value="${module.flamingo.basedir}/lib" />
 	<property name="flamingo.src.dir" value="${module.flamingo.basedir}/src/" />
-	<property name="flamingo.version" value="5.1.01" />
-	<property name="flamingo.versionKey" value="5.1final Jileen" />
+	<property name="flamingo.version" value="5.2.00" />
+	<property name="flamingo.versionKey" value="5.2dev Kennocha" />
 
 	<path id="flamingo.module.bootclasspath">
 		<!-- Paths to be included in compilation bootclasspath -->
@@ -143,9 +143,9 @@
 	</target>
 
 	<target name="jar-bin" description="create runtime jar">
-		<mkdir dir="${flamingo.drop.dir}" />
-		<delete file="${flamingo.drop.dir}/flamingo-${flamingo.version}.jar" />
-		<jar compress="true" destfile="${flamingo.drop.dir}/flamingo-${flamingo.version}.jar">
+		<mkdir dir="${flamingo.drop.dir}/${flamingo.version}" />
+		<delete file="${flamingo.drop.dir}/${flamingo.version}/flamingo-${flamingo.version}.jar" />
+		<jar compress="true" destfile="${flamingo.drop.dir}/${flamingo.version}/flamingo-${flamingo.version}.jar">
 			<fileset dir="${flamingo.output.dir}/" excludes="test/**" />
 			<fileset dir="${module.flamingo.basedir}/" includes="resources/**" />
 			<manifest>
@@ -156,8 +156,8 @@
 	</target>
 
 	<target name="jar-bin-tst" description="create test runtime jar">
-		<delete file="${flamingo.drop.dir}/flamingo-tst-${flamingo.version}.jar" />
-		<jar destfile="${flamingo.drop.dir}/flamingo-tst-${flamingo.version}.jar">
+		<delete file="${flamingo.drop.dir}/${flamingo.version}/flamingo-tst-${flamingo.version}.jar" />
+		<jar destfile="${flamingo.drop.dir}/${flamingo.version}/flamingo-tst-${flamingo.version}.jar">
 			<fileset dir="${flamingo.output.dir}/">
 				<include name="test/**/*.class" />
 				<include name="test/**/*.svg*" />

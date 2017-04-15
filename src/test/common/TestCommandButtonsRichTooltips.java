@@ -43,7 +43,8 @@ import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 
 import test.ribbon.help_browser;
-import test.svg.transcoded.address_book_new;
+import test.svg.transcoded.Address_book_new;
+import test.svg.transcoded.Help_browser;
 
 public class TestCommandButtonsRichTooltips extends TestCommandButtons {
 
@@ -59,8 +60,8 @@ public class TestCommandButtonsRichTooltips extends TestCommandButtons {
 						.getString("Tooltip.textParagraph1"));
 				actionRichTooltip.addDescriptionSection(resourceBundle
 						.getString("Tooltip.textParagraph2"));
-				actionRichTooltip.setMainImage(new address_book_new(), new Dimension(32, 32));
-				actionRichTooltip.setFooterIcon(new help_browser());
+				actionRichTooltip.setMainImage(new Address_book_new(), new Dimension(32, 32));
+				actionRichTooltip.setFooterIcon(new Help_browser());
 				actionRichTooltip.addFooterSection(resourceBundle
 						.getString("Tooltip.textFooterParagraph1"));
 

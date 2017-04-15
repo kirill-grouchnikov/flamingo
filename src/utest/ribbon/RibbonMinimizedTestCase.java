@@ -46,10 +46,10 @@ import org.pushingpixels.flamingo.internal.utils.RenderingUtils;
 
 import junit.framework.TestCase;
 import test.common.SamplePopupMenu;
-import test.svg.transcoded.edit_copy;
-import test.svg.transcoded.edit_cut;
-import test.svg.transcoded.edit_paste;
-import test.svg.transcoded.font_x_generic;
+import test.svg.transcoded.Edit_copy;
+import test.svg.transcoded.Edit_cut;
+import test.svg.transcoded.Edit_paste;
+import test.svg.transcoded.Font_x_generic;
 
 public class RibbonMinimizedTestCase extends TestCase {
 	private JRibbonFrame ribbonFrame;
@@ -65,7 +65,7 @@ public class RibbonMinimizedTestCase extends TestCase {
 				this.addButtonGroup(iconGroupName, groupIndex);
 				for (int i = 0; i < 15; i++) {
 					final int index = i;
-					ResizableIcon fontIcon = new font_x_generic();
+					ResizableIcon fontIcon = new Font_x_generic();
 					ResizableIcon finalIcon = new DecoratedResizableIcon(
 							fontIcon,
 							new DecoratedResizableIcon.IconDecorator() {
@@ -103,11 +103,11 @@ public class RibbonMinimizedTestCase extends TestCase {
 
 	private JRibbonBand getClipboardBand() {
 		JRibbonBand clipboardBand = new JRibbonBand("Clipboard",
-				new edit_paste());
+				new Edit_paste());
 		clipboardBand.setExpandButtonKeyTip("FO");
 
 		JCommandButton mainButton = new JCommandButton("Paste",
-				new edit_paste());
+				new Edit_paste());
 		mainButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Pasted!");
@@ -137,7 +137,7 @@ public class RibbonMinimizedTestCase extends TestCase {
 
 		clipboardBand.addCommandButton(mainButton, RibbonElementPriority.TOP);
 
-		JCommandButton cutButton = new JCommandButton("Cut", new edit_cut());
+		JCommandButton cutButton = new JCommandButton("Cut", new Edit_cut());
 		cutButton.setPopupCallback(new PopupPanelCallback() {
 			@Override
 			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
@@ -156,7 +156,7 @@ public class RibbonMinimizedTestCase extends TestCase {
 
 		clipboardBand.addCommandButton(cutButton, RibbonElementPriority.MEDIUM);
 
-		JCommandButton copyButton = new JCommandButton("Copy", new edit_copy());
+		JCommandButton copyButton = new JCommandButton("Copy", new Edit_copy());
 		copyButton.setPopupCallback(new PopupPanelCallback() {
 			@Override
 			public JPopupPanel getPopupPanel(JCommandButton commandButton) {
@@ -172,7 +172,7 @@ public class RibbonMinimizedTestCase extends TestCase {
 				.addCommandButton(copyButton, RibbonElementPriority.MEDIUM);
 
 		JCommandButton formatButton = new JCommandButton("Format",
-				new edit_paste());
+				new Edit_paste());
 		formatButton.setPopupCallback(new PopupPanelCallback() {
 			@Override
 			public JPopupPanel getPopupPanel(JCommandButton commandButton) {

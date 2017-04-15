@@ -221,7 +221,7 @@ abstract class SvgBatikIcon extends UserAgentAdapter implements Icon {
 		BufferedImage image = this.cachedImages.get(this.getIconWidth() + ":"
 				+ this.getIconHeight());
 		if (image != null) {
-			int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+			int scaleFactor = UIUtil.getScaleFactor();
 			int dx = (this.width - image.getWidth() / scaleFactor) / 2;
 			int dy = (this.height - image.getHeight() / scaleFactor) / 2;
 			g.drawImage(image, x + dx, y + dy, image.getWidth() / scaleFactor,
@@ -300,7 +300,7 @@ abstract class SvgBatikIcon extends UserAgentAdapter implements Icon {
 					fireEvent(startedDispatcher, ev);
 
 					BufferedImageTranscoder t = 
-							new BufferedImageTranscoder(UIUtil.isRetina() ? 2 : 1);
+							new BufferedImageTranscoder(UIUtil.getScaleFactor());
 					if (renderWidth != 0 && renderHeight != 0) {
 						t.setDimensions(renderWidth, renderHeight);
 					}

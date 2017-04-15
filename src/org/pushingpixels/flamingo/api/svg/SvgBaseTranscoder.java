@@ -211,14 +211,14 @@ abstract class SvgBaseTranscoder {
 
 		Rectangle2D bounds = gvtRoot.getBounds();
 
-		templateString = templateString.replaceAll(TOKEN_ORIG_X, ""
-				+ (int) Math.ceil(bounds.getX()));
-		templateString = templateString.replaceAll(TOKEN_ORIG_Y, ""
-				+ (int) Math.ceil(bounds.getY()));
-		templateString = templateString.replaceAll(TOKEN_ORIG_WIDTH, ""
-				+ (int) Math.ceil(bounds.getWidth()));
-		templateString = templateString.replaceAll(TOKEN_ORIG_HEIGHT, ""
-				+ (int) Math.ceil(bounds.getHeight()));
+		templateString = templateString.replaceAll(TOKEN_ORIG_X, "" + bounds.getX());
+				//+ (int) Math.ceil(bounds.getX()));
+		templateString = templateString.replaceAll(TOKEN_ORIG_Y, "" + bounds.getY());
+				//+ (int) Math.ceil(bounds.getY()));
+		templateString = templateString.replaceAll(TOKEN_ORIG_WIDTH, "" + bounds.getWidth());
+				//+ (int) Math.ceil(bounds.getWidth()));
+		templateString = templateString.replaceAll(TOKEN_ORIG_HEIGHT, "" + bounds.getHeight());
+				//+ (int) Math.ceil(bounds.getHeight()));
 
 		this.externalPrintWriter.println(templateString);
 		this.externalPrintWriter.close();

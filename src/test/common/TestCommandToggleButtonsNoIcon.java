@@ -44,7 +44,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 
-import test.svg.transcoded.edit_paste;
+import test.svg.transcoded.Edit_paste;
 
 public class TestCommandToggleButtonsNoIcon extends TestCommandToggleButtons {
 	@Override
@@ -80,7 +80,7 @@ public class TestCommandToggleButtonsNoIcon extends TestCommandToggleButtons {
 											JCommandToggleButton button) {
 										button
 												.setIcon(noIcon.isSelected() ? null
-														: new edit_paste());
+														: new Edit_paste());
 									};
 								});
 						TestCommandToggleButtonsNoIcon.this.getContentPane()

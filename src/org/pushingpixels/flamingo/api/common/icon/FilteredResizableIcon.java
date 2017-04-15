@@ -140,7 +140,7 @@ public class FilteredResizableIcon implements ResizableIcon {
 			BufferedImage filtered = this.operation.filter(offscreen, null);
 			this.cachedImages.put(key, filtered);
 		}
-		int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+		int scaleFactor = UIUtil.getScaleFactor();
 		BufferedImage toDraw = this.cachedImages.get(key);
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);

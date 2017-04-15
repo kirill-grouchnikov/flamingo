@@ -61,7 +61,7 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 import test.common.LocaleSwitcher.LocaleCallback;
-import test.svg.transcoded.edit_paste;
+import test.svg.transcoded.Edit_paste;
 
 public class TestCommandToggleButtons extends JFrame {
 	protected ResourceBundle resourceBundle;
@@ -127,8 +127,8 @@ public class TestCommandToggleButtons extends JFrame {
 	protected JCommandToggleButton createToggleButton(
 			CommandButtonDisplayState state, String title) {
 		final JCommandToggleButton mainButton = new JCommandToggleButton(title,
-				new edit_paste());
-		mainButton.setDisabledIcon(new FilteredResizableIcon(new edit_paste(),
+				new Edit_paste());
+		mainButton.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
 				new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
 						null)));
 		mainButton

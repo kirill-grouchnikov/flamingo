@@ -15,14 +15,14 @@ import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.JCommandToggleMenuButton;
 import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
 
-import test.svg.transcoded.format_justify_center;
-import test.svg.transcoded.format_justify_fill;
-import test.svg.transcoded.format_justify_left;
-import test.svg.transcoded.format_justify_right;
-import test.svg.transcoded.format_text_bold;
-import test.svg.transcoded.format_text_italic;
-import test.svg.transcoded.format_text_strikethrough;
-import test.svg.transcoded.format_text_underline;
+import test.svg.transcoded.Format_justify_center;
+import test.svg.transcoded.Format_justify_fill;
+import test.svg.transcoded.Format_justify_left;
+import test.svg.transcoded.Format_justify_right;
+import test.svg.transcoded.Format_text_bold;
+import test.svg.transcoded.Format_text_italic;
+import test.svg.transcoded.Format_text_strikethrough;
+import test.svg.transcoded.Format_text_underline;
 
 public class TestToggleMenuButtons extends JFrame {
 	public TestToggleMenuButtons() {
@@ -32,13 +32,13 @@ public class TestToggleMenuButtons extends JFrame {
 		singleChoice.setFlat(false);
 
 		final JCommandToggleMenuButton b11 = new JCommandToggleMenuButton(
-				"left", new format_justify_left());
+				"left", new Format_justify_left());
 		final JCommandToggleMenuButton b12 = new JCommandToggleMenuButton(
-				"center", new format_justify_center());
+				"center", new Format_justify_center());
 		final JCommandToggleMenuButton b13 = new JCommandToggleMenuButton(
-				"right", new format_justify_right());
+				"right", new Format_justify_right());
 		final JCommandToggleMenuButton b14 = new JCommandToggleMenuButton(
-				"fill", new format_justify_fill());
+				"fill", new Format_justify_fill());
 
 		CommandToggleButtonGroup group = new CommandToggleButtonGroup();
 		group.add(b11);
@@ -63,13 +63,13 @@ public class TestToggleMenuButtons extends JFrame {
 		multiChoice.setFlat(false);
 
 		final JCommandToggleMenuButton b21 = new JCommandToggleMenuButton(
-				"bold", new format_text_bold());
+				"bold", new Format_text_bold());
 		final JCommandToggleMenuButton b22 = new JCommandToggleMenuButton(
-				"italic", new format_text_italic());
+				"italic", new Format_text_italic());
 		final JCommandToggleMenuButton b23 = new JCommandToggleMenuButton(
-				"underline", new format_text_underline());
+				"underline", new Format_text_underline());
 		final JCommandToggleMenuButton b24 = new JCommandToggleMenuButton(
-				"strike", new format_text_strikethrough());
+				"strike", new Format_text_strikethrough());
 
 		multiChoice.setPopupCallback((JCommandButton commandButton) -> {
 			JCommandPopupMenu result = new JCommandPopupMenu();

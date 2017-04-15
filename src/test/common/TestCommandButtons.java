@@ -30,7 +30,6 @@
 package test.common;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
@@ -53,7 +52,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
@@ -71,12 +69,12 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 import test.common.LocaleSwitcher.LocaleCallback;
-import test.svg.transcoded.address_book_new;
-import test.svg.transcoded.edit_copy;
-import test.svg.transcoded.edit_cut;
-import test.svg.transcoded.edit_paste;
-import test.svg.transcoded.text_x_generic;
-import test.svg.transcoded.x_office_document;
+import test.svg.transcoded.Address_book_new;
+import test.svg.transcoded.Edit_copy;
+import test.svg.transcoded.Edit_cut;
+import test.svg.transcoded.Edit_paste;
+import test.svg.transcoded.Text_x_generic;
+import test.svg.transcoded.X_office_document;
 
 public class TestCommandButtons extends JFrame {
 	private enum PopupKind {
@@ -154,7 +152,7 @@ public class TestCommandButtons extends JFrame {
 				JCommandPopupMenu simpleMenu = new JCommandPopupMenu();
 
 				simpleMenu.addMenuButton(new JCommandMenuButton(mf
-						.format(new Object[] { "1" }), new address_book_new()));
+						.format(new Object[] { "1" }), new Address_book_new()));
 				simpleMenu.addMenuButton(new JCommandMenuButton(mf
 						.format(new Object[] { "2" }), new EmptyResizableIcon(
 						16)));
@@ -166,14 +164,14 @@ public class TestCommandButtons extends JFrame {
 						.format(new Object[] { "4" }), new EmptyResizableIcon(
 						16)));
 				simpleMenu.addMenuButton(new JCommandMenuButton(mf
-						.format(new Object[] { "5" }), new text_x_generic()));
+						.format(new Object[] { "5" }), new Text_x_generic()));
 				return simpleMenu;
 			case SCROLLABLE:
 				JCommandPopupMenu scrollableMenu = new JCommandPopupMenu();
 
 				for (int i = 0; i < 20; i++) {
 					final JCommandMenuButton smb = new JCommandMenuButton(mf
-							.format(new Object[] { i }), new text_x_generic());
+							.format(new Object[] { i }), new Text_x_generic());
 					smb.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -191,7 +189,7 @@ public class TestCommandButtons extends JFrame {
 						new QuickStylesPanel(resourceBundle, currLocale), 5, 3);
 				complexMenu.addMenuButton(new JCommandMenuButton(resourceBundle
 						.getString("SaveSelection.text"),
-						new x_office_document()));
+						new X_office_document()));
 				complexMenu.addMenuButton(new JCommandMenuButton(resourceBundle
 						.getString("ClearSelection.text"),
 						new EmptyResizableIcon(16)));
@@ -224,7 +222,7 @@ public class TestCommandButtons extends JFrame {
 
 	protected JCommandButton createPopupButton(CommandButtonDisplayState state) {
 		JCommandButton popupButton = new JCommandButton(resourceBundle
-				.getString("SelectAll.text"), new edit_paste());
+				.getString("SelectAll.text"), new Edit_paste());
 		popupButton.setExtraText(resourceBundle
 				.getString("SelectAll.textExtra"));
 		popupButton.setPopupCallback(new TestPopupCallback());
@@ -238,7 +236,7 @@ public class TestCommandButtons extends JFrame {
 	protected JCommandButton createActionAndPopupMainPopupButton(
 			CommandButtonDisplayState state) {
 		JCommandButton copyButton = new JCommandButton(resourceBundle
-				.getString("Copy.text"), new edit_copy());
+				.getString("Copy.text"), new Edit_copy());
 		copyButton.setExtraText(resourceBundle.getString("Copy.textExtra"));
 		copyButton.setPopupCallback(new TestPopupCallback());
 		copyButton
@@ -256,7 +254,7 @@ public class TestCommandButtons extends JFrame {
 	protected JCommandButton createActionAndPopupMainActionButton(
 			CommandButtonDisplayState state) {
 		JCommandButton cutButton = new JCommandButton(resourceBundle
-				.getString("Cut.text"), new edit_cut());
+				.getString("Cut.text"), new Edit_cut());
 		cutButton.setExtraText(resourceBundle.getString("Cut.textExtra"));
 		cutButton.setPopupCallback(new TestPopupCallback());
 		cutButton
@@ -273,8 +271,8 @@ public class TestCommandButtons extends JFrame {
 
 	protected JCommandButton createActionButton(CommandButtonDisplayState state) {
 		JCommandButton mainButton = new JCommandButton(resourceBundle
-				.getString("Paste.text"), new edit_paste());
-		mainButton.setDisabledIcon(new FilteredResizableIcon(new edit_paste(),
+				.getString("Paste.text"), new Edit_paste());
+		mainButton.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
 				new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
 						null)));
 		mainButton.setExtraText(resourceBundle.getString("Paste.textExtra"));

@@ -19,7 +19,7 @@ import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
-import test.svg.transcoded.edit_paste;
+import test.svg.transcoded.Edit_paste;
 
 /**
  * This class tests computation of action click and popup click areas of command
@@ -34,7 +34,7 @@ public class CommandButtonClickAreasTestCase extends FestSwingJUnitTestCase {
 	@Override
 	@Before
 	public void onSetUp() {
-		final ResizableIcon icon1 = new edit_paste();
+		final ResizableIcon icon1 = new Edit_paste();
 
 		GuiActionRunner.execute(new GuiTask() {
 			@Override

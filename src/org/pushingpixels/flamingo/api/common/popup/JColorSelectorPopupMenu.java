@@ -39,14 +39,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.JCommandToggleMenuButton;
+import org.pushingpixels.flamingo.internal.ui.common.popup.BasicColorSelectorPopupMenuUI;
 import org.pushingpixels.flamingo.internal.ui.common.popup.JColorSelectorComponent;
 import org.pushingpixels.flamingo.internal.ui.common.popup.JColorSelectorPanel;
+import org.pushingpixels.flamingo.internal.ui.common.popup.PopupPanelUI;
 
 public class JColorSelectorPopupMenu extends JCommandPopupMenu {
-	private ColorSelectorCallback colorSelectorCallback;
+    /**
+     * @see #getUIClassID
+     */
+    public static final String uiClassID = "ColorSelectorPopupMenuUI";
+
+    private ColorSelectorCallback colorSelectorCallback;
 
 	private JColorSelectorPanel lastColorSelectorPanel;
 
@@ -62,11 +70,25 @@ public class JColorSelectorPopupMenu extends JCommandPopupMenu {
 		this.colorSelectorCallback = colorSelectorCallback;
 	}
 
+    @Override
+    public String getUIClassID() {
+        return uiClassID;
+    }
+
+    @Override
+    public void updateUI() {
+        if (UIManager.get(getUIClassID()) != null) {
+            setUI((PopupPanelUI) UIManager.getUI(this));
+        } else {
+            setUI(BasicColorSelectorPopupMenuUI.createUI(this));
+        }
+    }
+
 	public void addColorSectionWithDerived(String label, Color[] primaryColors) {
 		if ((primaryColors == null) || (primaryColors.length != 10)) {
 			throw new IllegalArgumentException("Must pass exactly 10 colors");
 		}
-		JPanel selectorContainer = new MultiRowSelector(primaryColors);
+		JPanel selectorContainer = new MultiRowSelector(this, primaryColors);
 		JColorSelectorPanel selector = new JColorSelectorPanel(label,
 				selectorContainer);
 		this.addMenuPanel(selector);
@@ -78,7 +100,7 @@ public class JColorSelectorPopupMenu extends JCommandPopupMenu {
 		if ((primaryColors == null) || (primaryColors.length != 10)) {
 			throw new IllegalArgumentException("Must pass exactly 10 colors");
 		}
-		JPanel selectorContainer = new SingleRowSelector(primaryColors);
+		JPanel selectorContainer = new SingleRowSelector(this, primaryColors);
 		JColorSelectorPanel selector = new JColorSelectorPanel(label,
 				selectorContainer);
 		this.addMenuPanel(selector);
@@ -86,7 +108,7 @@ public class JColorSelectorPopupMenu extends JCommandPopupMenu {
 	}
 
 	public void addRecentSection(String label) {
-		JPanel recent = new SingleRowSelector(recentlySelected
+		JPanel recent = new SingleRowSelector(this, recentlySelected
 				.toArray(new Color[0]));
 		JColorSelectorPanel recentPanel = new JColorSelectorPanel(label, recent);
 		recentPanel.setLastPanel(true);
@@ -156,7 +178,8 @@ public class JColorSelectorPopupMenu extends JCommandPopupMenu {
 	}
 
 	private class SingleRowSelector extends JPanel {
-		public SingleRowSelector(final Color... colors) {
+		public SingleRowSelector(final JColorSelectorPopupMenu colorSelectorPopupMenu, 
+		        final Color... colors) {
 			final JColorSelectorComponent[] comps = new JColorSelectorComponent[colors.length];
 			for (int i = 0; i < colors.length; i++) {
 				comps[i] = new JColorSelectorComponent(colors[i],
@@ -181,16 +204,20 @@ public class JColorSelectorPopupMenu extends JCommandPopupMenu {
 
 				@Override
 				public Dimension preferredLayoutSize(Container parent) {
-					int gap = getGap();
-					int size = getSize();
+                    BasicColorSelectorPopupMenuUI ui = 
+                            (BasicColorSelectorPopupMenuUI) colorSelectorPopupMenu.getUI();
+                    int gap = ui.getColorSelectorCellGap();
+                    int size = ui.getColorSelectorCellSize();
 					return new Dimension(colors.length * size
 							+ (colors.length + 1) * gap, size + 2 * gap);
 				}
 
 				@Override
 				public void layoutContainer(Container parent) {
-					int gap = getGap();
-					int size = getSize();
+                    BasicColorSelectorPopupMenuUI ui = 
+                            (BasicColorSelectorPopupMenuUI) colorSelectorPopupMenu.getUI();
+                    int gap = ui.getColorSelectorCellGap();
+                    int size = ui.getColorSelectorCellSize();
 
 					if (parent.getComponentOrientation().isLeftToRight()) {
 						int x = gap;
@@ -208,22 +235,15 @@ public class JColorSelectorPopupMenu extends JCommandPopupMenu {
 						}
 					}
 				}
-
-				private int getGap() {
-					return 4;
-				}
-
-				private int getSize() {
-					return 13;
-				}
 			});
 		}
 	}
 
 	private class MultiRowSelector extends JPanel {
-		static final int SECONDARY_ROWS = 5;
+        private static final int SECONDARY_ROWS = 5;
 
-		public MultiRowSelector(final Color... colors) {
+        public MultiRowSelector(final JColorSelectorPopupMenu colorSelectorPopupMenu, 
+                final Color... colors) {
 			final JColorSelectorComponent[][] comps = new JColorSelectorComponent[colors.length][1 + SECONDARY_ROWS];
 			for (int i = 0; i < colors.length; i++) {
 				Color primary = colors[i];
@@ -279,8 +299,10 @@ public class JColorSelectorPopupMenu extends JCommandPopupMenu {
 
 				@Override
 				public Dimension preferredLayoutSize(Container parent) {
-					int gap = getGap();
-					int size = getSize();
+                    BasicColorSelectorPopupMenuUI ui = 
+                            (BasicColorSelectorPopupMenuUI) colorSelectorPopupMenu.getUI();
+					int gap = ui.getColorSelectorCellGap();
+					int size = ui.getColorSelectorCellSize();
 					return new Dimension(colors.length * size
 							+ (colors.length + 1) * gap, gap + size + gap
 							+ SECONDARY_ROWS * size + gap);
@@ -288,8 +310,10 @@ public class JColorSelectorPopupMenu extends JCommandPopupMenu {
 
 				@Override
 				public void layoutContainer(Container parent) {
-					int gap = getGap();
-					int size = getSize();
+                    BasicColorSelectorPopupMenuUI ui = 
+                            (BasicColorSelectorPopupMenuUI) colorSelectorPopupMenu.getUI();
+                    int gap = ui.getColorSelectorCellGap();
+                    int size = ui.getColorSelectorCellSize();
 
 					if (parent.getComponentOrientation().isLeftToRight()) {
 						int y = gap;
@@ -320,14 +344,6 @@ public class JColorSelectorPopupMenu extends JCommandPopupMenu {
 							}
 						}
 					}
-				}
-
-				private int getGap() {
-					return 4;
-				}
-
-				private int getSize() {
-					return 13;
 				}
 			});
 		}

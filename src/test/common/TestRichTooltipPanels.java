@@ -10,7 +10,7 @@ import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.internal.ui.common.JRichTooltipPanel;
 
 import test.ribbon.help_browser;
-import test.svg.transcoded.address_book_new;
+import test.svg.transcoded.Address_book_new;
 
 public class TestRichTooltipPanels extends JFrame {
 	public TestRichTooltipPanels() {
@@ -20,7 +20,7 @@ public class TestRichTooltipPanels extends JFrame {
 				"Simple description that can go over multiple lines of text even exceeding the bigger");
 		rt.addDescriptionSection(
 				"Second paragraph that can be multiline as well to test this feature");
-		rt.setMainImage(new address_book_new(), new Dimension(32, 32));
+		rt.setMainImage(new Address_book_new(), new Dimension(32, 32));
 		rt.setFooterIcon(new help_browser());
 		rt.addFooterSection(
 				"Multiline footer description to provide a little bit more information on this subject");

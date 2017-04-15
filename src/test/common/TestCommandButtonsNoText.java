@@ -47,16 +47,16 @@ import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.icon.FilteredResizableIcon;
 
-import test.svg.transcoded.edit_copy;
-import test.svg.transcoded.edit_cut;
-import test.svg.transcoded.edit_paste;
-import test.svg.transcoded.edit_select_all;
+import test.svg.transcoded.Edit_copy;
+import test.svg.transcoded.Edit_cut;
+import test.svg.transcoded.Edit_paste;
+import test.svg.transcoded.Edit_select_all;
 
 public class TestCommandButtonsNoText extends TestCommandButtons {
 	@Override
 	protected JCommandButton createActionButton(CommandButtonDisplayState state) {
-		JCommandButton result = new JCommandButton(new edit_paste());
-		result.setDisabledIcon(new FilteredResizableIcon(new edit_paste(),
+		JCommandButton result = new JCommandButton(new Edit_paste());
+		result.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
 				new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
 						null)));
 		result.addActionListener(new ActionListener() {
@@ -74,7 +74,7 @@ public class TestCommandButtonsNoText extends TestCommandButtons {
 	@Override
 	protected JCommandButton createActionAndPopupMainActionButton(
 			CommandButtonDisplayState state) {
-		JCommandButton result = new JCommandButton(new edit_cut());
+		JCommandButton result = new JCommandButton(new Edit_cut());
 		result.setPopupCallback(new TestPopupCallback());
 		result
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
@@ -91,7 +91,7 @@ public class TestCommandButtonsNoText extends TestCommandButtons {
 	@Override
 	protected JCommandButton createActionAndPopupMainPopupButton(
 			CommandButtonDisplayState state) {
-		JCommandButton result = new JCommandButton(new edit_copy());
+		JCommandButton result = new JCommandButton(new Edit_copy());
 		result.setPopupCallback(new TestPopupCallback());
 		result
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
@@ -107,7 +107,7 @@ public class TestCommandButtonsNoText extends TestCommandButtons {
 
 	@Override
 	protected JCommandButton createPopupButton(CommandButtonDisplayState state) {
-		JCommandButton result = new JCommandButton(new edit_select_all());
+		JCommandButton result = new JCommandButton(new Edit_select_all());
 		result.setPopupCallback(new TestPopupCallback());
 		result
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);

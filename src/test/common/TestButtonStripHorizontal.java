@@ -22,13 +22,13 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 import test.common.LocaleSwitcher.LocaleCallback;
-import test.svg.transcoded.format_justify_center;
-import test.svg.transcoded.format_justify_left;
-import test.svg.transcoded.format_justify_right;
-import test.svg.transcoded.format_text_bold;
-import test.svg.transcoded.format_text_italic;
-import test.svg.transcoded.format_text_strikethrough;
-import test.svg.transcoded.format_text_underline;
+import test.svg.transcoded.Format_justify_center;
+import test.svg.transcoded.Format_justify_left;
+import test.svg.transcoded.Format_justify_right;
+import test.svg.transcoded.Format_text_bold;
+import test.svg.transcoded.Format_text_italic;
+import test.svg.transcoded.Format_text_strikethrough;
+import test.svg.transcoded.Format_text_underline;
 
 public class TestButtonStripHorizontal extends JFrame {
 	protected Locale currLocale;
@@ -93,9 +93,9 @@ public class TestButtonStripHorizontal extends JFrame {
 		JCommandButtonStrip buttonStrip = new JCommandButtonStrip();
 		buttonStrip.setHGapScaleFactor(hgapScaleFactor);
 		buttonStrip.setVGapScaleFactor(vgapScaleFactor);
-		buttonStrip.add(new JCommandButton("", new format_justify_left()));
-		buttonStrip.add(new JCommandButton("", new format_justify_center()));
-		buttonStrip.add(new JCommandButton("", new format_justify_right()));
+		buttonStrip.add(new JCommandButton("", new Format_justify_left()));
+		buttonStrip.add(new JCommandButton("", new Format_justify_center()));
+		buttonStrip.add(new JCommandButton("", new Format_justify_right()));
 		return buttonStrip;
 	}
 
@@ -104,11 +104,11 @@ public class TestButtonStripHorizontal extends JFrame {
 		JCommandButtonStrip buttonStrip2 = new JCommandButtonStrip();
 		buttonStrip2.setHGapScaleFactor(hgapScaleFactor);
 		buttonStrip2.setVGapScaleFactor(vgapScaleFactor);
-		buttonStrip2.add(new JCommandButton("", new format_text_bold()));
-		buttonStrip2.add(new JCommandButton("", new format_text_italic()));
-		buttonStrip2.add(new JCommandButton("", new format_text_underline()));
+		buttonStrip2.add(new JCommandButton("", new Format_text_bold()));
+		buttonStrip2.add(new JCommandButton("", new Format_text_italic()));
+		buttonStrip2.add(new JCommandButton("", new Format_text_underline()));
 		JCommandButton strike = new JCommandButton("",
-				new format_text_strikethrough());
+				new Format_text_strikethrough());
 		strike
 				.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
 		strike.setPopupCallback(new PopupPanelCallback() {

@@ -27,9 +27,9 @@ import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
 import org.pushingpixels.flamingo.internal.ui.ribbon.BasicRibbonBandUI;
 
-import test.svg.transcoded.edit_copy;
-import test.svg.transcoded.edit_cut;
-import test.svg.transcoded.edit_paste;
+import test.svg.transcoded.Edit_copy;
+import test.svg.transcoded.Edit_cut;
+import test.svg.transcoded.Edit_paste;
 
 public class RibbonBandExpandActionListenerTestCase extends
 		FestSwingJUnitTestCase {
@@ -58,27 +58,27 @@ public class RibbonBandExpandActionListenerTestCase extends
 	private static JRibbonBand getSampleRibbonBand(
 			ActionListener expandActionListener) {
 		JRibbonBand clipboardBand = new JRibbonBand("Clipboard",
-				new edit_paste(), expandActionListener);
+				new Edit_paste(), expandActionListener);
 
 		JCommandButton mainButton = new JCommandButton("Paste",
-				new edit_paste());
+				new Edit_paste());
 		mainButton
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
 		clipboardBand.addCommandButton(mainButton, RibbonElementPriority.TOP);
 
-		JCommandButton cutButton = new JCommandButton("Cut", new edit_cut());
+		JCommandButton cutButton = new JCommandButton("Cut", new Edit_cut());
 		cutButton
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
 		clipboardBand.addCommandButton(cutButton, RibbonElementPriority.MEDIUM);
 
-		JCommandButton copyButton = new JCommandButton("Copy", new edit_copy());
+		JCommandButton copyButton = new JCommandButton("Copy", new Edit_copy());
 		copyButton
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
 		clipboardBand
 				.addCommandButton(copyButton, RibbonElementPriority.MEDIUM);
 
 		JCommandButton formatButton = new JCommandButton("Format",
-				new edit_paste());
+				new Edit_paste());
 		formatButton
 				.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
 		clipboardBand.addCommandButton(formatButton,

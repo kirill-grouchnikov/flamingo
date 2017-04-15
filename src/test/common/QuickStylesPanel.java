@@ -18,7 +18,7 @@ import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.DecoratedResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
-import test.svg.transcoded.font_x_generic;
+import test.svg.transcoded.Font_x_generic;
 
 public class QuickStylesPanel extends JCommandButtonPanel {
 	public QuickStylesPanel(ResourceBundle resourceBundle, Locale locale) {
@@ -33,7 +33,7 @@ public class QuickStylesPanel extends JCommandButtonPanel {
 			this.addButtonGroup(iconGroupName, groupIndex);
 			for (int i = 0; i < 15; i++) {
 				final String deco = groupIndex + "/" + i;
-				ResizableIcon fontIcon = new font_x_generic();
+				ResizableIcon fontIcon = new Font_x_generic();
 				ResizableIcon finalIcon = new DecoratedResizableIcon(fontIcon,
 						new DecoratedResizableIcon.IconDecorator() {
 							@Override

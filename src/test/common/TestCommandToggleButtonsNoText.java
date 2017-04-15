@@ -47,15 +47,15 @@ import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.FilteredResizableIcon;
 
-import test.svg.transcoded.edit_paste;
+import test.svg.transcoded.Edit_paste;
 
 public class TestCommandToggleButtonsNoText extends TestCommandToggleButtons {
 	@Override
 	protected JCommandToggleButton createToggleButton(
 			CommandButtonDisplayState state, String title) {
 		JCommandToggleButton mainButton = new JCommandToggleButton(
-				new edit_paste());
-		mainButton.setDisabledIcon(new FilteredResizableIcon(new edit_paste(),
+				new Edit_paste());
+		mainButton.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
 				new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
 						null)));
 		mainButton.addActionListener(new ActionListener() {
