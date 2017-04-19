@@ -30,6 +30,7 @@
 package org.pushingpixels.flamingo.internal.ui.ribbon;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
@@ -147,6 +148,12 @@ abstract class AbstractBandControlPanelUI extends BandControlPanelUI {
 				new BorderUIResource.EmptyBorderUIResource(1, 2, 1, 2);
 			this.controlPanel.setBorder(toSet);
 		}
+		
+		Font font = this.controlPanel.getFont();
+        if (font == null || font instanceof UIResource) {
+            Font toSet = UIManager.getFont("Panel.font");
+            this.controlPanel.setFont(toSet);
+        }
 	}
 
 	/**
@@ -197,6 +204,6 @@ abstract class AbstractBandControlPanelUI extends BandControlPanelUI {
 
 	@Override
 	public int getLayoutGap() {
-		return 4;
+		return FlamingoUtilities.getScaledSize(4, controlPanel.getFont().getSize(), 0.25, 1);
 	}
 }

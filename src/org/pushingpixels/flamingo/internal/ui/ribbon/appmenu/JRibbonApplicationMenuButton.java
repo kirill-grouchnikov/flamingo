@@ -46,6 +46,7 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
 import org.pushingpixels.flamingo.internal.ui.common.BasicCommandButtonUI;
+import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
 /**
  * The main application menu button for {@link JRibbon} component placed in a
@@ -66,8 +67,9 @@ public class JRibbonApplicationMenuButton extends JCommandButton {
 		@Override
 		public CommandButtonLayoutManager createLayoutManager(AbstractCommandButton commandButton) {
 			return new CommandButtonLayoutManager() {
-				public int getPreferredIconSize() {
-					return 24;
+				public int getPreferredIconSize(AbstractCommandButton commandButton) {
+			        return FlamingoUtilities.getScaledSize(24, commandButton.getFont().getSize(), 
+			                1.5, 4);
 				}
 
 				@Override

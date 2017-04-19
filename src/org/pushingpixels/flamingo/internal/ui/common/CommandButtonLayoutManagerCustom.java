@@ -47,7 +47,7 @@ public class CommandButtonLayoutManagerCustom extends
 	}
 
 	@Override
-	public int getPreferredIconSize() {
+	public int getPreferredIconSize(AbstractCommandButton commandButton) {
 		return -1;
 	}
 

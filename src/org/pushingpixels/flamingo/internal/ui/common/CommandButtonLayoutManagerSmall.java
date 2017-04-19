@@ -51,8 +51,8 @@ public class CommandButtonLayoutManagerSmall implements
 		CommandButtonLayoutManager {
 
 	@Override
-	public int getPreferredIconSize() {
-		return 16;
+	public int getPreferredIconSize(AbstractCommandButton commandButton) {
+        return FlamingoUtilities.getScaledSize(16, commandButton.getFont().getSize(), 1.0, 4);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class CommandButtonLayoutManagerSmall implements
 		boolean hasIcon = (commandButton.getIcon() != null);
 		boolean hasPopupIcon = FlamingoUtilities.hasPopupAction(commandButton);
 
-		int prefIconSize = hasIcon ? this.getPreferredIconSize() : 0;
+		int prefIconSize = hasIcon ? this.getPreferredIconSize(commandButton) : 0;
 
 		// start with the left insets
 		int width = borderInsets.left;

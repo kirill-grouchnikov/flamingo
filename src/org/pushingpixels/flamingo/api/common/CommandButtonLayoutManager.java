@@ -138,22 +138,26 @@ public interface CommandButtonLayoutManager extends PropertyChangeListener {
 	}
 
 	/**
-	 * Returns the preferred size of the specified command button.
+	 * Returns the preferred size of the specified command button when it uses
+     * this layout manager.
 	 * 
 	 * @param commandButton
 	 *            Command button.
-	 * @return The preferred size of the specified command button.
+	 * @return The preferred size of the specified command button when it uses
+     * this layout manager.
 	 */
 	public Dimension getPreferredSize(AbstractCommandButton commandButton);
 
 	/**
-	 * Returns the preferred icon size of command buttons which use this layout
-	 * manager.
+	 * Returns the preferred icon size of the specified command button when it uses
+	 * this layout manager.
 	 * 
-	 * @return The preferred icon size of command buttons which use this layout
-	 *         manager.
+     * @param commandButton
+     *            Command button.
+	 * @return The preferred icon size of the specified command button when it uses
+     * this layout manager.
 	 */
-	public int getPreferredIconSize();
+	public int getPreferredIconSize(AbstractCommandButton commandButton);
 
 	/**
 	 * Returns the anchor center point of the key tip of the specified command
@@ -175,6 +179,5 @@ public interface CommandButtonLayoutManager extends PropertyChangeListener {
 	 *            Graphics context.
 	 * @return The layout information for the specified command button.
 	 */
-	public CommandButtonLayoutInfo getLayoutInfo(
-			AbstractCommandButton commandButton, Graphics g);
+    public CommandButtonLayoutInfo getLayoutInfo(AbstractCommandButton commandButton, Graphics g);
 }

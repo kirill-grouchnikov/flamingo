@@ -51,8 +51,8 @@ import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 public class CommandButtonLayoutManagerMedium implements
 		CommandButtonLayoutManager {
 	@Override
-	public int getPreferredIconSize() {
-		return 16;
+	public int getPreferredIconSize(AbstractCommandButton commandButton) {
+        return FlamingoUtilities.getScaledSize(16, commandButton.getFont().getSize(), 1.0, 4);
 	}
 
 	protected float getIconTextGapFactor() {
@@ -81,7 +81,7 @@ public class CommandButtonLayoutManagerMedium implements
 		boolean hasText = (buttonText != null);
 		boolean hasPopupIcon = FlamingoUtilities.hasPopupAction(commandButton);
 
-		int prefIconSize = hasIcon ? this.getPreferredIconSize() : 0;
+		int prefIconSize = hasIcon ? this.getPreferredIconSize(commandButton) : 0;
 
 		// start with the left insets
 		int width = borderInsets.left;
@@ -157,7 +157,7 @@ public class CommandButtonLayoutManagerMedium implements
 		Insets ins = commandButton.getInsets();
 		int height = commandButton.getHeight();
 		boolean hasIcon = this.hasIcon(commandButton);
-		int iconSize = this.getPreferredIconSize();
+		int iconSize = this.getPreferredIconSize(commandButton);
 		if (hasIcon) {
 			// bottom-right corner of the icon area
 			return new Point(ins.left + iconSize, (height + iconSize) / 2);
@@ -184,7 +184,7 @@ public class CommandButtonLayoutManagerMedium implements
 		int height = commandButton.getHeight();
 
 		String buttonText = commandButton.getText();
-		int iconSize = this.getPreferredIconSize();
+		int iconSize = this.getPreferredIconSize(commandButton);
 
 		boolean hasIcon = this.hasIcon(commandButton);
 		boolean hasText = (buttonText != null);

@@ -50,8 +50,8 @@ public class CommandButtonLayoutManagerMenuTileLevel1 implements
 		CommandButtonLayoutManager {
 
 	@Override
-	public int getPreferredIconSize() {
-		return 32;
+	public int getPreferredIconSize(AbstractCommandButton commandButton) {
+        return FlamingoUtilities.getScaledSize(32, commandButton.getFont().getSize(), 2.0, 4);
 	}
 
 	@Override
@@ -65,16 +65,15 @@ public class CommandButtonLayoutManagerMenuTileLevel1 implements
 		int titleWidth = fm.stringWidth(commandButton.getText());
 		int layoutHGap = 2 * FlamingoUtilities.getHLayoutGap(commandButton);
 		int layoutVGap = 2 * FlamingoUtilities.getVLayoutGap(commandButton);
-		int widthMed = this.getPreferredIconSize()
-				+ 2
-				* layoutHGap
+		int widthMed = this.getPreferredIconSize(commandButton)
+				+ 2 * layoutHGap
 				+ jsep.getPreferredSize().width
 				+ titleWidth
 				+ (FlamingoUtilities.hasPopupAction(commandButton) ? 1
 						+ fm.getHeight() / 2 + 4 * layoutHGap
 						+ jsep.getPreferredSize().width : 0);
 		return new Dimension(bx + widthMed, by
-				+ Math.max(this.getPreferredIconSize(), 2
+				+ Math.max(this.getPreferredIconSize(commandButton), 2
 						* (fm.getAscent() + fm.getDescent()) + layoutVGap));
 	}
 

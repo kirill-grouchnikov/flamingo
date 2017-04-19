@@ -623,4 +623,11 @@ public class FlamingoUtilities {
 			}
 		}
 	}
+	
+	public static int getScaledSize(int baseSize, int componentFontSize, double scaleFactor,
+	        int stepQuantizationSize) {
+	    int fontDelta = Math.max(0, componentFontSize - 16);
+	    int stepCount = fontDelta / stepQuantizationSize;
+	    return baseSize + (int) (scaleFactor * stepCount * stepQuantizationSize);
+	}
 }

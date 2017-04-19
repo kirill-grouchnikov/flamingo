@@ -29,6 +29,7 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon.appmenu;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -108,6 +109,10 @@ public class BasicRibbonApplicationMenuButtonUI extends BasicCommandButtonUI {
 		this.buttonRendererPane = new CellRendererPane();
 		this.commandButton.add(buttonRendererPane);
 		this.rendererButton = new JButton("");
+        Font currFont = this.commandButton.getFont();
+        if ((currFont == null) || (currFont instanceof UIResource)) {
+            this.commandButton.setFont(this.rendererButton.getFont());
+        }
 	}
 
 	@Override

@@ -72,8 +72,8 @@ public class CommandButtonLayoutManagerBig implements CommandButtonLayoutManager
 	}
 
 	@Override
-	public int getPreferredIconSize() {
-		return 32;
+	public int getPreferredIconSize(AbstractCommandButton commandButton) {
+		return FlamingoUtilities.getScaledSize(32, commandButton.getFont().getSize(), 2.0f, 4);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class CommandButtonLayoutManagerBig implements CommandButtonLayoutManager
 		int title1Width = (this.titlePart1 == null) ? 0 : fm.stringWidth(this.titlePart1);
 		int title2Width = (this.titlePart2 == null) ? 0 : fm.stringWidth(this.titlePart2);
 
-		int prefIconSize = hasIcon ? this.getPreferredIconSize() : 0;
+		int prefIconSize = hasIcon ? this.getPreferredIconSize(commandButton) : 0;
 
 		int width = Math.max(prefIconSize, Math.max(title1Width, title2Width + 4 * layoutHGap
 				+ jsep.getPreferredSize().height

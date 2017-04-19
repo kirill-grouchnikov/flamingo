@@ -544,7 +544,8 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
 
             boolean ltr = c.getComponentOrientation().isLeftToRight();
             int scrollerButtonHeight = galleryHeight / 3;
-            int scrollerButtonWidth = 15;
+            int scrollerButtonWidth = FlamingoUtilities.getScaledSize(15,
+                    scrollDownButton.getFont().getSize(), 1.0f, 1);
             int buttonX = ltr ? width - scrollerButtonWidth - margin.right : margin.left;
 
             scrollDownButton

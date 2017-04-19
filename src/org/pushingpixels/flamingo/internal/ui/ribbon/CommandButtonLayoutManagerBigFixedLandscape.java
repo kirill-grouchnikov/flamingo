@@ -50,8 +50,8 @@ public class CommandButtonLayoutManagerBigFixedLandscape implements
 		CommandButtonLayoutManager {
 
 	@Override
-	public int getPreferredIconSize() {
-		return 32;
+	public int getPreferredIconSize(AbstractCommandButton commandButton) {
+        return FlamingoUtilities.getScaledSize(32, commandButton.getFont().getSize(), 2.0f, 4);
 	}
 
 	@Override
@@ -66,9 +66,9 @@ public class CommandButtonLayoutManagerBigFixedLandscape implements
 		// icon, label
 		int fillTitleWidth = fm.stringWidth(commandButton.getText());
 
-		int widthFull = Math.max(this.getPreferredIconSize(), fillTitleWidth);
+		int widthFull = Math.max(this.getPreferredIconSize(commandButton), fillTitleWidth);
 
-		int heightFull = by + this.getPreferredIconSize() + layoutVGap
+		int heightFull = by + this.getPreferredIconSize(commandButton) + layoutVGap
 				+ jsep.getPreferredSize().width;
 		if (commandButton.getText() != null) {
 			heightFull += fm.getHeight();

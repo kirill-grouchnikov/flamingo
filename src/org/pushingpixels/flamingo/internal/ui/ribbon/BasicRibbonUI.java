@@ -603,7 +603,7 @@ public class BasicRibbonUI extends RibbonUI {
      * @return The layout gap for the bands in the associated ribbon.
      */
     protected int getBandGap() {
-        return 2;
+        return FlamingoUtilities.getScaledSize(2, this.ribbon.getFont().getSize(), 0.2, 1);
     }
 
     /**
@@ -612,7 +612,7 @@ public class BasicRibbonUI extends RibbonUI {
      * @return The layout gap for the tab buttons in the associated ribbon.
      */
     protected int getTabButtonGap() {
-        return 6;
+        return FlamingoUtilities.getScaledSize(6, this.ribbon.getFont().getSize(), 0.25, 1);
     }
 
     /**
@@ -641,7 +641,7 @@ public class BasicRibbonUI extends RibbonUI {
      * @return The height of the taskbar area.
      */
     public int getTaskbarHeight() {
-        return 24;
+        return FlamingoUtilities.getScaledSize(24, this.ribbon.getFont().getSize(), 1.5f, 1);
     }
 
     /**
@@ -929,7 +929,7 @@ public class BasicRibbonUI extends RibbonUI {
             int gap = getBandGap();
 
             boolean ltr = c.getComponentOrientation().isLeftToRight();
-
+            int childHeight = getTaskbarHeight() - ins.top - ins.bottom;
             if (ltr) {
                 int x = ins.left + 1;
                 if (applicationMenuButton.isVisible()) {
@@ -938,7 +938,7 @@ public class BasicRibbonUI extends RibbonUI {
 
                 for (Component regComp : ribbon.getTaskbarComponents()) {
                     int pw = regComp.getPreferredSize().width;
-                    regComp.setBounds(x, ins.top + 1, pw, c.getHeight() - ins.top - ins.bottom - 2);
+                    regComp.setBounds(x, ins.top + 1, pw, childHeight);
                     x += (pw + gap);
                 }
             } else {
@@ -949,8 +949,7 @@ public class BasicRibbonUI extends RibbonUI {
 
                 for (Component regComp : ribbon.getTaskbarComponents()) {
                     int pw = regComp.getPreferredSize().width;
-                    regComp.setBounds(x - pw, ins.top + 1, pw,
-                            c.getHeight() - ins.top - ins.bottom - 2);
+                    regComp.setBounds(x - pw, ins.top + 1, pw, childHeight);
                     x -= (pw + gap);
                 }
             }

@@ -1150,7 +1150,7 @@ public class BasicCommandButtonUI extends CommandButtonUI {
         if (icon == null)
             return;
 
-        int maxHeight = layoutManager.getPreferredIconSize();
+        int maxHeight = layoutManager.getPreferredIconSize(this.commandButton);
         if (maxHeight < 0) {
             maxHeight = this.commandButton.getIcon().getIconHeight();
         }
