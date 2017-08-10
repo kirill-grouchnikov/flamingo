@@ -1291,8 +1291,8 @@ public class BasicRibbonUI extends RibbonUI {
          * @see java.awt.LayoutManager#layoutContainer(java.awt.Container)
          */
         public void layoutContainer(Container c) {
-            // System.err.println("Layout of band host panel " + c.getWidth() +
-            // ":" + c.getHeight());
+//             System.err.println("Layout of band host panel " + c.getWidth() +
+//             ":" + c.getHeight());
             int bandGap = getBandGap();
 
             // the top row - task bar components
@@ -1339,7 +1339,7 @@ public class BasicRibbonUI extends RibbonUI {
 
                     // get the current preferred width of the bands
                     int totalWidth = 0;
-                    // System.out.println("Iteration");
+//                     System.out.println("Iteration");
                     for (AbstractRibbonBand<?> ribbonBand : selectedTask.getBands()) {
                         RibbonBandResizePolicy currentResizePolicy = ribbonBand
                                 .getCurrentResizePolicy();
@@ -1362,18 +1362,18 @@ public class BasicRibbonUI extends RibbonUI {
                         int preferredWidth = currentResizePolicy.getPreferredWidth(availableHeight,
                                 controlPanelGap) + ribbonBandInsets.left + ribbonBandInsets.right;
                         totalWidth += preferredWidth + bandGap;
-                        // System.out.println("\t"
-                        // + ribbonBand.getTitle()
-                        // + ":"
-                        // + currentResizePolicy.getClass()
-                        // .getSimpleName() + ":" + preferredWidth
-                        // + " under " + availableHeight + " with "
-                        // + controlPanel.getComponentCount()
-                        // + " children");
+//                         System.out.println("\t"
+//                         + ribbonBand.getTitle()
+//                         + ":"
+//                         + currentResizePolicy.getClass()
+//                         .getSimpleName() + ":" + preferredWidth
+//                         + " under " + availableHeight + " with "
+//                         + controlPanel.getComponentCount()
+//                         + " children");
                     }
-                    // System.out.println("\t:Total:" + totalWidth + "("
-                    // + availableWidth + ")");
-                    // System.out.println("\n");
+//                     System.out.println("\t:Total:" + totalWidth + "("
+//                     + availableWidth + ")");
+//                     System.out.println("\n");
                     if (totalWidth < availableWidth)
                         break;
 
@@ -1391,7 +1391,7 @@ public class BasicRibbonUI extends RibbonUI {
 
             boolean ltr = c.getComponentOrientation().isLeftToRight();
             x = ltr ? 1 : c.getWidth() - 1;
-            // System.out.println("Will get [" + availableWidth + "]:");
+//             System.out.println("Will get [" + availableWidth + "]:");
             for (AbstractRibbonBand<?> ribbonBand : selectedTask.getBands()) {
                 Insets ribbonBandInsets = ribbonBand.getInsets();
                 RibbonBandResizePolicy currentResizePolicy = ribbonBand.getCurrentResizePolicy();
@@ -1420,9 +1420,10 @@ public class BasicRibbonUI extends RibbonUI {
                             ribbonBandHeight);
                 }
 
-                // System.out.println("\t" + ribbonBand.getTitle() + ":"
-                // + currentResizePolicy.getClass().getSimpleName() + ":"
-                // + requiredBandWidth + " under " + ribbonBandHeight);
+//                 System.out.println("\t" + ribbonBand.getTitle() + ":"
+//                 + currentResizePolicy.getClass().getSimpleName() + ":"
+//                 + requiredBandWidth + "[insets " + ribbonBandInsets.left + "," + 
+//                 ribbonBandInsets.right + "] under " + ribbonBandHeight);
 
                 if (ribbonBand.getHeight() > 0) {
                     ribbonBand.doLayout();
@@ -1435,7 +1436,7 @@ public class BasicRibbonUI extends RibbonUI {
                 }
 
             }
-            // System.out.println();
+//             System.out.println();
         }
     }
 

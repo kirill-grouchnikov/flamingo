@@ -544,8 +544,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
 
             boolean ltr = c.getComponentOrientation().isLeftToRight();
             int scrollerButtonHeight = galleryHeight / 3;
-            int scrollerButtonWidth = FlamingoUtilities.getScaledSize(15,
-                    scrollDownButton.getFont().getSize(), 1.0f, 1);
+            int scrollerButtonWidth = getScrollerButtonWidth();
             int buttonX = ltr ? width - scrollerButtonWidth - margin.right : margin.left;
 
             scrollDownButton
@@ -736,7 +735,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
         // and the gaps between them (including before first and after last)
         result += (buttonCount + 1) * getLayoutGap();
         // and the control button strip width
-        result += 15;
+        result += getScrollerButtonWidth();
         // and the gap to the right margin
         result += margin.right;
 
@@ -744,18 +743,16 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
         // + buttonHeight + " --> " + result);
         return result;
     }
+    
+    private int getScrollerButtonWidth() {
+        return FlamingoUtilities.getScaledSize(15, scrollDownButton.getFont().getSize(), 1.0f, 1);
+    }
 
     /**
      * Scrolls the contents of this ribbon gallery one row down.
      */
     protected void scrollOneRowDown() {
         this.firstVisibleButtonIndex += this.visibleButtonsInEachRow;
-        // int buttonCount = this.ribbonGallery.getButtonCount();
-        // // compute the last visible button
-        // this.lastVisibleButtonIndex = this.firstVisibleButtonIndex
-        // + this.visibleButtonsCount - 1;
-        // if (this.lastVisibleButtonIndex >= buttonCount)
-        // this.lastVisibleButtonIndex = buttonCount - 1;
     }
 
     /**
@@ -763,18 +760,6 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
      */
     protected void scrollOneRowUp() {
         this.firstVisibleButtonIndex -= this.visibleButtonsInEachRow;
-        // this.firstVisibleButtonIndex -= this.visibleButtonsCount;
-        // // int buttonCount = this.ribbonGallery.getButtonCount();
-        // // compute the last visible button
-        // this.lastVisibleButtonIndex = this.firstVisibleButtonIndex
-        // + this.visibleButtonsCount - 1;
-        // // // update the last visible index so there's overlap between the
-        // rows
-        // // this.lastVisibleButtonIndex = this.firstVisibleButtonIndex;
-        // // this.firstVisibleButtonIndex = this.lastVisibleButtonIndex
-        // // - this.visibleButtonsCount + 1;
-        // // if (this.firstVisibleButtonIndex < 0)
-        // // this.firstVisibleButtonIndex = 0;
     }
 
     /**

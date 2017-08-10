@@ -29,6 +29,8 @@
  */
 package org.pushingpixels.flamingo.api.ribbon.resize;
 
+import java.awt.Insets;
+
 import org.pushingpixels.flamingo.api.ribbon.AbstractRibbonBand;
 import org.pushingpixels.flamingo.internal.ui.ribbon.AbstractBandControlPanel;
 import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonBandUI;
@@ -36,9 +38,9 @@ import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonBandUI;
 /**
  * Special resize policy that is used for collapsed ribbon bands. When there is
  * not enough horizontal space to show the ribbon band content under the most
- * restructive {@link RibbonBandResizePolicy}, the entire ribbon band content is
- * replaced by a single popup button. Activating the popup button will show the
- * original content under the most permissive resize policy in a popup.
+ * restrictive {@link RibbonBandResizePolicy}, the entire ribbon band content is
+ * replaced by a single popup button. Activating the popup button will show a popup
+ * with the original content under the most permissive resize policy.
  * 
  * <p>
  * An instance of this policy <strong>must</strong> appear exactly once in the

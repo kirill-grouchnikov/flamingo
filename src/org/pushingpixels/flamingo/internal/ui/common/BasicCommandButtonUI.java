@@ -322,6 +322,10 @@ public class BasicCommandButtonUI extends CommandButtonUI {
                         commandButton.repaint();
                     }
                 }
+                if ("enabled".equals(evt.getPropertyName())) {
+                    syncDisabledIcon();
+                    commandButton.repaint();
+                }
                 if ("commandButtonKind".equals(evt.getPropertyName())) {
                     updatePopupActionIcon();
                 }
@@ -662,6 +666,10 @@ public class BasicCommandButtonUI extends CommandButtonUI {
             toUseDisabledIcon = !((JCommandButton) this.commandButton).getPopupModel().isEnabled();
         } else {
             toUseDisabledIcon = !this.commandButton.getActionModel().isEnabled();
+        }
+        // Disabled state at the component level overrides the model state
+        if (!toUseDisabledIcon && !this.commandButton.isEnabled()) {
+            toUseDisabledIcon = true;
         }
         return toUseDisabledIcon;
     }

@@ -73,7 +73,6 @@ import org.pushingpixels.flamingo.api.common.JCommandButtonStrip;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
-import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.ribbon.AbstractRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbon;
@@ -457,7 +456,7 @@ public class BasicRibbonBandUI extends RibbonBandUI {
         public Dimension preferredLayoutSize(Container c) {
             Insets ins = c.getInsets();
             AbstractBandControlPanel controlPanel = ribbonBand.getControlPanel();
-            boolean useCollapsedButton = (controlPanel == null) || (!controlPanel.isVisible());
+            boolean useCollapsedButton = (controlPanel == null) || !controlPanel.isVisible();
             int width = useCollapsedButton ? collapsedButton.getPreferredSize().width
                     : controlPanel.getPreferredSize().width;
             int height = (useCollapsedButton ? collapsedButton.getPreferredSize().height
@@ -516,14 +515,9 @@ public class BasicRibbonBandUI extends RibbonBandUI {
 
             if (resizePolicy instanceof IconRibbonBandResizePolicy) {
                 collapsedButton.setVisible(true);
-                int w = collapsedButton.getPreferredSize().width;
-                // System.out.println("Width for collapsed of '"
-                // + ribbonBand.getTitle() + "' is " + w);
-                collapsedButton.setBounds((c.getWidth() - w) / 2, ins.top, w,
-                        c.getHeight() - ins.top - ins.bottom);
-
-                // System.out.println("Collapsed " + collapsedButton.getHeight()
-                // + ":" + c.getHeight());
+                int collapsedButtonWidth = c.getWidth() - ins.left - ins.right - 2;
+                collapsedButton.setBounds((c.getWidth() - collapsedButtonWidth) / 2, ins.top, 
+                        collapsedButtonWidth, c.getHeight() - ins.top - ins.bottom);
 
                 if (collapsedButton.getPopupCallback() == null) {
                     final AbstractRibbonBand popupBand = ribbonBand.cloneBand();
@@ -540,16 +534,8 @@ public class BasicRibbonBandUI extends RibbonBandUI {
                                     + Math.max(c.getHeight(),
                                             ribbonBand.getControlPanel().getPreferredSize().height
                                                     + getBandTitleHeight()));
-                    // System.out.println(ribbonBand.getTitle() + ":"
-                    // + size.getHeight());
-                    collapsedButton.setPopupCallback(new PopupPanelCallback() {
-                        @Override
-                        public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-                            return new CollapsedButtonPopupPanel(popupBand, size);
-                        }
-                    });
-                    // collapsedButton.setGallery(new JPopupGallery(ribbonBand
-                    // .getControlPanel(), size));
+                    collapsedButton.setPopupCallback((JCommandButton commandButton) ->
+                            new CollapsedButtonPopupPanel(popupBand, size));
                     ribbonBand.setControlPanel(null);
                     ribbonBand.setPopupRibbonBand(popupBand);
                 }
@@ -906,7 +892,8 @@ public class BasicRibbonBandUI extends RibbonBandUI {
     public int getPreferredCollapsedWidth() {
         // Don't let long ribbon band titles create collapsed buttons that are too wide
         Dimension collapsedPreferredSize = this.collapsedButton.getPreferredSize();
-        return Math.min(collapsedPreferredSize.height, collapsedPreferredSize.width + 2);
+        return Math.min((int) (collapsedPreferredSize.height * 1.25), 
+                collapsedPreferredSize.width + 2);
     }
 
     @Override
