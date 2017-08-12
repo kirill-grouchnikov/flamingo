@@ -6,3 +6,4 @@
 4.1 - Guinevere
 5.0 - Imogene
 5.1 - Jileen
+5.2 - Kennocha

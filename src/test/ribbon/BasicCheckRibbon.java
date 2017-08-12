@@ -1337,7 +1337,12 @@ public class BasicCheckRibbon extends JRibbonFrame {
 		this.getRibbon().addTask(animationsTask);
 		this.getRibbon().addTask(wrappedTask);
 
+        RichTooltip helpTooltip = new RichTooltip();
+        helpTooltip.setTitle(resourceBundle.getString("Help.tooltip.title"));
+        helpTooltip.addDescriptionSection(resourceBundle
+                .getString("Help.tooltip.actionParagraph"));
 		this.getRibbon().configureHelp(new help_browser(),
+		        helpTooltip,
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {

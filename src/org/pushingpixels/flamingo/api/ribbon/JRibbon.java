@@ -160,11 +160,12 @@ public class JRibbon extends JComponent {
 
 	/**
 	 * Help icon. When not <code>null</code>, the ribbon will display a help
-	 * button at the far right of the tab area.
+	 * button at the far edge of the tab area (right under LTR and left under RTL)
 	 * 
 	 * @see #helpActionListener
-	 * @see #configureHelp(ResizableIcon, ActionListener)
+	 * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
 	 * @see #getHelpIcon()
+	 * @see #getHelpRichTooltip()
 	 */
 	private ResizableIcon helpIcon;
 
@@ -172,10 +173,21 @@ public class JRibbon extends JComponent {
 	 * When the {@link #helpIcon} is not <code>null</code>, this listener will
 	 * be invoked when the user activates the help button.
 	 * 
-	 * @see #configureHelp(ResizableIcon, ActionListener)
+	 * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
 	 * @see #getHelpActionListener()
+     * @see #getHelpRichTooltip()
 	 */
 	private ActionListener helpActionListener;
+	
+	/**
+	 * When the {@link helpIcon} is not <code>null</code>, this tooltip will be set
+	 * on the help button.
+     * 
+     * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
+     * @see #getHelpIcon()
+     * @see #getHelpRichTooltip()
+	 */
+	private RichTooltip helpRichTooltip;
 
 	/**
 	 * Visibility status of the contextual task group. Must contain a value for
@@ -316,14 +328,17 @@ public class JRibbon extends JComponent {
 	 * 
 	 * @param helpIcon
 	 *            The icon for the help button.
+	 * @param helpRichTooltip
+	 *             The optional rich tooltip for the help button. 
 	 * @param helpActionListener
 	 *            The action listener for the help button.
 	 * @see #getHelpIcon()
 	 * @see #getHelpActionListener()
 	 */
 	public synchronized void configureHelp(ResizableIcon helpIcon,
-			ActionListener helpActionListener) {
+	        RichTooltip helpRichTooltip, ActionListener helpActionListener) {
 		this.helpIcon = helpIcon;
+		this.helpRichTooltip = helpRichTooltip;
 		this.helpActionListener = helpActionListener;
 		this.fireStateChanged();
 	}
@@ -331,28 +346,44 @@ public class JRibbon extends JComponent {
 	/**
 	 * Returns the icon for the help button. Will return <code>null</code> if
 	 * the help button has not been configured with the
-	 * {@link #configureHelp(ResizableIcon, ActionListener)} API.
+	 * {@link #configureHelp(ResizableIcon, RichTooltip, ActionListener)} API.
 	 * 
 	 * @return The icon for the help button.
-	 * @see #configureHelp(ResizableIcon, ActionListener)
+	 * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
 	 * @see #getHelpActionListener()
+	 * @see #getHelpRichTooltip()
 	 */
 	public ResizableIcon getHelpIcon() {
 		return this.helpIcon;
 	}
 
-	/**
-	 * Returns the action listener for the help button. Will return
-	 * <code>null</code> if the help button has not been configured with the
-	 * {@link #configureHelp(ResizableIcon, ActionListener)} API.
-	 * 
-	 * @return The action listener for the help button.
-	 * @see #configureHelp(ResizableIcon, ActionListener)
-	 * @see #getHelpIcon()
-	 */
-	public ActionListener getHelpActionListener() {
-		return this.helpActionListener;
-	}
+    /**
+     * Returns the rich tooltip for the help button. Will return
+     * <code>null</code> if the help button has not been configured with the
+     * {@link #configureHelp(ResizableIcon, RichTooltip, ActionListener)} API.
+     * 
+     * @return The action listener for the help button.
+     * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
+     * @see #getHelpIcon()
+     * @see #getHelpActionListener()
+     */
+    public RichTooltip getHelpRichTooltip() {
+        return this.helpRichTooltip;
+    }
+
+    /**
+     * Returns the action listener for the help button. Will return
+     * <code>null</code> if the help button has not been configured with the
+     * {@link #configureHelp(ResizableIcon, RichTooltip, ActionListener)} API.
+     * 
+     * @return The action listener for the help button.
+     * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
+     * @see #getHelpIcon()
+     * @see #getHelpRichTooltip()
+     */
+    public ActionListener getHelpActionListener() {
+        return this.helpActionListener;
+    }
 
 	/**
 	 * Adds the specified contextual task group to this ribbon.

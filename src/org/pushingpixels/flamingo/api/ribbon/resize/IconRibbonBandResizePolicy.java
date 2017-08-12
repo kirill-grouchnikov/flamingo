@@ -29,8 +29,6 @@
  */
 package org.pushingpixels.flamingo.api.ribbon.resize;
 
-import java.awt.Insets;
-
 import org.pushingpixels.flamingo.api.ribbon.AbstractRibbonBand;
 import org.pushingpixels.flamingo.internal.ui.ribbon.AbstractBandControlPanel;
 import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonBandUI;
