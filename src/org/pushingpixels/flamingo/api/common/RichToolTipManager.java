@@ -152,9 +152,7 @@ public class RichToolTipManager extends MouseAdapter implements
 		hideTipWindow();
 
 		tip = new JRichTooltipPanel(insideComponent.getRichTooltip(mouseEvent));
-		tip
-				.applyComponentOrientation(insideComponent
-						.getComponentOrientation());
+        tip.applyComponentOrientation(insideComponent.getComponentOrientation());
 		size = tip.getPreferredSize();
 
 		AbstractRibbonBand<?> ribbonBand = (AbstractRibbonBand<?>) SwingUtilities

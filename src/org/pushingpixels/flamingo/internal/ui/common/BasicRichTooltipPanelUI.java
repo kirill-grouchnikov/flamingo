@@ -145,6 +145,11 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 		}
 		LookAndFeel.installProperty(this.richTooltipPanel, "opaque",
 				Boolean.TRUE);
+		Font f = this.richTooltipPanel.getFont();
+		if (f == null || f instanceof UIResource) {
+		    this.richTooltipPanel.setFont(FlamingoUtilities.getFont(this.richTooltipPanel,
+	                "Ribbon.font", "Button.font", "Panel.font"));
+		}
 	}
 
 	/**
@@ -559,7 +564,8 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 	}
 
 	protected int getDescriptionTextWidth() {
-		return 200;
+		return FlamingoUtilities.getScaledSize(200, 
+		        this.richTooltipPanel.getFont().getSize(), 20f, 4);
 	}
 
 	protected int getLayoutGap() {

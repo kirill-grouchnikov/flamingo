@@ -52,6 +52,7 @@ import javax.swing.JComponent;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 import javax.swing.LookAndFeel;
+import javax.swing.Popup;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
@@ -65,6 +66,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.ComboPopup;
 
 import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
@@ -620,7 +622,16 @@ public class BasicPopupPanelUI extends PopupPanelUI {
 					return;
 				}
 
-				PopupPanelManager.defaultManager().hidePopups(src);
+				// Find the deepest child that contains the location of our mouse
+				// wheel event
+				Component deepest = SwingUtilities.getDeepestComponentAt(
+				        src, me.getX(), me.getY());
+				if (SwingUtilities.getAncestorOfClass(JCommandPopupMenu.class, deepest) == null) {
+				    // The source of the mouse wheel event is not in command popup menu. 
+				    // Dismiss all our popups
+				    PopupPanelManager.defaultManager().hidePopups(src);
+				}
+
 				break;
 			}
 		}
