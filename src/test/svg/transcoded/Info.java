@@ -7,7 +7,7 @@ import java.awt.geom.*;
  * This class has been automatically generated using <a
  * href="https://github.com/kirill-grouchnikov/flamingo">Flamingo SVG transcoder</a>.
  */
-public class Format_justify_center implements
+public class Info implements
 		org.pushingpixels.flamingo.api.common.icon.ResizableIcon {
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
@@ -37,23 +37,23 @@ public class Format_justify_center implements
 // 
 g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
 AffineTransform defaultTransform__0 = g.getTransform();
-g.transform(new AffineTransform(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
+g.transform(new AffineTransform(1.0f, 0.0f, 0.0f, 1.0f, -0.0f, -0.0f));
 // _0
 g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
 AffineTransform defaultTransform__0_0 = g.getTransform();
 g.transform(new AffineTransform(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
 // _0_0
-g.setComposite(AlphaComposite.getInstance(3, 0.47368422f * origAlpha));
+g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
 AffineTransform defaultTransform__0_0_0 = g.getTransform();
-g.transform(new AffineTransform(1.4723349809646606f, 0.0f, 0.0f, 0.2663849890232086f, -9.159070014953613f, 37.48202896118164f));
+g.transform(new AffineTransform(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
 // _0_0_0
-paint = new RadialGradientPaint(new Point2D.Double(22.571428298950195, 30.85714340209961), 15.571428f, new Point2D.Double(22.571428298950195, 30.85714340209961), new float[] {0.0f,1.0f}, new Color[] {new Color(0, 0, 0, 255),new Color(0, 0, 0, 0)}, MultipleGradientPaint.CycleMethod.NO_CYCLE, MultipleGradientPaint.ColorSpaceType.SRGB, new AffineTransform(1.0f, 0.0f, 0.0f, 0.6513760089874268f, 4.6386480336631404E-15f, 10.757539749145508f));
+paint = new Color(139, 183, 240, 255);
 shape = new GeneralPath();
-((GeneralPath)shape).moveTo(38.142857, 30.857143);
-((GeneralPath)shape).curveTo(38.142857, 36.45889, 31.171291, 41.0, 22.571428, 41.0);
-((GeneralPath)shape).curveTo(13.971566, 41.0, 7.0, 36.45889, 7.0, 30.857143);
-((GeneralPath)shape).curveTo(7.0, 25.255398, 13.971566, 20.714287, 22.571428, 20.714287);
-((GeneralPath)shape).curveTo(31.171291, 20.714287, 38.142857, 25.255398, 38.142857, 30.857143);
+((GeneralPath)shape).moveTo(40.0, 77.5);
+((GeneralPath)shape).curveTo(19.322, 77.5, 2.5, 60.678, 2.5, 40.0);
+((GeneralPath)shape).curveTo(2.5, 19.321999, 19.322, 2.5, 40.0, 2.5);
+((GeneralPath)shape).curveTo(60.678, 2.5, 77.5, 19.322, 77.5, 40.0);
+((GeneralPath)shape).curveTo(77.5, 60.678, 60.678, 77.5, 40.0, 77.5);
 ((GeneralPath)shape).closePath();
 g.setPaint(paint);
 g.fill(shape);
@@ -62,74 +62,63 @@ g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
 AffineTransform defaultTransform__0_0_1 = g.getTransform();
 g.transform(new AffineTransform(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
 // _0_0_1
-paint = new LinearGradientPaint(new Point2D.Double(20.794008255004883, 18.378812789916992), new Point2D.Double(35.59600067138672, 39.600460052490234), new float[] {0.0f,0.59928656f,1.0f}, new Color[] {new Color(248, 248, 247, 255),new Color(232, 232, 232, 255),new Color(226, 226, 222, 255)}, MultipleGradientPaint.CycleMethod.NO_CYCLE, MultipleGradientPaint.ColorSpaceType.SRGB, new AffineTransform(1.3427040576934814f, 0.0f, 0.0f, 1.2353780269622803f, -8.219611167907715f, -6.577188968658447f));
-shape = new RoundRectangle2D.Double(4.501601696014404, 1.4968987703323364, 38.99679183959961, 45.00310134887695, 1.133015751838684, 1.1330164670944214);
-g.setPaint(paint);
-g.fill(shape);
-paint = new Color(136, 138, 133, 255);
-stroke = new BasicStroke(0.99999976f,0,0,4.0f,null,0.0f);
-shape = new RoundRectangle2D.Double(4.501601696014404, 1.4968987703323364, 38.99679183959961, 45.00310134887695, 1.133015751838684, 1.1330164670944214);
-g.setPaint(paint);
-g.setStroke(stroke);
-g.draw(shape);
-g.setTransform(defaultTransform__0_0_1);
 g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
-AffineTransform defaultTransform__0_0_2 = g.getTransform();
-g.transform(new AffineTransform(-1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
-// _0_0_2
-paint = new Color(153, 153, 153, 255);
-shape = new Rectangle2D.Double(-37.0, 10.0, 26.0, 2.0);
-g.setPaint(paint);
-g.fill(shape);
-g.setTransform(defaultTransform__0_0_2);
-g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
-AffineTransform defaultTransform__0_0_3 = g.getTransform();
-g.transform(new AffineTransform(-1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
-// _0_0_3
-paint = new Color(153, 153, 153, 255);
-shape = new Rectangle2D.Double(-35.0, 16.0, 23.0, 2.0);
-g.setPaint(paint);
-g.fill(shape);
-g.setTransform(defaultTransform__0_0_3);
-g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
-AffineTransform defaultTransform__0_0_4 = g.getTransform();
-g.transform(new AffineTransform(-1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
-// _0_0_4
-paint = new Color(153, 153, 153, 255);
-shape = new Rectangle2D.Double(-34.0, 22.0, 21.0, 2.0);
-g.setPaint(paint);
-g.fill(shape);
-g.setTransform(defaultTransform__0_0_4);
-g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
-AffineTransform defaultTransform__0_0_5 = g.getTransform();
-g.transform(new AffineTransform(-1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
-// _0_0_5
-paint = new Color(153, 153, 153, 255);
-shape = new Rectangle2D.Double(-37.0, 28.0, 26.0, 2.0);
-g.setPaint(paint);
-g.fill(shape);
-g.setTransform(defaultTransform__0_0_5);
-g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
-AffineTransform defaultTransform__0_0_6 = g.getTransform();
-g.transform(new AffineTransform(-1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
-// _0_0_6
-paint = new Color(153, 153, 153, 255);
-shape = new Rectangle2D.Double(-32.0, 34.0, 17.0, 2.0);
-g.setPaint(paint);
-g.fill(shape);
-g.setTransform(defaultTransform__0_0_6);
-g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
-AffineTransform defaultTransform__0_0_7 = g.getTransform();
+AffineTransform defaultTransform__0_0_1_0 = g.getTransform();
 g.transform(new AffineTransform(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
-// _0_0_7
-paint = new Color(255, 255, 255, 255);
-stroke = new BasicStroke(0.9999998f,0,0,4.0f,null,0.0f);
-shape = new Rectangle2D.Double(5.4997124671936035, 2.4997177124023438, 37.02556610107422, 43.022315979003906);
+// _0_0_1_0
+paint = new Color(78, 122, 181, 255);
+shape = new GeneralPath();
+((GeneralPath)shape).moveTo(40.0, 3.0);
+((GeneralPath)shape).curveTo(60.402, 3.0, 77.0, 19.598, 77.0, 40.0);
+((GeneralPath)shape).curveTo(77.0, 60.402, 60.402, 77.0, 40.0, 77.0);
+((GeneralPath)shape).curveTo(19.598, 77.0, 3.0, 60.402, 3.0, 40.0);
+((GeneralPath)shape).curveTo(3.0, 19.598, 19.598, 3.0, 40.0, 3.0);
+((GeneralPath)shape).moveTo(40.0, 2.0);
+((GeneralPath)shape).curveTo(19.013, 2.0, 2.0, 19.013, 2.0, 40.0);
+((GeneralPath)shape).curveTo(2.0, 60.987, 19.013, 78.0, 40.0, 78.0);
+((GeneralPath)shape).curveTo(60.987, 78.0, 78.0, 60.987, 78.0, 40.0);
+((GeneralPath)shape).curveTo(78.0, 19.013, 60.987, 2.0, 40.0, 2.0);
+((GeneralPath)shape).lineTo(40.0, 2.0);
+((GeneralPath)shape).closePath();
 g.setPaint(paint);
-g.setStroke(stroke);
-g.draw(shape);
-g.setTransform(defaultTransform__0_0_7);
+g.fill(shape);
+g.setTransform(defaultTransform__0_0_1_0);
+g.setTransform(defaultTransform__0_0_1);
 g.setTransform(defaultTransform__0_0);
+g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
+AffineTransform defaultTransform__0_1 = g.getTransform();
+g.transform(new AffineTransform(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
+// _0_1
+paint = new Color(255, 255, 255, 255);
+shape = new Ellipse2D.Double(37.0, 21.0, 6.0, 6.0);
+g.setPaint(paint);
+g.fill(shape);
+g.setTransform(defaultTransform__0_1);
+g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
+AffineTransform defaultTransform__0_2 = g.getTransform();
+g.transform(new AffineTransform(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
+// _0_2
+g.setComposite(AlphaComposite.getInstance(3, 1.0f * origAlpha));
+AffineTransform defaultTransform__0_2_0 = g.getTransform();
+g.transform(new AffineTransform(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f));
+// _0_2_0
+paint = new Color(255, 255, 255, 255);
+shape = new GeneralPath();
+((GeneralPath)shape).moveTo(43.0, 56.0);
+((GeneralPath)shape).lineTo(43.0, 31.0);
+((GeneralPath)shape).lineTo(35.0, 31.0);
+((GeneralPath)shape).lineTo(35.0, 33.0);
+((GeneralPath)shape).lineTo(37.0, 33.0);
+((GeneralPath)shape).lineTo(37.0, 56.0);
+((GeneralPath)shape).lineTo(35.0, 56.0);
+((GeneralPath)shape).lineTo(35.0, 58.0);
+((GeneralPath)shape).lineTo(45.0, 58.0);
+((GeneralPath)shape).lineTo(45.0, 56.0);
+((GeneralPath)shape).closePath();
+g.setPaint(paint);
+g.fill(shape);
+g.setTransform(defaultTransform__0_2_0);
+g.setTransform(defaultTransform__0_2);
 g.setTransform(defaultTransform__0);
 g.setTransform(defaultTransform_);
 
@@ -141,7 +130,7 @@ g.setTransform(defaultTransform_);
      * @return The X of the bounding box of the original SVG image.
      */
     public static double getOrigX() {
-        return 1.1472748517990112;
+        return 2.0;
     }
 
     /**
@@ -150,7 +139,7 @@ g.setTransform(defaultTransform_);
      * @return The Y of the bounding box of the original SVG image.
      */
     public static double getOrigY() {
-        return 0.996898889541626;
+        return 2.0;
     }
 
 	/**
@@ -159,7 +148,7 @@ g.setTransform(defaultTransform_);
 	 * @return The width of the bounding box of the original SVG image.
 	 */
 	public static double getOrigWidth() {
-		return 45.852718353271484;
+		return 76.0;
 	}
 
 	/**
@@ -168,7 +157,7 @@ g.setTransform(defaultTransform_);
 	 * @return The height of the bounding box of the original SVG image.
 	 */
 	public static double getOrigHeight() {
-		return 47.00310134887695;
+		return 76.0;
 	}
 
 	/**
@@ -184,7 +173,7 @@ g.setTransform(defaultTransform_);
 	/**
 	 * Creates a new transcoded SVG image.
 	 */
-	public Format_justify_center() {
+	public Info() {
         this.width = (int) getOrigWidth();
         this.height = (int) getOrigHeight();
 	}
@@ -254,8 +243,8 @@ g.setTransform(defaultTransform_);
         g2d.dispose();
 	}
     
-    public static Format_justify_center of(int width, int height) {
-       Format_justify_center result = new Format_justify_center();
+    public static Info of(int width, int height) {
+       Info result = new Info();
        result.width = width;
        result.height = height;
        return result;

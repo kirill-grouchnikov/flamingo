@@ -17,6 +17,7 @@ public class Font_x_generic implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -779,5 +780,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Font_x_generic of(int width, int height) {
+       Font_x_generic result = new Font_x_generic();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

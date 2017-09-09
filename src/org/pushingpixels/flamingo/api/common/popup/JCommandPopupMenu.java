@@ -32,6 +32,7 @@ package org.pushingpixels.flamingo.api.common.popup;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -46,6 +47,7 @@ import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.JCommandToggleMenuButton;
 import org.pushingpixels.flamingo.internal.ui.common.popup.BasicCommandPopupMenuUI;
 import org.pushingpixels.flamingo.internal.ui.common.popup.PopupPanelUI;
+import org.pushingpixels.flamingo.internal.ui.common.popup.ScrollableHost;
 
 /**
  * Popup menu. Can host any number of command menu buttons added with
@@ -56,7 +58,7 @@ import org.pushingpixels.flamingo.internal.ui.common.popup.PopupPanelUI;
  * 
  * @author Kirill Grouchnikov
  */
-public class JCommandPopupMenu extends JPopupPanel {
+public class JCommandPopupMenu extends JPopupPanel implements ScrollableHost {
 	/**
 	 * @see #getUIClassID
 	 */
@@ -90,7 +92,7 @@ public class JCommandPopupMenu extends JPopupPanel {
 	 * @see #addMenuPanel(JPanel)
 	 * @see #getMenuComponents()
 	 */
-	protected java.util.List<Component> menuComponents;
+	protected List<Component> menuComponents;
 
 	/**
 	 * Maximum number of button columns visible in the {@link #mainButtonPanel}.

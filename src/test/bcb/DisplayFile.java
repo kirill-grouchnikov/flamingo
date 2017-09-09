@@ -41,10 +41,10 @@ public class DisplayFile {
 		/*
 		 * Default values:
 		 */
-		String url = "svn://anonsvn.kde.org/home/kde/trunk";
+		String url = "svn://anonsvn.kde.org/home/kde/";
 		String name = "anonymous";
 		String password = "anonymous";
-		String filePath = "KDE/kdebase/README";
+		String filePath = "branches/KDE/4.9/kdeartwork/IconThemes/nuvola/author.txt";
 		/*
 		 * Initializes the library (it must be done before ever using the
 		 * library itself)

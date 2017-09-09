@@ -17,6 +17,7 @@ public class Appointment_new implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -443,5 +444,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Appointment_new of(int width, int height) {
+       Appointment_new result = new Appointment_new();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

@@ -17,6 +17,7 @@ public class System_log_out implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -351,5 +352,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static System_log_out of(int width, int height) {
+       System_log_out result = new System_log_out();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

@@ -62,7 +62,7 @@ public class DisplayRepositoryTree {
 		/*
 		 * default values:
 		 */
-		String url = "http://svn.svnkit.com/repos/svnkit";
+		String url = "svn://anonsvn.kde.org/home/kde/";
 		String name = "anonymous";
 		String password = "anonymous";
 

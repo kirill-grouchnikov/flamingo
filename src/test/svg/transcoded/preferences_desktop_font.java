@@ -17,6 +17,7 @@ public class Preferences_desktop_font implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -327,5 +328,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Preferences_desktop_font of(int width, int height) {
+       Preferences_desktop_font result = new Preferences_desktop_font();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

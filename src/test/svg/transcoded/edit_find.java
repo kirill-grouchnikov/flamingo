@@ -17,6 +17,7 @@ public class Edit_find implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -637,5 +638,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Edit_find of(int width, int height) {
+       Edit_find result = new Edit_find();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

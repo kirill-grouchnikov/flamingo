@@ -17,6 +17,7 @@ public class Text_html implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -1656,5 +1657,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Text_html of(int width, int height) {
+       Text_html result = new Text_html();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

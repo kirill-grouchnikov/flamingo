@@ -58,6 +58,7 @@ import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonPopupOrientationKind;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
+import org.pushingpixels.flamingo.api.common.JScrollablePanel;
 import org.pushingpixels.flamingo.api.common.RolloverActionListener;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
@@ -76,6 +77,8 @@ import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 	protected JPanel panelLevel1;
 
+	protected JScrollablePanel<JPanel> panelScrollerLevel2;
+	
 	protected JPanel panelLevel2;
 
 	protected JPanel footerPanel;
@@ -227,7 +230,7 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 										panelLevel2.repaint();
 									}
 								}
-								panelLevel2.applyComponentOrientation(
+								panelScrollerLevel2.applyComponentOrientation(
 										applicationMenuPopupPanel.getComponentOrientation());
 							}
 						});
@@ -278,6 +281,8 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 		mainPanel.add(this.panelLevel1, BorderLayout.LINE_START);
 
 		this.panelLevel2 = new JPanel();
+		this.panelScrollerLevel2 = new JScrollablePanel<JPanel>(this.panelLevel2, 
+		        JScrollablePanel.ScrollType.VERTICALLY);
 		this.panelLevel2.setBorder(new Border() {
 			@Override
 			public Insets getBorderInsets(Component c) {
@@ -298,11 +303,11 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 				g.drawLine(xToPaint, y, xToPaint, y + height);
 			}
 		});
-		this.panelLevel2.setPreferredSize(new Dimension(30 * FlamingoUtilities
+		this.panelScrollerLevel2.setPreferredSize(new Dimension(30 * FlamingoUtilities
 				.getFont(this.panelLevel1, "Ribbon.font", "Button.font", "Panel.font").getSize()
 				- 30, 10));
 
-		mainPanel.add(this.panelLevel2, BorderLayout.CENTER);
+		mainPanel.add(this.panelScrollerLevel2, BorderLayout.CENTER);
 
 		if (ribbonAppMenu != null) {
 			if (ribbonAppMenu.getDefaultCallback() != null) {

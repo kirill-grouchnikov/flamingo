@@ -35,8 +35,10 @@ import javax.swing.UIManager;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
 import org.pushingpixels.flamingo.internal.ui.common.popup.BasicPopupPanelUI;
+import org.pushingpixels.flamingo.internal.ui.common.popup.ScrollableHost;
 
-public class JRibbonApplicationMenuPopupPanel extends JPopupPanel {
+public class JRibbonApplicationMenuPopupPanel extends JPopupPanel 
+        implements ScrollableHost {
 	/**
 	 * The UI class ID string.
 	 */

@@ -17,6 +17,7 @@ public class TOKEN_CLASSNAME implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -153,4 +154,11 @@ public class TOKEN_CLASSNAME implements
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static TOKEN_CLASSNAME of(int width, int height) {
+       TOKEN_CLASSNAME result = new TOKEN_CLASSNAME();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }

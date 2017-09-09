@@ -17,6 +17,7 @@ public class System_search implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -329,5 +330,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static System_search of(int width, int height) {
+       System_search result = new System_search();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

@@ -17,6 +17,7 @@ public class Format_justify_fill implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -252,5 +253,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Format_justify_fill of(int width, int height) {
+       Format_justify_fill result = new Format_justify_fill();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

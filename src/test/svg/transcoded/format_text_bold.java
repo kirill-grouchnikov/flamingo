@@ -17,6 +17,7 @@ public class Format_text_bold implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -279,5 +280,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Format_text_bold of(int width, int height) {
+       Format_text_bold result = new Format_text_bold();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

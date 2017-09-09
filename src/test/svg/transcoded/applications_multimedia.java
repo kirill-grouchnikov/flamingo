@@ -17,6 +17,7 @@ public class Applications_multimedia implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -715,5 +716,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Applications_multimedia of(int width, int height) {
+       Applications_multimedia result = new Applications_multimedia();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

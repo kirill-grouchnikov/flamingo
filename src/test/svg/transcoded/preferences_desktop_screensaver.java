@@ -17,6 +17,7 @@ public class Preferences_desktop_screensaver implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -706,5 +707,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Preferences_desktop_screensaver of(int width, int height) {
+       Preferences_desktop_screensaver result = new Preferences_desktop_screensaver();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

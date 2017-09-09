@@ -17,6 +17,7 @@ public class Edit_clear implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -513,5 +514,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Edit_clear of(int width, int height) {
+       Edit_clear result = new Edit_clear();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

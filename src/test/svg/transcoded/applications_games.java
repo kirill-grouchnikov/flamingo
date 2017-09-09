@@ -17,6 +17,7 @@ public class Applications_games implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -355,5 +356,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Applications_games of(int width, int height) {
+       Applications_games result = new Applications_games();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

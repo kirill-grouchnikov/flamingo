@@ -1551,14 +1551,20 @@ public class BasicCheckRibbon extends JRibbonFrame {
 				resourceBundle.getString("AppMenuPrint.secondary.textGroupTitle1"),
 				amEntryPrintSelect, amEntryPrintDefault, amEntryPrintPreview);
 
-		RibbonApplicationMenuEntrySecondary amEntryPrintMemo = 
-				new RibbonApplicationMenuEntrySecondary(
-					new Text_x_generic(), resourceBundle.getString("AppMenuPrint.memo.text"), null,
-					CommandButtonKind.ACTION_ONLY);
-		amEntryPrintMemo.setActionKeyTip("M");
+        RibbonApplicationMenuEntrySecondary amEntryPrintMemo = 
+                new RibbonApplicationMenuEntrySecondary(
+                    new Text_x_generic(), resourceBundle.getString("AppMenuPrint.memo.text"), null,
+                    CommandButtonKind.ACTION_ONLY);
+        amEntryPrintMemo.setActionKeyTip("M");
+
+        RibbonApplicationMenuEntrySecondary amEntryPrintCustom = 
+                new RibbonApplicationMenuEntrySecondary(
+                    new Text_x_generic(), resourceBundle.getString("AppMenuPrint.custom.text"), null,
+                    CommandButtonKind.ACTION_ONLY);
+        amEntryPrintCustom.setActionKeyTip("C");
 
 		amEntryPrint.addSecondaryMenuGroup(resourceBundle.getString("AppMenuPrint.secondary.textGroupTitle2"),
-				amEntryPrintMemo);
+				amEntryPrintMemo, amEntryPrintCustom);
 
 		RibbonApplicationMenuEntryPrimary amEntrySend = new RibbonApplicationMenuEntryPrimary(
 				new Mail_forward(), resourceBundle.getString("AppMenuSend.text"),

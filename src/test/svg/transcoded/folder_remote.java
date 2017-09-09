@@ -17,6 +17,7 @@ public class Folder_remote implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -763,5 +764,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Folder_remote of(int width, int height) {
+       Folder_remote result = new Folder_remote();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

@@ -17,6 +17,7 @@ public class X_office_document implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -612,5 +613,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static X_office_document of(int width, int height) {
+       X_office_document result = new X_office_document();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

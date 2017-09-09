@@ -17,6 +17,7 @@ public class Edit_select_all implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -351,5 +352,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Edit_select_all of(int width, int height) {
+       Edit_select_all result = new Edit_select_all();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

@@ -234,8 +234,8 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 					"Button.font", "Panel.font");
 			Font titleFont = font.deriveFont(Font.BOLD);
 
-			// the main text gets 200 pixels. The width is defined
-			// by this and the presence of the main text.
+			// The overall width is defined by the width of the text 
+			// and the presence of the main image.
 			// The height is defined based on the width and the
 			// text broken into multiline paragraphs
 
@@ -565,7 +565,7 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 
 	protected int getDescriptionTextWidth() {
 		return FlamingoUtilities.getScaledSize(200, 
-		        this.richTooltipPanel.getFont().getSize(), 20f, 4);
+		        this.richTooltipPanel.getFont().getSize(), 40f, 4);
 	}
 
 	protected int getLayoutGap() {

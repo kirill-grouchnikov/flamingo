@@ -17,6 +17,7 @@ public class Document_print_preview implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -631,5 +632,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Document_print_preview of(int width, int height) {
+       Document_print_preview result = new Document_print_preview();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

@@ -36,7 +36,6 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -284,12 +283,9 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 		this.leadingScroller.setAutoRepeatAction(true);
 		this.leadingScroller.setAutoRepeatActionIntervals(200, 50);
 		this.leadingScroller.setFireActionOnRollover(this.scrollablePanel.isScrollOnRollover());
-		this.leadingScroller.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				viewOffset -= 12;
-				syncScrolling();
-			}
+		this.leadingScroller.addActionListener((ActionEvent e) -> {
+			viewOffset -= 12;
+			syncScrolling();
 		});
 	}
 
@@ -297,12 +293,9 @@ public class BasicScrollablePanelUI extends ScrollablePanelUI {
 		this.trailingScroller.setAutoRepeatAction(true);
 		this.trailingScroller.setAutoRepeatActionIntervals(200, 50);
 		this.trailingScroller.setFireActionOnRollover(this.scrollablePanel.isScrollOnRollover());
-		this.trailingScroller.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				viewOffset += 12;
-				syncScrolling();
-			}
+		this.trailingScroller.addActionListener((ActionEvent e) -> {
+			viewOffset += 12;
+			syncScrolling();
 		});
 	}
 

@@ -17,6 +17,7 @@ public class Mail_forward implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -455,5 +456,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Mail_forward of(int width, int height) {
+       Mail_forward result = new Mail_forward();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 

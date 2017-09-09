@@ -17,6 +17,7 @@ public class Format_indent_less implements
 	 * @param g
 	 *            Graphics context.
 	 */
+    @SuppressWarnings("unused")
 	public static void paint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
@@ -261,5 +262,12 @@ g.setTransform(defaultTransform_);
         paint(g2d);
         g2d.dispose();
 	}
+    
+    public static Format_indent_less of(int width, int height) {
+       Format_indent_less result = new Format_indent_less();
+       result.width = width;
+       result.height = height;
+       return result;
+    }
 }
 
