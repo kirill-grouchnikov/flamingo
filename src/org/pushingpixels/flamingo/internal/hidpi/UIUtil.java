@@ -16,10 +16,11 @@
 package org.pushingpixels.flamingo.internal.hidpi;
 
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
-import java.lang.reflect.InvocationTargetException;
+import java.awt.geom.AffineTransform;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.WeakHashMap;
@@ -29,8 +30,10 @@ import java.util.WeakHashMap;
  */
 public class UIUtil {
 	public static final boolean IS_OS_MAC = startsWith(getSystemProperty("os.name"), "Mac");
-	public static final boolean IS_VENDOR_APPLE = containsIgnoreCase(
-			getSystemProperty("java.vendor"), "Apple");
+    public static final boolean IS_VENDOR_APPLE = containsIgnoreCase(
+            getSystemProperty("java.vendor"), "Apple");
+    public static final boolean IS_JAVA_9 = startsWith(
+            getSystemProperty("java.specification.version"), "9");
 
 	private static String getSystemProperty(String key) {
 		try {
@@ -65,37 +68,44 @@ public class UIUtil {
 		 * So let's use a dedicated method. It is rather safe because it caches
 		 * a value that has been got on AppKit previously.
 		 */
-		private static boolean isOracleMacRetinaDevice(GraphicsDevice device) {
-			if (IS_VENDOR_APPLE)
-				return false;
+        private static boolean isOracleMacRetinaDeviceModern(GraphicsDevice device) {
+            GraphicsConfiguration graphicsConfig = device.getDefaultConfiguration();
 
-			Boolean isRetina = devicesToRetinaSupportCacheMap.get(device);
+            AffineTransform tx = graphicsConfig.getDefaultTransform();
+            double scaleX = tx.getScaleX();
+            double scaleY = tx.getScaleY();
+            return (scaleX > 1.0f && scaleY > 1.0f);
+        }
 
-			if (isRetina != null) {
-				return isRetina;
-			}
+        private static boolean isOracleMacRetinaDeviceLegacy(GraphicsDevice device) {
+            try {
+                Method getScaleFactorMethod = Class.forName("sun.awt.CGraphicsDevice")
+                        .getMethod("getScaleFactor");
+                return getScaleFactorMethod == null
+                        || (Integer) getScaleFactorMethod.invoke(device) != 1;
+            } catch (Throwable t) {
+                return false;
+            }
+        }
 
-			Method getScaleFactorMethod = null;
-			try {
-				getScaleFactorMethod = Class.forName("sun.awt.CGraphicsDevice").getMethod("getScaleFactor");
-			} catch (ClassNotFoundException e) {
-			} catch (NoSuchMethodException e) {
-			}
+        private static boolean isOracleMacRetinaDevice(GraphicsDevice device) {
 
-			try {
-				isRetina = getScaleFactorMethod == null || (Integer) getScaleFactorMethod.invoke(device) != 1;
-			} catch (IllegalAccessException e) {
-				isRetina = false;
-			} catch (InvocationTargetException e) {
-				isRetina = false;
-			} catch (IllegalArgumentException e) {
-				isRetina = false;
-			}
+            if (IS_VENDOR_APPLE)
+                return false;
 
-			devicesToRetinaSupportCacheMap.put(device, isRetina);
+            Boolean isRetina = devicesToRetinaSupportCacheMap.get(device);
 
-			return isRetina;
-		}
+            if (isRetina != null) {
+                return isRetina;
+            }
+            
+            isRetina = IS_JAVA_9 ? isOracleMacRetinaDeviceModern(device) :
+                isOracleMacRetinaDeviceLegacy(device);
+
+            devicesToRetinaSupportCacheMap.put(device, isRetina);
+
+            return isRetina;
+        }
 
 		/**
 		 * For JDK6 we have a dedicated property which does not allow to

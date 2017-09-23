@@ -163,7 +163,7 @@ public class JRibbonFrame extends JFrame {
 			this.setOpaque(false);
 
 			// Support placing heavyweight components in the ribbon frame. See
-			// http://today.java.net/article/2009/11/02/transparent-panel-mixing-heavyweight-and-lightweight-components.
+			// https://community.oracle.com/docs/DOC-982814.
 			try {
 				Class awtUtilitiesClass = Class
 						.forName("com.sun.awt.AWTUtilities");
