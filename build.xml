@@ -52,8 +52,8 @@
 	<property name="flamingo.drop.dir" value="${module.flamingo.basedir}/drop" />
 	<property name="flamingo.lib.dir" value="${module.flamingo.basedir}/lib" />
 	<property name="flamingo.src.dir" value="${module.flamingo.basedir}/src/" />
-	<property name="flamingo.version" value="5.2.00-dev" />
-	<property name="flamingo.versionKey" value="5.2dev Kennocha" />
+	<property name="flamingo.version" value="5.2.00-rc" />
+	<property name="flamingo.versionKey" value="5.2rc Kennocha" />
 
 	<path id="flamingo.module.bootclasspath">
 		<!-- Paths to be included in compilation bootclasspath -->
