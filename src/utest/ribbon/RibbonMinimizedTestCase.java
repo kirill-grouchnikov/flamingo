@@ -45,11 +45,10 @@ import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 import org.pushingpixels.flamingo.internal.utils.RenderingUtils;
 
 import junit.framework.TestCase;
-import test.common.SamplePopupMenu;
-import test.svg.transcoded.Edit_copy;
-import test.svg.transcoded.Edit_cut;
-import test.svg.transcoded.Edit_paste;
-import test.svg.transcoded.Font_x_generic;
+import utest.svg.transcoded.Edit_copy;
+import utest.svg.transcoded.Edit_cut;
+import utest.svg.transcoded.Edit_paste;
+import utest.svg.transcoded.Font_x_generic;
 
 public class RibbonMinimizedTestCase extends TestCase {
 	private JRibbonFrame ribbonFrame;

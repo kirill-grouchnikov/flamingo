@@ -27,9 +27,9 @@ import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
 import org.pushingpixels.flamingo.internal.ui.ribbon.BasicRibbonBandUI;
 
-import test.svg.transcoded.Edit_copy;
-import test.svg.transcoded.Edit_cut;
-import test.svg.transcoded.Edit_paste;
+import utest.svg.transcoded.Edit_copy;
+import utest.svg.transcoded.Edit_cut;
+import utest.svg.transcoded.Edit_paste;
 
 public class RibbonBandExpandActionListenerTestCase extends
 		FestSwingJUnitTestCase {

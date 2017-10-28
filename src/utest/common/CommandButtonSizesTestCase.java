@@ -18,8 +18,8 @@ import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
-import test.svg.transcoded.Edit_cut;
-import test.svg.transcoded.Edit_paste;
+import utest.svg.transcoded.Edit_cut;
+import utest.svg.transcoded.Edit_paste;
 
 public class CommandButtonSizesTestCase extends FestSwingJUnitTestCase {
 	JFrame buttonFrame;

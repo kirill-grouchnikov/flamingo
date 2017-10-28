@@ -19,7 +19,7 @@ import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
-import test.svg.transcoded.Edit_paste;
+import utest.svg.transcoded.Edit_paste;
 
 /**
  * This class tests computation of action click and popup click areas of command

@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/batik-all.jar" sourcepath="/Users/kirillg/JTools/batik-1.7/sources"/>
-	<classpathentry kind="lib" path="lib/forms-1.2.0.jar"/>
 	<classpathentry kind="lib" path="lib/js.jar"/>
 	<classpathentry kind="lib" path="lib/pdf-transcoder.jar"/>
 	<classpathentry kind="lib" path="lib/svnkit.jar"/>
