@@ -3,17 +3,14 @@ TOKEN_PACKAGE
 import java.awt.*;
 import java.awt.geom.*;
 
-import javax.swing.Icon;
-import javax.swing.plaf.UIResource;
-
-import org.pushingpixels.substance.internal.hidpi.IsHiDpiAware;
-import org.pushingpixels.substance.internal.hidpi.IsResizable;
+import org.pushingpixels.substance.api.hidpi.HiDpiAwareIcon;
+import org.pushingpixels.substance.api.iconpack.SubstanceIcon;
 
 /**
  * This class has been automatically generated using <a
  * href="https://github.com/kirill-grouchnikov/flamingo">Flamingo SVG transcoder</a>.
  */
-public class TOKEN_CLASSNAME implements Icon, UIResource, IsResizable, IsHiDpiAware {
+public class TOKEN_CLASSNAME implements SubstanceIcon {
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
@@ -126,12 +123,6 @@ public class TOKEN_CLASSNAME implements Icon, UIResource, IsResizable, IsHiDpiAw
         return true;
     }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics,
-	 * int, int)
-	 */
     @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
@@ -158,10 +149,10 @@ public class TOKEN_CLASSNAME implements Icon, UIResource, IsResizable, IsHiDpiAw
 		g2d.dispose();
 	}
 	
-	public static TOKEN_CLASSNAME of(int width, int height) {
-	   TOKEN_CLASSNAME result = new TOKEN_CLASSNAME();
-	   result.width = width;
-	   result.height = height;
-	   return result;
+	public static HiDpiAwareIcon of(int width, int height) {
+	   TOKEN_CLASSNAME base = new TOKEN_CLASSNAME();
+	   base.width = width;
+	   base.height = height;
+	   return new HiDpiAwareIcon(base);
 	}
 }
