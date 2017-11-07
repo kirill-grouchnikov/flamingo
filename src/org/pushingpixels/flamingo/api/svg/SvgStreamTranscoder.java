@@ -70,7 +70,7 @@ public class SvgStreamTranscoder extends SvgBaseTranscoder {
 	 * Transcodes the SVG image into Java2D code. Does nothing if the
 	 * {@link #listener} is <code>null</code>.
 	 */
-	public void transcode() {
+	public void transcode(InputStream templateStream) {
 		if (this.externalPrintWriter == null)
 			return;
 
@@ -81,7 +81,7 @@ public class SvgStreamTranscoder extends SvgBaseTranscoder {
 
 		try {
 			transcoder.transcode(ti, null);
-			this.transcode(transcoder.getGVTRoot());
+			this.transcode(transcoder.getGVTRoot(), templateStream);
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		} finally {

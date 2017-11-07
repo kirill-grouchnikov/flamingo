@@ -30,6 +30,7 @@
 package org.pushingpixels.flamingo.api.svg;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,7 +74,7 @@ public class SvgTranscoder extends SvgBaseTranscoder {
 	 * Transcodes the SVG image into Java2D code. Does nothing if the
 	 * {@link #listener} is <code>null</code>.
 	 */
-	public void transcode() {
+	public void transcode(InputStream templateStream) {
 		if (this.listener == null)
 			return;
 
@@ -90,7 +91,7 @@ public class SvgTranscoder extends SvgBaseTranscoder {
 			// System.out.println("Building: " + this.uri);
 			GraphicsNode gvtRoot = builder.build(batikBridgeContext, svgDoc);
 
-			this.transcode(gvtRoot);
+			this.transcode(gvtRoot, templateStream);
 		} catch (IOException ex) {
 			Logger.getLogger(SvgTranscoder.class.getName()).log(Level.SEVERE,
 					null, ex);

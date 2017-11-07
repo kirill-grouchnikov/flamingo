@@ -66,12 +66,13 @@
 		<path refid="${module.jdk.classpath.flamingo}" />
 		<pathelement location="${flamingo.lib.dir}/jsr173_api.jar" />
 		<pathelement location="${flamingo.lib.dir}/sjsxp.jar" />
-		<pathelement location="${flamingo.lib.dir}/batik-all.jar" />
+        <pathelement location="${flamingo.lib.dir}/batik-all-1.9.jar" />
 		<pathelement location="${flamingo.lib.dir}/js.jar" />
 		<pathelement location="${flamingo.lib.dir}/pdf-transcoder.jar" />
-		<pathelement location="${flamingo.lib.dir}/xerces_2_5_0.jar" />
-		<pathelement location="${flamingo.lib.dir}/xml-apis.jar" />
-		<pathelement location="${flamingo.lib.dir}/xml-apis-ext.jar" />
+		<pathelement location="${flamingo.lib.dir}/xercesImpl-2.9.1.jar" />
+		<pathelement location="${flamingo.lib.dir}/xml-apis-1.3.04.jar" />
+        <pathelement location="${flamingo.lib.dir}/xml-apis-ext-1.3.04.jar" />
+        <pathelement location="${flamingo.lib.dir}/xmlgraphics-commons-2.2.jar" />
 		<pathelement location="${flamingo.lib.dir}/svnkit.jar" />
 		<pathelement location="${flamingo.lib.dir}/trident-1.4.jar" />
 	</path>

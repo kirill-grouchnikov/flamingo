@@ -151,6 +151,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
                     try {
                         pushChoices(new BreadcrumbItemChoices(null, get()));
                     } catch (Exception exc) {
+                        exc.printStackTrace(System.err);
                     }
                 }
             };
@@ -549,9 +550,6 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
                 final int biIndex = i;
                 menuButton.getActionModel().addActionListener((ActionEvent e) -> {
                     SwingUtilities.invokeLater(() -> {
-                        if (bi == null)
-                            return;
-
                         BreadcrumbBarModel barModel = breadcrumbBar.getModel();
                         barModel.setCumulative(true);
                         int itemIndex = barModel.indexOf(bic.getAncestor());

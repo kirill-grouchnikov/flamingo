@@ -98,10 +98,6 @@ abstract class SvgBaseTranscoder {
 	 */
 	protected String javaPackageName;
 
-	protected boolean javaToImplementResizableIconInterface;
-
-	protected boolean javaToImplementSubstanceIconInterfaces;
-
 	protected final static String TOKEN_PACKAGE = "TOKEN_PACKAGE";
 
 	protected final static String TOKEN_CLASSNAME = "TOKEN_CLASSNAME";
@@ -126,16 +122,6 @@ abstract class SvgBaseTranscoder {
 	 */
 	public SvgBaseTranscoder(String javaClassname) {
 		this.javaClassName = javaClassname;
-		this.javaToImplementResizableIconInterface = false;
-	}
-
-	public void setJavaToImplementResizableIconInterface(
-			boolean javaToImplementResizableIconInterface) {
-		this.javaToImplementResizableIconInterface = javaToImplementResizableIconInterface;
-	}
-	
-	public void setJavaToImplementSubstanceInterfaces() {
-		this.javaToImplementSubstanceIconInterfaces = true;
 	}
 
 	public void setJavaPackageName(String javaPackageName) {
@@ -160,15 +146,8 @@ abstract class SvgBaseTranscoder {
 	/**
 	 * Transcodes the SVG image into Java2D code.
 	 */
-	public void transcode(GraphicsNode gvtRoot) {
-		String template = this.javaToImplementSubstanceIconInterfaces 
-				? "SvgTranscoderTemplateSubstance.templ" :
-					(this.javaToImplementResizableIconInterface 
-						? "SvgTranscoderTemplateResizable.templ"
-						: "SvgTranscoderTemplatePlain.templ");
+	public void transcode(GraphicsNode gvtRoot, InputStream templateStream) {
 		// load the template
-		InputStream templateStream = SvgBaseTranscoder.class
-				.getResourceAsStream(template);
 		StringBuffer templateBuffer = new StringBuffer();
 		BufferedReader templateReader = new BufferedReader(
 				new InputStreamReader(templateStream));
