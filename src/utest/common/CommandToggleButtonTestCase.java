@@ -6,7 +6,6 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.net.URL;
 
 import javax.swing.Icon;
 import javax.swing.JFrame;
@@ -17,15 +16,11 @@ import org.fest.swing.edt.GuiActionRunner;
 import org.fest.swing.edt.GuiQuery;
 import org.fest.swing.edt.GuiTask;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
-import org.fest.swing.timing.Condition;
-import org.fest.swing.timing.Pause;
 import org.junit.Before;
 import org.junit.Test;
-import org.pushingpixels.flamingo.api.common.AsynchronousLoading;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-import org.pushingpixels.flamingo.api.svg.SvgBatikResizableIcon;
 
 public class CommandToggleButtonTestCase extends FestSwingJUnitTestCase {
 	JFrame buttonFrame;
@@ -35,17 +30,7 @@ public class CommandToggleButtonTestCase extends FestSwingJUnitTestCase {
 	@Override
 	@Before
 	public void onSetUp() {
-		URL resource = CommandToggleButtonTestCase.class.getClassLoader()
-				.getResource("utest/common/edit-paste.svg");
-		Assertions.assertThat(resource).isNotNull();
-		final ResizableIcon icon = SvgBatikResizableIcon.getSvgIcon(resource,
-				new Dimension(32, 32));
-		Pause.pause(new Condition("Waiting to load the SVG icon") {
-			@Override
-			public boolean test() {
-				return !((AsynchronousLoading) icon).isLoading();
-			}
-		});
+        final ResizableIcon icon = edit_paste.of(32, 32);
 
 		GuiActionRunner.execute(new GuiTask() {
 			@Override
@@ -326,17 +311,7 @@ public class CommandToggleButtonTestCase extends FestSwingJUnitTestCase {
 					}
 				});
 
-		URL cutIconUrl = CommandToggleButtonTestCase.class.getClassLoader()
-				.getResource("utest/common/edit-cut.svg");
-		Assertions.assertThat(cutIconUrl).isNotNull();
-		final ResizableIcon cutIcon = SvgBatikResizableIcon.getSvgIcon(
-				cutIconUrl, new Dimension(16, 16));
-		Pause.pause(new Condition("Waiting to load the SVG icon") {
-			@Override
-			public boolean test() {
-				return !((AsynchronousLoading) cutIcon).isLoading();
-			}
-		});
+        final ResizableIcon cutIcon = edit_cut.of(16, 16);
 		GuiActionRunner.execute(new GuiTask() {
 			@Override
 			protected void executeInEDT() throws Throwable {

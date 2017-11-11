@@ -1,13 +1,11 @@
 package utest.common;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.net.URL;
 
 import javax.swing.JFrame;
 
@@ -17,11 +15,8 @@ import org.fest.swing.edt.GuiActionRunner;
 import org.fest.swing.edt.GuiQuery;
 import org.fest.swing.edt.GuiTask;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
-import org.fest.swing.timing.Condition;
-import org.fest.swing.timing.Pause;
 import org.junit.Before;
 import org.junit.Test;
-import org.pushingpixels.flamingo.api.common.AsynchronousLoading;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
@@ -31,7 +26,6 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
-import org.pushingpixels.flamingo.api.svg.SvgBatikResizableIcon;
 
 public class SplitCommandButtonTestCase extends FestSwingJUnitTestCase {
 	JFrame buttonFrame;
@@ -44,17 +38,7 @@ public class SplitCommandButtonTestCase extends FestSwingJUnitTestCase {
 	@Override
 	@Before
 	public void onSetUp() {
-		URL resource = SplitCommandButtonTestCase.class.getClassLoader()
-				.getResource("utest/common/edit-paste.svg");
-		Assertions.assertThat(resource).isNotNull();
-		final ResizableIcon icon = SvgBatikResizableIcon.getSvgIcon(resource,
-				new Dimension(32, 32));
-		Pause.pause(new Condition("Waiting to load the SVG icon") {
-			@Override
-			public boolean test() {
-				return !((AsynchronousLoading) icon).isLoading();
-			}
-		});
+        final ResizableIcon icon = edit_paste.of(32, 32);
 
 		GuiActionRunner.execute(new GuiTask() {
 			@Override

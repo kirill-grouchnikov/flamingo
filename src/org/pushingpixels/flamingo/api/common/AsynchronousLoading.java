@@ -31,8 +31,6 @@ package org.pushingpixels.flamingo.api.common;
 
 import java.util.concurrent.ExecutorService;
 
-import org.pushingpixels.flamingo.api.svg.SvgBatikResizableIcon;
-
 /**
  * This interface is used for asynchronously-loaded contents. For example, the
  * {@link SvgBatikResizableIcon} uses the {@link ExecutorService} to load the

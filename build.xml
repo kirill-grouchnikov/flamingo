@@ -18,7 +18,6 @@
 		<include name="**/?*.ttf" />
 		<include name="**/?*.svg" />
 		<include name="**/?*.svgz" />
-		<include name="**/?*.templ" />
 	</patternset>
 	<!-- JDK definitions -->
 
@@ -55,6 +54,9 @@
 	<property name="flamingo.version" value="6.0.00-dev" />
 	<property name="flamingo.versionKey" value="6.0.00dev Liadan" />
 
+    <property name="trident.basedir" value="${module.flamingo.basedir}/../trident" />
+    <property name="trident.version" value="1.5.00-dev" />
+
 	<path id="flamingo.module.bootclasspath">
 		<!-- Paths to be included in compilation bootclasspath -->
 	</path>
@@ -64,17 +66,7 @@
 
 	<path id="flamingo.module.classpath">
 		<path refid="${module.jdk.classpath.flamingo}" />
-		<pathelement location="${flamingo.lib.dir}/jsr173_api.jar" />
-		<pathelement location="${flamingo.lib.dir}/sjsxp.jar" />
-        <pathelement location="${flamingo.lib.dir}/batik-all-1.9.jar" />
-		<pathelement location="${flamingo.lib.dir}/js.jar" />
-		<pathelement location="${flamingo.lib.dir}/pdf-transcoder.jar" />
-		<pathelement location="${flamingo.lib.dir}/xercesImpl-2.9.1.jar" />
-		<pathelement location="${flamingo.lib.dir}/xml-apis-1.3.04.jar" />
-        <pathelement location="${flamingo.lib.dir}/xml-apis-ext-1.3.04.jar" />
-        <pathelement location="${flamingo.lib.dir}/xmlgraphics-commons-2.2.jar" />
-		<pathelement location="${flamingo.lib.dir}/svnkit.jar" />
-		<pathelement location="${flamingo.lib.dir}/trident-1.4.jar" />
+		<pathelement location="${trident.basedir}/drop/${trident.version}/trident-${trident.version}.jar" />
 	</path>
 
 	<patternset id="excluded.from.module.flamingo" />

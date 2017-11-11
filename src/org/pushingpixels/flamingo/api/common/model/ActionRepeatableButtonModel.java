@@ -32,7 +32,6 @@ package org.pushingpixels.flamingo.api.common.model;
 import java.awt.AWTEvent;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 
 import javax.swing.DefaultButtonModel;
@@ -214,22 +213,18 @@ public class ActionRepeatableButtonModel extends DefaultButtonModel implements
 	 *            Modifiers for the action event to be fired.
 	 */
 	private void startActionTimer(final int modifiers) {
-		this.autoRepeatTimer = new Timer(this.commandButton
-				.getAutoRepeatSubsequentInterval(), new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!isEnabled() || !commandButton.isVisible()
-						|| !commandButton.isDisplayable()) {
-					// stop the timer when the button becomes
-					// disabled, invisible or undisplayable
-					autoRepeatTimer.stop();
-					return;
-				}
-				fireActionPerformed(new ActionEvent(this,
-						ActionEvent.ACTION_PERFORMED, getActionCommand(),
-						EventQueue.getMostRecentEventTime(), modifiers));
-			}
-		});
+        this.autoRepeatTimer = new Timer(this.commandButton.getAutoRepeatSubsequentInterval(),
+                (ActionEvent e) -> {
+                    if (!isEnabled() || !commandButton.isVisible()
+                            || !commandButton.isDisplayable()) {
+                        // stop the timer when the button becomes
+                        // disabled, invisible or undisplayable
+                        autoRepeatTimer.stop();
+                        return;
+                    }
+                    fireActionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED,
+                            getActionCommand(), EventQueue.getMostRecentEventTime(), modifiers));
+                });
 		this.autoRepeatTimer.setInitialDelay(this.commandButton
 				.getAutoRepeatInitialInterval());
 		this.autoRepeatTimer.start();

@@ -56,6 +56,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -78,6 +79,7 @@ import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.model.PopupButtonModel;
 import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.internal.ui.common.JCircularProgress;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
 /**
@@ -92,6 +94,8 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
      * The associated breadcrumb bar.
      */
     protected JBreadcrumbBar breadcrumbBar;
+
+    protected JCircularProgress circularProgress;
 
     protected JPanel mainPanel;
 
@@ -111,6 +115,10 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
     protected BreadcrumbPathListener pathListener;
 
     private AtomicInteger atomicCounter;
+
+    private Timer loadingTimer;
+
+    private boolean isShowingProgress;
 
     /*
      * (non-Javadoc)
@@ -143,12 +151,14 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
             SwingWorker<List<StringValuePair>, Void> worker = new SwingWorker<List<StringValuePair>, Void>() {
                 @Override
                 protected List<StringValuePair> doInBackground() throws Exception {
+                    startLoadingTimer();
                     return breadcrumbBar.getCallback().getPathChoices(null);
                 }
 
                 @Override
                 protected void done() {
                     try {
+                        stopLoadingTimer();
                         pushChoices(new BreadcrumbItemChoices(null, get()));
                     } catch (Exception exc) {
                         exc.printStackTrace(System.err);
@@ -161,6 +171,10 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
         this.dummy = new JCommandButton("Dummy", new EmptyResizableIcon(16));
         this.dummy.setDisplayState(CommandButtonDisplayState.MEDIUM);
         this.dummy.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
+        int preferredHeight = dummy.getPreferredSize().height;
+        this.circularProgress.setBorder(
+                new EmptyBorder((preferredHeight - 12) / 2, 10, (preferredHeight - 12) / 2, 10));
+        this.circularProgress.setPreferredSize(new Dimension(32, preferredHeight));
     }
 
     /*
@@ -188,12 +202,15 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
     }
 
     protected void installComponents(JBreadcrumbBar bar) {
-        this.mainPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        FlowLayout mainPanelLayout = new FlowLayout(FlowLayout.LEFT, 0, 0);
+        mainPanelLayout.setAlignOnBaseline(true);
+        this.mainPanel = new JPanel(mainPanelLayout);
         this.mainPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
         this.mainPanel.setOpaque(false);
         this.scrollerPanel = new JScrollablePanel<JPanel>(this.mainPanel,
                 JScrollablePanel.ScrollType.HORIZONTALLY);
-
+        this.circularProgress = new JCircularProgress();
+        this.circularProgress.setPreferredSize(new Dimension(12, 12));
         bar.add(this.scrollerPanel, BorderLayout.CENTER);
     }
 
@@ -213,6 +230,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 
             @Override
             public void breadcrumbPathEvent(BreadcrumbPathEvent event) {
+                startLoadingTimer();
                 final int indexOfFirstChange = event.getIndexOfFirstChange();
 
                 if ((this.pathChangeWorker != null) && !this.pathChangeWorker.isDone()) {
@@ -234,7 +252,9 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
                             }
                         }
 
-                        SwingUtilities.invokeLater(() -> updateComponents());
+                        SwingUtilities.invokeLater(() -> {
+                            updateComponents();
+                        });
 
                         if (indexOfFirstChange == 0) {
                             List<StringValuePair> rootChoices = breadcrumbBar.getCallback()
@@ -294,6 +314,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
                     @Override
                     protected void done() {
                         atomicCounter.decrementAndGet();
+                        stopLoadingTimer();
                     }
                 };
                 pathChangeWorker.execute();
@@ -306,6 +327,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
     }
 
     protected void uninstallComponents(JBreadcrumbBar bar) {
+        this.stopLoadingTimer();
         this.mainPanel.removeAll();
         this.buttonStack.clear();
 
@@ -320,9 +342,39 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
         this.pathListener = null;
     }
 
+    private synchronized void startLoadingTimer() {
+        if (this.loadingTimer == null) {
+            this.loadingTimer = new Timer(100, (ActionEvent e) -> {
+                this.loadingTimer.stop();
+
+                this.circularProgress.setVisible(false);
+                this.mainPanel.remove(this.circularProgress);
+                this.circularProgress.setVisible(true);
+                this.isShowingProgress = true;
+                this.mainPanel.add(this.circularProgress);
+                this.mainPanel.revalidate();
+                this.mainPanel.repaint();
+            });
+        }
+        if (this.loadingTimer.isRunning()) {
+            this.loadingTimer.stop();
+        }
+        this.loadingTimer.start();
+    }
+
+    private synchronized void stopLoadingTimer() {
+        if ((this.loadingTimer != null) && this.loadingTimer.isRunning()) {
+            this.loadingTimer.stop();
+        }
+        this.isShowingProgress = false;
+        this.mainPanel.remove(this.circularProgress);
+        this.mainPanel.revalidate();
+        this.mainPanel.repaint();
+    }
+
     /**
-     * Invoked by <code>installUI</code> to create a layout manager object to
-     * manage the {@link JBreadcrumbBar}.
+     * Invoked by <code>installUI</code> to create a layout manager object to manage the
+     * {@link JBreadcrumbBar}.
      * 
      * @return a layout manager object
      * 
@@ -348,8 +400,7 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
         /*
          * (non-Javadoc)
          * 
-         * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String,
-         * java.awt.Component)
+         * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String, java.awt.Component)
          */
         public void addLayoutComponent(String name, Component c) {
         }
@@ -480,6 +531,9 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
 
         for (JCommandButton jcb : buttonStack) {
             this.mainPanel.add(jcb);
+        }
+        if (this.isShowingProgress) {
+            this.mainPanel.add(this.circularProgress);
         }
 
         this.scrollerPanel.revalidate();
@@ -626,8 +680,8 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
     }
 
     /**
-     * Pushes a choice to the top position of the stack. If the current top is
-     * already a {@link BreadcrumbItemChoices}, replace it.
+     * Pushes a choice to the top position of the stack. If the current top is already a
+     * {@link BreadcrumbItemChoices}, replace it.
      * 
      * @param bic
      *            The choice item to push.
@@ -638,8 +692,8 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
     }
 
     /**
-     * Pushes a choice to the top position of the stack. If the current top is
-     * already a {@link BreadcrumbItemChoices}, replace it.
+     * Pushes a choice to the top position of the stack. If the current top is already a
+     * {@link BreadcrumbItemChoices}, replace it.
      * 
      * @param bic
      *            The choice item to push.
@@ -661,8 +715,8 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
     }
 
     /**
-     * Pushes an item to the top position of the stack. If the current top is
-     * already a {@link BreadcrumbItemChoices}, replace it.
+     * Pushes an item to the top position of the stack. If the current top is already a
+     * {@link BreadcrumbItemChoices}, replace it.
      * 
      * @param bi
      *            The item to push.

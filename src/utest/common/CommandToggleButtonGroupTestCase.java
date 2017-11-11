@@ -1,11 +1,9 @@
 package utest.common;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.URL;
 
 import javax.swing.JFrame;
 
@@ -14,16 +12,12 @@ import org.fest.swing.edt.GuiActionRunner;
 import org.fest.swing.edt.GuiQuery;
 import org.fest.swing.edt.GuiTask;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
-import org.fest.swing.timing.Condition;
-import org.fest.swing.timing.Pause;
 import org.junit.Before;
 import org.junit.Test;
-import org.pushingpixels.flamingo.api.common.AsynchronousLoading;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-import org.pushingpixels.flamingo.api.svg.SvgBatikResizableIcon;
 
 public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 	JFrame buttonFrame;
@@ -36,26 +30,10 @@ public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 	@Override
 	@Before
 	public void onSetUp() {
-		String[] iconNames = new String[] { "paste", "copy", "cut" };
 		final ResizableIcon[] icons = new ResizableIcon[COUNT];
-		for (int i = 0; i < COUNT; i++) {
-			URL iconUrl = CommandToggleButtonGroupTestCase.class
-					.getClassLoader().getResource(
-							"utest/common/edit-" + iconNames[i] + ".svg");
-			Assertions.assertThat(iconUrl).isNotNull();
-			icons[i] = SvgBatikResizableIcon.getSvgIcon(iconUrl, new Dimension(
-					32, 32));
-		}
-		Pause.pause(new Condition("Waiting to load the SVG icons") {
-			@Override
-			public boolean test() {
-				for (int i = 0; i < COUNT; i++) {
-					if (((AsynchronousLoading) icons[i]).isLoading())
-						return false;
-				}
-				return true;
-			}
-		});
+        icons[0] = edit_paste.of(32, 32);
+        icons[1] = edit_copy.of(32, 32);
+        icons[2] = edit_cut.of(32, 32);
 
 		GuiActionRunner.execute(new GuiTask() {
 			@Override
@@ -240,17 +218,7 @@ public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 				})).isNull();
 
 		// create a new button
-		URL cutIconUrl = CommandToggleButtonTestCase.class.getClassLoader()
-				.getResource("utest/common/edit-cut.svg");
-		Assertions.assertThat(cutIconUrl).isNotNull();
-		final ResizableIcon cutIcon = SvgBatikResizableIcon.getSvgIcon(
-				cutIconUrl, new Dimension(16, 16));
-		Pause.pause(new Condition("Waiting to load the SVG icon") {
-			@Override
-			public boolean test() {
-				return !((AsynchronousLoading) cutIcon).isLoading();
-			}
-		});
+		final ResizableIcon cutIcon = edit_cut.of(16, 16);
 		final JCommandToggleButton newButton = GuiActionRunner
 				.execute(new GuiQuery<JCommandToggleButton>() {
 					@Override
@@ -349,17 +317,7 @@ public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 				})).isEqualTo(buttons[0]);
 
 		// create a new button
-		URL cutIconUrl = CommandToggleButtonTestCase.class.getClassLoader()
-				.getResource("utest/common/edit-cut.svg");
-		Assertions.assertThat(cutIconUrl).isNotNull();
-		final ResizableIcon cutIcon = SvgBatikResizableIcon.getSvgIcon(
-				cutIconUrl, new Dimension(16, 16));
-		Pause.pause(new Condition("Waiting to load the SVG icon") {
-			@Override
-			public boolean test() {
-				return !((AsynchronousLoading) cutIcon).isLoading();
-			}
-		});
+		final ResizableIcon cutIcon = edit_cut.of(16, 16);
 		final JCommandToggleButton newButton = GuiActionRunner
 				.execute(new GuiQuery<JCommandToggleButton>() {
 					@Override
@@ -439,17 +397,7 @@ public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 				})).isNull();
 
 		// create a new button
-		URL cutIconUrl = CommandToggleButtonTestCase.class.getClassLoader()
-				.getResource("utest/common/edit-cut.svg");
-		Assertions.assertThat(cutIconUrl).isNotNull();
-		final ResizableIcon cutIcon = SvgBatikResizableIcon.getSvgIcon(
-				cutIconUrl, new Dimension(16, 16));
-		Pause.pause(new Condition("Waiting to load the SVG icon") {
-			@Override
-			public boolean test() {
-				return !((AsynchronousLoading) cutIcon).isLoading();
-			}
-		});
+        final ResizableIcon cutIcon = edit_cut.of(16, 16);
 		final JCommandToggleButton newButton = GuiActionRunner
 				.execute(new GuiQuery<JCommandToggleButton>() {
 					@Override
@@ -567,17 +515,7 @@ public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 				})).isEqualTo(buttons[0]);
 
 		// create a new button
-		URL cutIconUrl = CommandToggleButtonTestCase.class.getClassLoader()
-				.getResource("utest/common/edit-cut.svg");
-		Assertions.assertThat(cutIconUrl).isNotNull();
-		final ResizableIcon cutIcon = SvgBatikResizableIcon.getSvgIcon(
-				cutIconUrl, new Dimension(16, 16));
-		Pause.pause(new Condition("Waiting to load the SVG icon") {
-			@Override
-			public boolean test() {
-				return !((AsynchronousLoading) cutIcon).isLoading();
-			}
-		});
+        final ResizableIcon cutIcon = edit_cut.of(16, 16);
 		final JCommandToggleButton newButton = GuiActionRunner
 				.execute(new GuiQuery<JCommandToggleButton>() {
 					@Override
