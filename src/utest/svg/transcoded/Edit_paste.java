@@ -1,42 +1,16 @@
 package utest.svg.transcoded;
 
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.LinearGradientPaint;
-import java.awt.MultipleGradientPaint;
-import java.awt.Paint;
-import java.awt.RadialGradientPaint;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
+import java.awt.*;
+import java.awt.geom.*;
 
 /**
  * This class has been automatically generated using <a
- * href="https://github.com/kirill-grouchnikov/flamingo">Flamingo SVG transcoder</a>.
+ * href="https://github.com/kirill-grouchnikov/ibis">Ibis SVG transcoder</a>.
  */
 public class Edit_paste implements
 		org.pushingpixels.flamingo.api.common.icon.ResizableIcon {
-	/**
-	 * Paints the transcoded SVG image on the specified graphics context. You
-	 * can install a custom transformation on the graphics context to scale the
-	 * image.
-	 * 
-	 * @param g
-	 *            Graphics context.
-	 */
     @SuppressWarnings("unused")
-	public static void paint(Graphics2D g) {
+	private void innerPaint(Graphics2D g) {
         Shape shape = null;
         Paint paint = null;
         Stroke stroke = null;
@@ -68,12 +42,12 @@ g.transform(new AffineTransform(0.9133830070495605f, 0.0f, 0.0f, 1.1788920164108
 paint = new RadialGradientPaint(new Point2D.Double(24.647722244262695, 45.272586822509766), 21.011173f, new Point2D.Double(24.647722244262695, 45.272586822509766), new float[] {0.0f,1.0f}, new Color[] {new Color(100, 100, 89, 255),new Color(100, 100, 89, 0)}, MultipleGradientPaint.CycleMethod.NO_CYCLE, MultipleGradientPaint.ColorSpaceType.SRGB, new AffineTransform(1.0f, 0.0f, 0.0f, 0.11057700216770172f, 4.9873299934333204E-17f, 40.2664794921875f));
 shape = new GeneralPath();
 ((GeneralPath)shape).moveTo(45.658894, 45.272587);
-((GeneralPath)shape).curveTo(45.661156, 46.102806, 41.656944, 46.870068, 35.155136, 47.28525);
-((GeneralPath)shape).curveTo(28.653326, 47.70043, 20.642117, 47.70043, 14.140307, 47.28525);
-((GeneralPath)shape).curveTo(7.638499, 46.870068, 3.6342869, 46.102806, 3.636549, 45.272587);
-((GeneralPath)shape).curveTo(3.6342869, 44.442368, 7.638499, 43.675106, 14.140307, 43.259922);
-((GeneralPath)shape).curveTo(20.642117, 42.84474, 28.653326, 42.84474, 35.155136, 43.259922);
-((GeneralPath)shape).curveTo(41.656944, 43.675106, 45.661156, 44.442368, 45.658894, 45.272587);
+((GeneralPath)shape).curveTo(45.692566, 46.105114, 41.695236, 46.876003, 35.180527, 47.293343);
+((GeneralPath)shape).curveTo(28.665815, 47.710686, 20.629627, 47.710686, 14.114916, 47.293343);
+((GeneralPath)shape).curveTo(7.600205, 46.876003, 3.6028783, 46.105114, 3.636549, 45.272587);
+((GeneralPath)shape).curveTo(3.6028783, 44.44006, 7.600205, 43.66917, 14.114916, 43.25183);
+((GeneralPath)shape).curveTo(20.629627, 42.834488, 28.665815, 42.834488, 35.180527, 43.25183);
+((GeneralPath)shape).curveTo(41.695236, 43.66917, 45.692566, 44.44006, 45.658894, 45.272587);
 ((GeneralPath)shape).closePath();
 g.setPaint(paint);
 g.fill(shape);
@@ -386,63 +360,37 @@ g.setTransform(defaultTransform_);
 		return 48.0;
 	}
 
-	/**
-	 * The current width of this resizable icon.
-	 */
-	int width;
+	/** The current width of this resizable icon. */
+	private int width;
+
+    /** The current height of this resizable icon. */
+	private int height;
 
 	/**
-	 * The current height of this resizable icon.
-	 */
-	int height;
-
-	/**
-	 * Creates a new transcoded SVG image.
+	 * Creates a new transcoded SVG image. It is recommended to use the 
+	 * {@link #of(int, int)} method to obtain a pre-configured instance.
 	 */
 	public Edit_paste() {
         this.width = (int) getOrigWidth();
         this.height = (int) getOrigHeight();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.Icon#getIconHeight()
-	 */
     @Override
 	public int getIconHeight() {
 		return height;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.Icon#getIconWidth()
-	 */
     @Override
 	public int getIconWidth() {
 		return width;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.jvnet.flamingo.common.icon.ResizableIcon#setDimension(java.awt.Dimension
-	 * )
-	 */
 	@Override
 	public void setDimension(Dimension newDimension) {
 		this.width = newDimension.width;
 		this.height = newDimension.height;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics,
-	 * int, int)
-	 */
     @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
@@ -465,10 +413,13 @@ g.setTransform(defaultTransform_);
                g2d.translate(extraDx, 0);
             }
         }
-        paint(g2d);
+        innerPaint(g2d);
         g2d.dispose();
 	}
     
+    /**
+     * Returns an instance of this icon with specified dimensions.
+     */
     public static Edit_paste of(int width, int height) {
        Edit_paste result = new Edit_paste();
        result.width = width;

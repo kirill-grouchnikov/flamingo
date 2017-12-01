@@ -19,6 +19,10 @@ import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
+import utest.svg.transcoded.Edit_copy;
+import utest.svg.transcoded.Edit_cut;
+import utest.svg.transcoded.Edit_paste;
+
 public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 	JFrame buttonFrame;
 	final static int COUNT = 3;
@@ -31,9 +35,9 @@ public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 	@Before
 	public void onSetUp() {
 		final ResizableIcon[] icons = new ResizableIcon[COUNT];
-        icons[0] = edit_paste.of(32, 32);
-        icons[1] = edit_copy.of(32, 32);
-        icons[2] = edit_cut.of(32, 32);
+        icons[0] = Edit_paste.of(32, 32);
+        icons[1] = Edit_copy.of(32, 32);
+        icons[2] = Edit_cut.of(32, 32);
 
 		GuiActionRunner.execute(new GuiTask() {
 			@Override
@@ -218,7 +222,7 @@ public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 				})).isNull();
 
 		// create a new button
-		final ResizableIcon cutIcon = edit_cut.of(16, 16);
+		final ResizableIcon cutIcon = Edit_cut.of(16, 16);
 		final JCommandToggleButton newButton = GuiActionRunner
 				.execute(new GuiQuery<JCommandToggleButton>() {
 					@Override
@@ -317,7 +321,7 @@ public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 				})).isEqualTo(buttons[0]);
 
 		// create a new button
-		final ResizableIcon cutIcon = edit_cut.of(16, 16);
+		final ResizableIcon cutIcon = Edit_cut.of(16, 16);
 		final JCommandToggleButton newButton = GuiActionRunner
 				.execute(new GuiQuery<JCommandToggleButton>() {
 					@Override
@@ -397,7 +401,7 @@ public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 				})).isNull();
 
 		// create a new button
-        final ResizableIcon cutIcon = edit_cut.of(16, 16);
+        final ResizableIcon cutIcon = Edit_cut.of(16, 16);
 		final JCommandToggleButton newButton = GuiActionRunner
 				.execute(new GuiQuery<JCommandToggleButton>() {
 					@Override
@@ -515,7 +519,7 @@ public class CommandToggleButtonGroupTestCase extends FestSwingJUnitTestCase {
 				})).isEqualTo(buttons[0]);
 
 		// create a new button
-        final ResizableIcon cutIcon = edit_cut.of(16, 16);
+        final ResizableIcon cutIcon = Edit_cut.of(16, 16);
 		final JCommandToggleButton newButton = GuiActionRunner
 				.execute(new GuiQuery<JCommandToggleButton>() {
 					@Override

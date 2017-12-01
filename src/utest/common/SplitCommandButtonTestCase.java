@@ -27,6 +27,8 @@ import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 
+import utest.svg.transcoded.Edit_paste;
+
 public class SplitCommandButtonTestCase extends FestSwingJUnitTestCase {
 	JFrame buttonFrame;
 	JCommandButton button;
@@ -38,7 +40,7 @@ public class SplitCommandButtonTestCase extends FestSwingJUnitTestCase {
 	@Override
 	@Before
 	public void onSetUp() {
-        final ResizableIcon icon = edit_paste.of(32, 32);
+        final ResizableIcon icon = Edit_paste.of(32, 32);
 
 		GuiActionRunner.execute(new GuiTask() {
 			@Override

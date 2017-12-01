@@ -23,6 +23,9 @@ import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
+import utest.svg.transcoded.Edit_cut;
+import utest.svg.transcoded.Edit_paste;
+
 public class ActionCommandButtonTestCase extends FestSwingJUnitTestCase {
     JFrame buttonFrame;
     int count;
@@ -31,7 +34,7 @@ public class ActionCommandButtonTestCase extends FestSwingJUnitTestCase {
     @Override
     @Before
     public void onSetUp() {
-        final ResizableIcon icon = edit_paste.of(32, 32);
+        final ResizableIcon icon = Edit_paste.of(32, 32);
 
         GuiActionRunner.execute(new GuiTask() {
             @Override
@@ -514,7 +517,7 @@ public class ActionCommandButtonTestCase extends FestSwingJUnitTestCase {
             }
         });
 
-        final ResizableIcon cutIcon = edit_cut.of(16, 16);
+        final ResizableIcon cutIcon = Edit_cut.of(16, 16);
         GuiActionRunner.execute(new GuiTask() {
             @Override
             protected void executeInEDT() throws Throwable {
