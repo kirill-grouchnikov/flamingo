@@ -59,208 +59,198 @@ import org.pushingpixels.trident.swing.SwingRepaintCallback;
  * @author Kirill Grouchnikov
  */
 public class BasicColorSelectorComponentUI extends ColorSelectorComponentUI {
-	protected JColorSelectorComponent colorSelectorComponent;
+    protected JColorSelectorComponent colorSelectorComponent;
 
-	protected ButtonModel buttonModel;
+    protected ButtonModel buttonModel;
 
-	protected MouseListener mouseListener;
+    protected MouseListener mouseListener;
 
-	protected ChangeListener modelChangeListener;
+    protected ChangeListener modelChangeListener;
 
-	protected ActionListener actionListener;
+    protected ActionListener actionListener;
 
-	protected Timeline rolloverTimeline;
+    protected Timeline rolloverTimeline;
 
-	protected float rollover;
+    protected float rollover;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.plaf.ComponentUI#createUI(javax.swing.JComponent)
-	 */
-	public static ComponentUI createUI(JComponent c) {
-		return new BasicColorSelectorComponentUI();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.plaf.ComponentUI#createUI(javax.swing.JComponent)
+     */
+    public static ComponentUI createUI(JComponent c) {
+        return new BasicColorSelectorComponentUI();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.plaf.ComponentUI#installUI(javax.swing.JComponent)
-	 */
-	@Override
-	public void installUI(JComponent c) {
-		this.colorSelectorComponent = (JColorSelectorComponent) c;
-		this.buttonModel = new DefaultButtonModel();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.plaf.ComponentUI#installUI(javax.swing.JComponent)
+     */
+    @Override
+    public void installUI(JComponent c) {
+        this.colorSelectorComponent = (JColorSelectorComponent) c;
+        this.buttonModel = new DefaultButtonModel();
 
-		installDefaults();
-		installComponents();
-		installListeners();
-	}
+        installDefaults();
+        installComponents();
+        installListeners();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.plaf.ComponentUI#uninstallUI(javax.swing.JComponent)
-	 */
-	@Override
-	public void uninstallUI(JComponent c) {
-		uninstallListeners();
-		uninstallComponents();
-		uninstallDefaults();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.plaf.ComponentUI#uninstallUI(javax.swing.JComponent)
+     */
+    @Override
+    public void uninstallUI(JComponent c) {
+        uninstallListeners();
+        uninstallComponents();
+        uninstallDefaults();
 
-		c.setLayout(null);
+        c.setLayout(null);
 
-		this.colorSelectorComponent = null;
-	}
+        this.colorSelectorComponent = null;
+    }
 
-	/**
-	 * Installs listeners on the associated color selector component.
-	 */
-	protected void installListeners() {
-		this.mouseListener = new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				if (!buttonModel.isRollover()) {
-					colorSelectorComponent
-							.onColorRollover(colorSelectorComponent.getColor());
-					rolloverTimeline.play();
-				}
-				buttonModel.setRollover(true);
-			}
+    /**
+     * Installs listeners on the associated color selector component.
+     */
+    protected void installListeners() {
+        this.mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (!buttonModel.isRollover()) {
+                    colorSelectorComponent.onColorRollover(colorSelectorComponent.getColor());
+                    rolloverTimeline.play();
+                }
+                buttonModel.setRollover(true);
+            }
 
-			@Override
-			public void mouseExited(MouseEvent e) {
-				if (buttonModel.isRollover()) {
-					colorSelectorComponent.onColorRollover(null);
-					rolloverTimeline.playReverse();
-				}
-				buttonModel.setRollover(false);
-			}
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (buttonModel.isRollover()) {
+                    colorSelectorComponent.onColorRollover(null);
+                    rolloverTimeline.playReverse();
+                }
+                buttonModel.setRollover(false);
+            }
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-				buttonModel.setArmed(true);
-				buttonModel.setPressed(true);
-			}
+            @Override
+            public void mousePressed(MouseEvent e) {
+                buttonModel.setArmed(true);
+                buttonModel.setPressed(true);
+            }
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				buttonModel.setPressed(false);
-				buttonModel.setArmed(false);
-			}
-		};
-		this.colorSelectorComponent.addMouseListener(this.mouseListener);
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                buttonModel.setPressed(false);
+                buttonModel.setArmed(false);
+            }
+        };
+        this.colorSelectorComponent.addMouseListener(this.mouseListener);
 
-		this.modelChangeListener = new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				colorSelectorComponent.repaint();
-			}
-		};
-		this.buttonModel.addChangeListener(this.modelChangeListener);
+        this.modelChangeListener = (ChangeEvent e) ->
+                colorSelectorComponent.repaint();
+        this.buttonModel.addChangeListener(this.modelChangeListener);
 
-		this.actionListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				colorSelectorComponent.onColorSelected(colorSelectorComponent
-						.getColor());
+        this.actionListener = (ActionEvent e) -> {
+            colorSelectorComponent.onColorSelected(colorSelectorComponent.getColor());
 
-				PopupPanelManager.defaultManager().hidePopups(null);
-			}
-		};
-		this.buttonModel.addActionListener(this.actionListener);
-	}
+            PopupPanelManager.defaultManager().hidePopups(null);
+        };
+        this.buttonModel.addActionListener(this.actionListener);
+    }
 
-	/**
-	 * Uninstalls listeners from the associated color selector component.
-	 */
-	protected void uninstallListeners() {
-		this.buttonModel.removeActionListener(this.actionListener);
-		this.actionListener = null;
+    /**
+     * Uninstalls listeners from the associated color selector component.
+     */
+    protected void uninstallListeners() {
+        this.buttonModel.removeActionListener(this.actionListener);
+        this.actionListener = null;
 
-		this.buttonModel.removeChangeListener(this.modelChangeListener);
-		this.modelChangeListener = null;
+        this.buttonModel.removeChangeListener(this.modelChangeListener);
+        this.modelChangeListener = null;
 
-		this.colorSelectorComponent.removeMouseListener(this.mouseListener);
-		this.mouseListener = null;
-	}
+        this.colorSelectorComponent.removeMouseListener(this.mouseListener);
+        this.mouseListener = null;
+    }
 
-	/**
-	 * Installs defaults on the associated color selector component.
-	 */
-	protected void installDefaults() {
-		this.rolloverTimeline = new Timeline(this);
-		this.rolloverTimeline.addPropertyToInterpolate("rollover", 0.0f, 1.0f);
-		this.rolloverTimeline.addCallback(new SwingRepaintCallback(
-				this.colorSelectorComponent));
-		this.rolloverTimeline.setDuration(150);
-	}
+    /**
+     * Installs defaults on the associated color selector component.
+     */
+    protected void installDefaults() {
+        this.rolloverTimeline = new Timeline(this);
+        this.rolloverTimeline.addPropertyToInterpolate("rollover", 0.0f, 1.0f);
+        this.rolloverTimeline.addCallback(new SwingRepaintCallback(this.colorSelectorComponent));
+        this.rolloverTimeline.setDuration(150);
+    }
 
-	/**
-	 * Uninstalls defaults from the associated color selector component.
-	 */
-	protected void uninstallDefaults() {
-	}
+    /**
+     * Uninstalls defaults from the associated color selector component.
+     */
+    protected void uninstallDefaults() {
+    }
 
-	/**
-	 * Installs subcomponents on the associated color selector component.
-	 */
-	protected void installComponents() {
-	}
+    /**
+     * Installs subcomponents on the associated color selector component.
+     */
+    protected void installComponents() {
+    }
 
-	/**
-	 * Uninstalls subcomponents from the associated color selector component.
-	 */
-	protected void uninstallComponents() {
-	}
+    /**
+     * Uninstalls subcomponents from the associated color selector component.
+     */
+    protected void uninstallComponents() {
+    }
 
-	public void setRollover(float rollover) {
-		this.rollover = rollover;
-	}
+    public void setRollover(float rollover) {
+        this.rollover = rollover;
+    }
 
-	@Override
-	public void update(Graphics g, JComponent c) {
-		int w = this.colorSelectorComponent.getWidth();
-		int h = this.colorSelectorComponent.getHeight();
-		Graphics2D g2d = (Graphics2D) g.create();
+    @Override
+    public void update(Graphics g, JComponent c) {
+        int w = this.colorSelectorComponent.getWidth();
+        int h = this.colorSelectorComponent.getHeight();
+        Graphics2D g2d = (Graphics2D) g.create();
 
-		Color fillColor = this.colorSelectorComponent.getColor();
-		g2d.setColor(fillColor);
-		g2d.fillRect(0, 0, w, h);
+        Color fillColor = this.colorSelectorComponent.getColor();
+        g2d.setColor(fillColor);
+        g2d.fillRect(0, 0, w, h);
 
-		float[] hsb = new float[3];
-		Color.RGBtoHSB(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), hsb);
-		float brightness = hsb[2] * 0.7f;
-		g2d.setColor(new Color(brightness, brightness, brightness));
+        float[] hsb = new float[3];
+        Color.RGBtoHSB(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), hsb);
+        float brightness = hsb[2] * 0.7f;
+        g2d.setColor(new Color(brightness, brightness, brightness));
 
-		float borderThickness = UIUtil.isRetina() ? 0.5f : 1.0f;
-		float ty = this.colorSelectorComponent.isTopOpen() ? borderThickness : 0;
-		float by = this.colorSelectorComponent.isBottomOpen() ? borderThickness : 0;
-		g2d.setStroke(new BasicStroke(borderThickness, BasicStroke.CAP_ROUND, 
-				BasicStroke.JOIN_ROUND));
-		g2d.draw(new Rectangle2D.Double(0, -ty, w - borderThickness, 
-				h - borderThickness + ty + by));
+        float borderThickness = UIUtil.isRetina() ? 0.5f : 1.0f;
+        float ty = this.colorSelectorComponent.isTopOpen() ? borderThickness : 0;
+        float by = this.colorSelectorComponent.isBottomOpen() ? borderThickness : 0;
+        g2d.setStroke(
+                new BasicStroke(borderThickness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2d.draw(
+                new Rectangle2D.Double(0, -ty, w - borderThickness, h - borderThickness + ty + by));
 
-		if (this.rollover > 0.0f) {
-			paintRolloverIndication(g2d);
-		}
+        if (this.rollover > 0.0f) {
+            paintRolloverIndication(g2d);
+        }
 
-		g2d.dispose();
-	}
+        g2d.dispose();
+    }
 
-	protected void paintRolloverIndication(Graphics g) {
-		int w = this.colorSelectorComponent.getWidth();
-		int h = this.colorSelectorComponent.getHeight();
-		float borderThickness = UIUtil.isRetina() ? 0.5f : 1.0f;
-		
-		Graphics2D g2d = (Graphics2D) g.create();
-		g2d.setComposite(AlphaComposite.SrcOver.derive(this.rollover));
-		g2d.setColor(new Color(207, 186, 115));
-		g2d.draw(new Rectangle2D.Double(0, 0, w - borderThickness, h - borderThickness));
-		g2d.setColor(new Color(230, 212, 150));
-		g2d.draw(new Rectangle2D.Double(borderThickness, borderThickness, 
-				w - 3 * borderThickness, h - 3 * borderThickness));
+    protected void paintRolloverIndication(Graphics g) {
+        int w = this.colorSelectorComponent.getWidth();
+        int h = this.colorSelectorComponent.getHeight();
+        float borderThickness = UIUtil.isRetina() ? 0.5f : 1.0f;
 
-		g2d.dispose();
-	}
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setComposite(AlphaComposite.SrcOver.derive(this.rollover));
+        g2d.setColor(new Color(207, 186, 115));
+        g2d.draw(new Rectangle2D.Double(0, 0, w - borderThickness, h - borderThickness));
+        g2d.setColor(new Color(230, 212, 150));
+        g2d.draw(new Rectangle2D.Double(borderThickness, borderThickness, w - 3 * borderThickness,
+                h - 3 * borderThickness));
+
+        g2d.dispose();
+    }
 }

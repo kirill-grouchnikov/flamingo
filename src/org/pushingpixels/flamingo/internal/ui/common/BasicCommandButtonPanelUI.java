@@ -163,13 +163,10 @@ public class BasicCommandButtonPanelUI extends CommandButtonPanelUI {
         };
         this.buttonPanel.addPropertyChangeListener(this.propertyChangeListener);
 
-        this.changeListener = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                recomputeGroupHeaders();
-                buttonPanel.revalidate();
-                buttonPanel.doLayout();
-            }
+        this.changeListener = (ChangeEvent e) -> {
+            recomputeGroupHeaders();
+            buttonPanel.revalidate();
+            buttonPanel.doLayout();
         };
         this.buttonPanel.addChangeListener(this.changeListener);
     }
@@ -235,8 +232,7 @@ public class BasicCommandButtonPanelUI extends CommandButtonPanelUI {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.swing.plaf.ComponentUI#paint(java.awt.Graphics,
-     * javax.swing.JComponent)
+     * @see javax.swing.plaf.ComponentUI#paint(java.awt.Graphics, javax.swing.JComponent)
      */
     @Override
     public void paint(Graphics g, JComponent c) {
@@ -342,8 +338,7 @@ public class BasicCommandButtonPanelUI extends CommandButtonPanelUI {
         /*
          * (non-Javadoc)
          * 
-         * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String,
-         * java.awt.Component)
+         * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String, java.awt.Component)
          */
         public void addLayoutComponent(String name, Component comp) {
         }
@@ -546,8 +541,7 @@ public class BasicCommandButtonPanelUI extends CommandButtonPanelUI {
         /*
          * (non-Javadoc)
          * 
-         * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String,
-         * java.awt.Component)
+         * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String, java.awt.Component)
          */
         public void addLayoutComponent(String name, Component comp) {
         }
@@ -759,15 +753,13 @@ public class BasicCommandButtonPanelUI extends CommandButtonPanelUI {
     }
 
     /**
-     * Returns the preferred size of the associated button panel for the
-     * specified parameters.
+     * Returns the preferred size of the associated button panel for the specified parameters.
      * 
      * @param buttonVisibleRows
      *            Target number of visible button rows.
      * @param titleVisibleRows
      *            Target number of visible group title rows.
-     * @return The preferred size of the associated button panel for the
-     *         specified parameters.
+     * @return The preferred size of the associated button panel for the specified parameters.
      */
     public int getPreferredHeight(int buttonVisibleRows, int titleVisibleRows) {
         Insets bInsets = this.buttonPanel.getInsets();

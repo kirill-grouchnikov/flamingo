@@ -138,8 +138,8 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
 
     /**
      * Listener on the {@link PopupPanelManager} changes to sync the
-     * {@link JRibbonGallery#setShowingPopupPanel(boolean)} once the popup
-     * gallery is dismissed by the user.
+     * {@link JRibbonGallery#setShowingPopupPanel(boolean)} once the popup gallery is dismissed by
+     * the user.
      */
     protected PopupPanelManager.PopupListener popupListener;
 
@@ -307,20 +307,16 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
      * Installs listeners on the associated ribbon gallery.
      */
     protected void installListeners() {
-        this.scrollDownListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                scrollOneRowDown();
-                ribbonGallery.revalidate();
-            }
+        this.scrollDownListener = (ActionEvent e) -> {
+            scrollOneRowDown();
+            ribbonGallery.revalidate();
         };
 
         this.scrollDownButton.addActionListener(this.scrollDownListener);
 
-        this.scrollUpListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                scrollOneRowUp();
-                ribbonGallery.revalidate();
-            }
+        this.scrollUpListener = (ActionEvent e) -> {
+            scrollOneRowUp();
+            ribbonGallery.revalidate();
         };
         this.scrollUpButton.addActionListener(this.scrollUpListener);
 
@@ -412,20 +408,17 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
         };
         PopupPanelManager.defaultManager().addPopupListener(this.popupListener);
 
-        this.propertyChangeListener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("selectedButton".equals(evt.getPropertyName())) {
-                    scrollToSelected();
-                    ribbonGallery.revalidate();
-                }
-                if ("expandKeyTip".equals(evt.getPropertyName())) {
-                    syncExpandKeyTip();
-                }
-                if ("buttonDisplayState".equals(evt.getPropertyName())) {
-                    firstVisibleButtonIndex = 0;
-                    ribbonGallery.revalidate();
-                }
+        this.propertyChangeListener = (PropertyChangeEvent evt) -> {
+            if ("selectedButton".equals(evt.getPropertyName())) {
+                scrollToSelected();
+                ribbonGallery.revalidate();
+            }
+            if ("expandKeyTip".equals(evt.getPropertyName())) {
+                syncExpandKeyTip();
+            }
+            if ("buttonDisplayState".equals(evt.getPropertyName())) {
+                firstVisibleButtonIndex = 0;
+                ribbonGallery.revalidate();
             }
         };
         this.ribbonGallery.addPropertyChangeListener(this.propertyChangeListener);
@@ -468,8 +461,8 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
     }
 
     /**
-     * Invoked by <code>installUI</code> to create a layout manager object to
-     * manage the {@link JCommandButtonStrip}.
+     * Invoked by <code>installUI</code> to create a layout manager object to manage the
+     * {@link JCommandButtonStrip}.
      * 
      * @return a layout manager object
      */
@@ -487,8 +480,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
         /*
          * (non-Javadoc)
          * 
-         * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String,
-         * java.awt.Component)
+         * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String, java.awt.Component)
          */
         public void addLayoutComponent(String name, Component c) {
         }
@@ -652,8 +644,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.swing.plaf.ComponentUI#paint(java.awt.Graphics,
-     * javax.swing.JComponent)
+     * @see javax.swing.plaf.ComponentUI#paint(java.awt.Graphics, javax.swing.JComponent)
      */
     @Override
     public void paint(Graphics g, JComponent c) {
@@ -703,15 +694,13 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
     }
 
     /**
-     * Returns the preferred width of the ribbon gallery for the specified
-     * parameters.
+     * Returns the preferred width of the ribbon gallery for the specified parameters.
      * 
      * @param buttonCount
      *            Button count.
      * @param availableHeight
      *            Available height in pixels.
-     * @return The preferred width of the ribbon gallery for the specified
-     *         parameters.
+     * @return The preferred width of the ribbon gallery for the specified parameters.
      */
     public int getPreferredWidth(int buttonCount, int availableHeight) {
         Insets borderInsets = ribbonGallery.getInsets();
@@ -743,7 +732,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
         // + buttonHeight + " --> " + result);
         return result;
     }
-    
+
     private int getScrollerButtonWidth() {
         return FlamingoUtilities.getScaledSize(15, scrollDownButton.getFont().getSize(), 1.0f, 1);
     }
@@ -763,8 +752,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
     }
 
     /**
-     * Scrolls the contents of this ribbon gallery to reveal the currently
-     * selected button.
+     * Scrolls the contents of this ribbon gallery to reveal the currently selected button.
      */
     protected void scrollToSelected() {
         JCommandToggleButton selected = this.ribbonGallery.getSelectedButton();

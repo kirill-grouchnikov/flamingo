@@ -103,9 +103,8 @@ public class BasicRibbonBandUI extends RibbonBandUI {
     protected JCommandButton collapsedButton;
 
     /**
-     * The band expand button. Is visible when the
-     * {@link JRibbonBand#getExpandActionListener()} of the associated ribbon
-     * band is not <code>null</code>.
+     * The band expand button. Is visible when the {@link JRibbonBand#getExpandActionListener()} of
+     * the associated ribbon band is not <code>null</code>.
      */
     protected AbstractCommandButton expandButton;
 
@@ -129,15 +128,13 @@ public class BasicRibbonBandUI extends RibbonBandUI {
     protected ActionListener expandButtonActionListener;
 
     /**
-     * Popup panel that shows the contents of the ribbon band when it is in a
-     * collapsed state.
+     * Popup panel that shows the contents of the ribbon band when it is in a collapsed state.
      * 
      * @author Kirill Grouchnikov
      */
     protected static class CollapsedButtonPopupPanel extends JPopupPanel {
         /**
-         * The main component of <code>this</code> popup panel. Can be
-         * <code>null</code>.
+         * The main component of <code>this</code> popup panel. Can be <code>null</code>.
          */
         protected Component component;
 
@@ -293,54 +290,51 @@ public class BasicRibbonBandUI extends RibbonBandUI {
 
         configureExpandButton();
 
-        this.propertyChangeListener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("title".equals(evt.getPropertyName()))
-                    ribbonBand.repaint();
-                if ("expandButtonKeyTip".equals(evt.getPropertyName())) {
-                    if (expandButton != null) {
-                        expandButton.setActionKeyTip((String) evt.getNewValue());
-                    }
+        this.propertyChangeListener = (PropertyChangeEvent evt) -> {
+            if ("title".equals(evt.getPropertyName()))
+                ribbonBand.repaint();
+            if ("expandButtonKeyTip".equals(evt.getPropertyName())) {
+                if (expandButton != null) {
+                    expandButton.setActionKeyTip((String) evt.getNewValue());
                 }
-                if ("expandButtonRichTooltip".equals(evt.getPropertyName())) {
-                    if (expandButton != null) {
-                        expandButton.setActionRichTooltip((RichTooltip) evt.getNewValue());
-                    }
+            }
+            if ("expandButtonRichTooltip".equals(evt.getPropertyName())) {
+                if (expandButton != null) {
+                    expandButton.setActionRichTooltip((RichTooltip) evt.getNewValue());
                 }
-                if ("collapsedStateKeyTip".equals(evt.getPropertyName())) {
-                    if (collapsedButton != null) {
-                        collapsedButton.setPopupKeyTip((String) evt.getNewValue());
-                    }
+            }
+            if ("collapsedStateKeyTip".equals(evt.getPropertyName())) {
+                if (collapsedButton != null) {
+                    collapsedButton.setPopupKeyTip((String) evt.getNewValue());
                 }
-                if ("expandActionListener".equals(evt.getPropertyName())) {
-                    ActionListener oldListener = (ActionListener) evt.getOldValue();
-                    ActionListener newListener = (ActionListener) evt.getNewValue();
+            }
+            if ("expandActionListener".equals(evt.getPropertyName())) {
+                ActionListener oldListener = (ActionListener) evt.getOldValue();
+                ActionListener newListener = (ActionListener) evt.getNewValue();
 
-                    if ((oldListener != null) && (newListener == null)) {
-                        // need to remove
-                        unconfigureExpandButton();
-                        ribbonBand.remove(expandButton);
-                        expandButton = null;
-                        ribbonBand.revalidate();
-                    }
-                    if ((oldListener == null) && (newListener != null)) {
-                        // need to add
-                        expandButton = createExpandButton();
-                        configureExpandButton();
-                        ribbonBand.add(expandButton);
-                        ribbonBand.revalidate();
-                    }
-                    if ((oldListener != null) && (newListener != null)) {
-                        // need to reconfigure
-                        expandButton.removeActionListener(oldListener);
-                        expandButton.addActionListener(newListener);
-                    }
+                if ((oldListener != null) && (newListener == null)) {
+                    // need to remove
+                    unconfigureExpandButton();
+                    ribbonBand.remove(expandButton);
+                    expandButton = null;
+                    ribbonBand.revalidate();
                 }
-                if ("componentOrientation".equals(evt.getPropertyName())) {
-                    if (expandButton != null) {
-                        syncExpandButtonIcon();
-                    }
+                if ((oldListener == null) && (newListener != null)) {
+                    // need to add
+                    expandButton = createExpandButton();
+                    configureExpandButton();
+                    ribbonBand.add(expandButton);
+                    ribbonBand.revalidate();
+                }
+                if ((oldListener != null) && (newListener != null)) {
+                    // need to reconfigure
+                    expandButton.removeActionListener(oldListener);
+                    expandButton.addActionListener(newListener);
+                }
+            }
+            if ("componentOrientation".equals(evt.getPropertyName())) {
+                if (expandButton != null) {
+                    syncExpandButtonIcon();
                 }
             }
         };
@@ -351,8 +345,8 @@ public class BasicRibbonBandUI extends RibbonBandUI {
         if (this.expandButton != null) {
             this.expandButton.addActionListener(this.ribbonBand.getExpandActionListener());
 
-            this.expandButtonActionListener = (ActionEvent e) -> 
-                    SwingUtilities.invokeLater(() -> trackMouseCrossing(false));
+            this.expandButtonActionListener = (ActionEvent e) -> SwingUtilities
+                    .invokeLater(() -> trackMouseCrossing(false));
             this.expandButton.addActionListener(this.expandButtonActionListener);
         }
     }
@@ -415,8 +409,8 @@ public class BasicRibbonBandUI extends RibbonBandUI {
     }
 
     /**
-     * Invoked by <code>installUI</code> to create a layout manager object to
-     * manage the {@link JCommandButtonStrip}.
+     * Invoked by <code>installUI</code> to create a layout manager object to manage the
+     * {@link JCommandButtonStrip}.
      * 
      * @return a layout manager object
      */
@@ -434,8 +428,7 @@ public class BasicRibbonBandUI extends RibbonBandUI {
         /*
          * (non-Javadoc)
          * 
-         * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String,
-         * java.awt.Component)
+         * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String, java.awt.Component)
          */
         public void addLayoutComponent(String name, Component c) {
         }
@@ -516,7 +509,7 @@ public class BasicRibbonBandUI extends RibbonBandUI {
             if (resizePolicy instanceof IconRibbonBandResizePolicy) {
                 collapsedButton.setVisible(true);
                 int collapsedButtonWidth = c.getWidth() - ins.left - ins.right - 2;
-                collapsedButton.setBounds((c.getWidth() - collapsedButtonWidth) / 2, ins.top, 
+                collapsedButton.setBounds((c.getWidth() - collapsedButtonWidth) / 2, ins.top,
                         collapsedButtonWidth, c.getHeight() - ins.top - ins.bottom);
 
                 if (collapsedButton.getPopupCallback() == null) {
@@ -534,8 +527,9 @@ public class BasicRibbonBandUI extends RibbonBandUI {
                                     + Math.max(c.getHeight(),
                                             ribbonBand.getControlPanel().getPreferredSize().height
                                                     + getBandTitleHeight()));
-                    collapsedButton.setPopupCallback((JCommandButton commandButton) ->
-                            new CollapsedButtonPopupPanel(popupBand, size));
+                    collapsedButton.setPopupCallback(
+                            (JCommandButton commandButton) -> new CollapsedButtonPopupPanel(
+                                    popupBand, size));
                     ribbonBand.setControlPanel(null);
                     ribbonBand.setPopupRibbonBand(popupBand);
                 }
@@ -593,10 +587,8 @@ public class BasicRibbonBandUI extends RibbonBandUI {
     /**
      * Event listener to handle global ribbon events. Currently handles:
      * <ul>
-     * <li>Marking a ribbon band to be hovered when the mouse moves over
-     * it.</li>
-     * <li>Mouse wheel events anywhere in the ribbon to rotate the selected
-     * task.</li>
+     * <li>Marking a ribbon band to be hovered when the mouse moves over it.</li>
+     * <li>Mouse wheel events anywhere in the ribbon to rotate the selected task.</li>
      * </ul>
      */
     private static class AWTRibbonEventListener implements AWTEventListener {
@@ -689,8 +681,7 @@ public class BasicRibbonBandUI extends RibbonBandUI {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.swing.plaf.ComponentUI#update(java.awt.Graphics,
-     * javax.swing.JComponent)
+     * @see javax.swing.plaf.ComponentUI#update(java.awt.Graphics, javax.swing.JComponent)
      */
     @Override
     public void update(Graphics g, JComponent c) {
@@ -703,8 +694,7 @@ public class BasicRibbonBandUI extends RibbonBandUI {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.swing.plaf.ComponentUI#paint(java.awt.Graphics,
-     * javax.swing.JComponent)
+     * @see javax.swing.plaf.ComponentUI#paint(java.awt.Graphics, javax.swing.JComponent)
      */
     @Override
     public void paint(Graphics g, JComponent c) {
@@ -892,7 +882,7 @@ public class BasicRibbonBandUI extends RibbonBandUI {
     public int getPreferredCollapsedWidth() {
         // Don't let long ribbon band titles create collapsed buttons that are too wide
         Dimension collapsedPreferredSize = this.collapsedButton.getPreferredSize();
-        return Math.min((int) (collapsedPreferredSize.height * 1.25), 
+        return Math.min((int) (collapsedPreferredSize.height * 1.25),
                 collapsedPreferredSize.width + 2);
     }
 
@@ -907,8 +897,7 @@ public class BasicRibbonBandUI extends RibbonBandUI {
     }
 
     /**
-     * This method is for unit tests only and should not be called by the
-     * application code.
+     * This method is for unit tests only and should not be called by the application code.
      * 
      * @return The expand button of the matching ribbon band.
      */

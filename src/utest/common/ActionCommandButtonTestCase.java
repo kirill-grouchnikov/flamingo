@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Icon;
@@ -51,12 +50,7 @@ public class ActionCommandButtonTestCase extends FestSwingJUnitTestCase {
                 buttonFrame.setVisible(true);
 
                 count = 0;
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        count++;
-                    }
-                });
+                button.addActionListener((ActionEvent e) -> count++);
             }
         });
 

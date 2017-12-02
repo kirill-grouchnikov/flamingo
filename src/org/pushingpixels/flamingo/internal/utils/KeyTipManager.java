@@ -109,10 +109,9 @@ public class KeyTipManager {
     }
 
     /**
-     * Annotation to mark a command button that shows UI content with associated
-     * keytips on clicking its action area. Can be used to associate keytips
-     * with menu command buttons in the popup menu shown when the ribbon gallery
-     * is expanded.
+     * Annotation to mark a command button that shows UI content with associated keytips on clicking
+     * its action area. Can be used to associate keytips with menu command buttons in the popup menu
+     * shown when the ribbon gallery is expanded.
      * 
      * @author Kirill Grouchnikov
      */
@@ -217,12 +216,7 @@ public class KeyTipManager {
             appMenuButtonLink.comp = appMenuButton;
             appMenuButtonLink.keyTipString = ribbon.getApplicationMenuKeyTip();
             appMenuButtonLink.prefAnchorPoint = appMenuButton.getUI().getKeyTipAnchorCenterPoint();
-            appMenuButtonLink.onActivated = new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    appMenuButton.doPopupClick();
-                }
-            };
+            appMenuButtonLink.onActivated = (ActionEvent e) -> appMenuButton.doPopupClick();
             appMenuButtonLink.enabled = true;
             appMenuButtonLink.traversal = () -> {
                 // System.out.println("Get next chain");
@@ -278,12 +272,8 @@ public class KeyTipManager {
                     taskToggleButtonLink.keyTipString = keyTip;
                     taskToggleButtonLink.prefAnchorPoint = new Point(
                             taskToggleButton.getWidth() / 2, taskToggleButton.getHeight());
-                    taskToggleButtonLink.onActivated = new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            taskToggleButton.doActionClick();
-                        }
-                    };
+                    taskToggleButtonLink.onActivated = (ActionEvent e) -> taskToggleButton
+                            .doActionClick();
                     taskToggleButtonLink.enabled = true;
                     taskToggleButtonLink.traversal = () -> {
                         KeyTipChain taskChain = new KeyTipChain(taskToggleButton);
@@ -380,12 +370,7 @@ public class KeyTipManager {
             link.comp = cb;
             link.keyTipString = cb.getActionKeyTip();
             link.prefAnchorPoint = cb.getUI().getKeyTipAnchorCenterPoint();
-            link.onActivated = new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    cb.doActionClick();
-                }
-            };
+            link.onActivated = (ActionEvent e) -> cb.doActionClick();
             link.enabled = cb.getActionModel().isEnabled();
             if (cb.getClass().isAnnotationPresent(KeyTipManager.HasNextKeyTipChain.class)) {
                 link.traversal = () -> {
@@ -416,22 +401,19 @@ public class KeyTipManager {
             link.comp = rc;
             link.keyTipString = rc.getKeyTip();
             link.prefAnchorPoint = rc.getUI().getKeyTipAnchorCenterPoint();
-            link.onActivated = new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JComponent mainComponent = rc.getMainComponent();
-                    if (mainComponent instanceof AbstractButton) {
-                        ((AbstractButton) mainComponent).doClick();
+            link.onActivated = (ActionEvent e) -> {
+                JComponent mainComponent = rc.getMainComponent();
+                if (mainComponent instanceof AbstractButton) {
+                    ((AbstractButton) mainComponent).doClick();
+                } else {
+                    if (mainComponent instanceof JComboBox) {
+                        ((JComboBox) mainComponent).showPopup();
                     } else {
-                        if (mainComponent instanceof JComboBox) {
-                            ((JComboBox) mainComponent).showPopup();
+                        if (mainComponent instanceof JSpinner) {
+                            JComponent editor = ((JSpinner) mainComponent).getEditor();
+                            editor.requestFocusInWindow();
                         } else {
-                            if (mainComponent instanceof JSpinner) {
-                                JComponent editor = ((JSpinner) mainComponent).getEditor();
-                                editor.requestFocusInWindow();
-                            } else {
-                                mainComponent.requestFocusInWindow();
-                            }
+                            mainComponent.requestFocusInWindow();
                         }
                     }
                 }
@@ -449,14 +431,11 @@ public class KeyTipManager {
             link.comp = cb;
             link.keyTipString = cb.getPopupKeyTip();
             link.prefAnchorPoint = cb.getUI().getKeyTipAnchorCenterPoint();
-            link.onActivated = new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (cb instanceof JCommandMenuButton) {
-                        ((JCommandMenuButton) cb).doActionRollover();
-                    }
-                    cb.doPopupClick();
+            link.onActivated = (ActionEvent e) -> {
+                if (cb instanceof JCommandMenuButton) {
+                    ((JCommandMenuButton) cb).doActionRollover();
                 }
+                cb.doPopupClick();
             };
             link.enabled = cb.getPopupModel().isEnabled();
             link.traversal = () -> {

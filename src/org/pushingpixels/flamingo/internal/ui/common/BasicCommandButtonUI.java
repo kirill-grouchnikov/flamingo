@@ -98,8 +98,7 @@ public class BasicCommandButtonUI extends CommandButtonUI {
     protected AbstractCommandButton commandButton;
 
     /**
-     * Indication whether the mouse pointer is over the associated command
-     * button.
+     * Indication whether the mouse pointer is over the associated command button.
      */
     protected boolean isUnderMouse;
 
@@ -109,8 +108,7 @@ public class BasicCommandButtonUI extends CommandButtonUI {
     protected PropertyChangeListener propertyChangeListener;
 
     /**
-     * Tracks user interaction with the command button (including keyboard and
-     * mouse).
+     * Tracks user interaction with the command button (including keyboard and mouse).
      */
     protected BasicCommandButtonListener basicPopupButtonListener;
 
@@ -120,24 +118,22 @@ public class BasicCommandButtonUI extends CommandButtonUI {
     protected CommandButtonLayoutManager.CommandButtonLayoutInfo layoutInfo;
 
     /**
-     * Client property to mark the command button to have square corners. This
-     * client property is for internal use only.
+     * Client property to mark the command button to have square corners. This client property is
+     * for internal use only.
      */
     public static final String EMULATE_SQUARE_BUTTON = "flamingo.internal.commandButton.ui.emulateSquare";
 
     /**
-     * Client property to mark the command button to not dispose the popups on
-     * activation.
+     * Client property to mark the command button to not dispose the popups on activation.
      * 
      * @see #disposePopupsActionListener
      */
     public static final String DONT_DISPOSE_POPUPS = "flamingo.internal.commandButton.ui.dontDisposePopups";
 
     /**
-     * This listener disposes all popup panels when button's action is
-     * activated. An example of scenario would be a command button in the popup
-     * panel of an in-ribbon gallery. When this command button is activated, the
-     * associated popup panel is dismissed.
+     * This listener disposes all popup panels when button's action is activated. An example of
+     * scenario would be a command button in the popup panel of an in-ribbon gallery. When this
+     * command button is activated, the associated popup panel is dismissed.
      * 
      * @see #DONT_DISPOSE_POPUPS
      */
@@ -295,86 +291,84 @@ public class BasicCommandButtonUI extends CommandButtonUI {
             this.commandButton.addChangeListener(this.basicPopupButtonListener);
         }
 
-        this.propertyChangeListener = new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (AbstractButton.ICON_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
-                    Icon newIcon = (Icon) evt.getNewValue();
-                    if (newIcon instanceof AsynchronousLoading) {
-                        AsynchronousLoading async = (AsynchronousLoading) newIcon;
-                        async.addAsynchronousLoadListener((boolean success) -> {
-                            if (success) {
-                                if (commandButton != null) {
-                                    syncIconDimension();
-                                    syncDisabledIcon();
-                                    commandButton.repaint();
-                                }
+        this.propertyChangeListener = (PropertyChangeEvent evt) -> {
+            if (AbstractButton.ICON_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
+                Icon newIcon = (Icon) evt.getNewValue();
+                if (newIcon instanceof AsynchronousLoading) {
+                    AsynchronousLoading async = (AsynchronousLoading) newIcon;
+                    async.addAsynchronousLoadListener((boolean success) -> {
+                        if (success) {
+                            if (commandButton != null) {
+                                syncIconDimension();
+                                syncDisabledIcon();
+                                commandButton.repaint();
                             }
-                        });
-                        if (!async.isLoading()) {
-                            syncIconDimension();
-                            syncDisabledIcon();
-                            commandButton.repaint();
                         }
-                    } else {
+                    });
+                    if (!async.isLoading()) {
                         syncIconDimension();
                         syncDisabledIcon();
-                        commandButton.revalidate();
                         commandButton.repaint();
                     }
-                }
-                if ("enabled".equals(evt.getPropertyName())) {
-                    syncDisabledIcon();
-                    commandButton.repaint();
-                }
-                if ("commandButtonKind".equals(evt.getPropertyName())) {
-                    updatePopupActionIcon();
-                }
-                if ("popupOrientationKind".equals(evt.getPropertyName())) {
-                    updatePopupActionIcon();
-                }
-                if ("customDimension".equals(evt.getPropertyName())) {
-                    updateCustomDimension();
-                }
-                if ("hgapScaleFactor".equals(evt.getPropertyName())) {
-                    updateBorder();
-                }
-                if ("vgapScaleFactor".equals(evt.getPropertyName())) {
-                    updateBorder();
-                }
-
-                if ("popupModel".equals(evt.getPropertyName())) {
-                    // rewire the popup action listener on the new popup model
-                    PopupButtonModel oldModel = (PopupButtonModel) evt.getOldValue();
-                    PopupButtonModel newModel = (PopupButtonModel) evt.getNewValue();
-
-                    if (oldModel != null) {
-                        oldModel.removePopupActionListener(popupActionListener);
-                        popupActionListener = null;
-                    }
-
-                    if (newModel != null) {
-                        popupActionListener = createPopupActionListener();
-                        newModel.addPopupActionListener(popupActionListener);
-                    }
-                }
-                if ("displayState".equals(evt.getPropertyName())) {
+                } else {
                     syncIconDimension();
                     syncDisabledIcon();
-
-                    commandButton.invalidate();
                     commandButton.revalidate();
-                    commandButton.doLayout();
-                }
-
-                // pass the event to the layout manager
-                if (layoutManager != null) {
-                    layoutManager.propertyChange(evt);
-                }
-
-                if ("componentOrientation".equals(evt.getPropertyName())) {
-                    updatePopupActionIcon();
                     commandButton.repaint();
                 }
+            }
+            if ("enabled".equals(evt.getPropertyName())) {
+                syncDisabledIcon();
+                commandButton.repaint();
+            }
+            if ("commandButtonKind".equals(evt.getPropertyName())) {
+                updatePopupActionIcon();
+            }
+            if ("popupOrientationKind".equals(evt.getPropertyName())) {
+                updatePopupActionIcon();
+            }
+            if ("customDimension".equals(evt.getPropertyName())) {
+                updateCustomDimension();
+            }
+            if ("hgapScaleFactor".equals(evt.getPropertyName())) {
+                updateBorder();
+            }
+            if ("vgapScaleFactor".equals(evt.getPropertyName())) {
+                updateBorder();
+            }
+
+            if ("popupModel".equals(evt.getPropertyName())) {
+                // rewire the popup action listener on the new popup model
+                PopupButtonModel oldModel = (PopupButtonModel) evt.getOldValue();
+                PopupButtonModel newModel = (PopupButtonModel) evt.getNewValue();
+
+                if (oldModel != null) {
+                    oldModel.removePopupActionListener(popupActionListener);
+                    popupActionListener = null;
+                }
+
+                if (newModel != null) {
+                    popupActionListener = createPopupActionListener();
+                    newModel.addPopupActionListener(popupActionListener);
+                }
+            }
+            if ("displayState".equals(evt.getPropertyName())) {
+                syncIconDimension();
+                syncDisabledIcon();
+
+                commandButton.invalidate();
+                commandButton.revalidate();
+                commandButton.doLayout();
+            }
+
+            // pass the event to the layout manager
+            if (layoutManager != null) {
+                layoutManager.propertyChange(evt);
+            }
+
+            if ("componentOrientation".equals(evt.getPropertyName())) {
+                updatePopupActionIcon();
+                commandButton.repaint();
             }
         };
         this.commandButton.addPropertyChangeListener(this.propertyChangeListener);
@@ -502,8 +496,7 @@ public class BasicCommandButtonUI extends CommandButtonUI {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.swing.plaf.ComponentUI#update(java.awt.Graphics,
-     * javax.swing.JComponent)
+     * @see javax.swing.plaf.ComponentUI#update(java.awt.Graphics, javax.swing.JComponent)
      */
     @Override
     public void update(Graphics g, JComponent c) {
@@ -516,8 +509,7 @@ public class BasicCommandButtonUI extends CommandButtonUI {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.swing.plaf.ComponentUI#paint(java.awt.Graphics,
-     * javax.swing.JComponent)
+     * @see javax.swing.plaf.ComponentUI#paint(java.awt.Graphics, javax.swing.JComponent)
      */
     @Override
     public void paint(Graphics g, JComponent c) {
@@ -954,8 +946,7 @@ public class BasicCommandButtonUI extends CommandButtonUI {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * javax.swing.plaf.ComponentUI#getPreferredSize(javax.swing.JComponent)
+     * @see javax.swing.plaf.ComponentUI#getPreferredSize(javax.swing.JComponent)
      */
     @Override
     public Dimension getPreferredSize(JComponent c) {
@@ -1172,8 +1163,7 @@ public class BasicCommandButtonUI extends CommandButtonUI {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.jvnet.flamingo.common.ui.CommandButtonUI#getKeyTipAnchorCenterPoint()
+     * @see org.jvnet.flamingo.common.ui.CommandButtonUI#getKeyTipAnchorCenterPoint()
      */
     @Override
     public Point getKeyTipAnchorCenterPoint() {

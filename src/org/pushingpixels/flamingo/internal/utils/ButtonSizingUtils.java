@@ -36,7 +36,6 @@ import java.awt.Insets;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -45,99 +44,93 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
 public class ButtonSizingUtils {
-	private static ButtonSizingUtils instance;
+    private static ButtonSizingUtils instance;
 
-	private Insets outsets;
+    private Insets outsets;
 
-	private Insets toggleOutsets;
+    private Insets toggleOutsets;
 
-	public static synchronized ButtonSizingUtils getInstance() {
-		if (instance == null)
-			instance = new ButtonSizingUtils();
-		return instance;
-	}
+    public static synchronized ButtonSizingUtils getInstance() {
+        if (instance == null)
+            instance = new ButtonSizingUtils();
+        return instance;
+    }
 
-	private ButtonSizingUtils() {
-		this.outsets = this.syncOutsets(new JButton(""));
-		this.toggleOutsets = this.syncOutsets(new JToggleButton(""));
-		UIManager.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				if ("lookAndFeel".equals(evt.getPropertyName())) {
-					outsets = syncOutsets(new JButton(""));
-					toggleOutsets = syncOutsets(new JToggleButton(""));
-				}
-			}
-		});
-	}
+    private ButtonSizingUtils() {
+        this.outsets = this.syncOutsets(new JButton(""));
+        this.toggleOutsets = this.syncOutsets(new JToggleButton(""));
+        UIManager.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if ("lookAndFeel".equals(evt.getPropertyName())) {
+                outsets = syncOutsets(new JButton(""));
+                toggleOutsets = syncOutsets(new JToggleButton(""));
+            }
+        });
+    }
 
-	private Insets syncOutsets(AbstractButton renderer) {
-		JPanel panel = new JPanel(null);
-		renderer.putClientProperty("JButton.buttonStyle", "square");
-		renderer.setFocusable(false);
-		renderer.setOpaque(false);
-		panel.add(renderer);
-		renderer.setBounds(0, 0, 100, 50);
+    private Insets syncOutsets(AbstractButton renderer) {
+        JPanel panel = new JPanel(null);
+        renderer.putClientProperty("JButton.buttonStyle", "square");
+        renderer.setFocusable(false);
+        renderer.setOpaque(false);
+        panel.add(renderer);
+        renderer.setBounds(0, 0, 100, 50);
 
-		GraphicsEnvironment e = GraphicsEnvironment
-				.getLocalGraphicsEnvironment();
-		GraphicsDevice d = e.getDefaultScreenDevice();
-		GraphicsConfiguration c = d.getDefaultConfiguration();
-		BufferedImage compatibleImage = c.createCompatibleImage(100, 50,
-				Transparency.TRANSLUCENT);
-		renderer.paint(compatibleImage.getGraphics());
+        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice d = e.getDefaultScreenDevice();
+        GraphicsConfiguration c = d.getDefaultConfiguration();
+        BufferedImage compatibleImage = c.createCompatibleImage(100, 50, Transparency.TRANSLUCENT);
+        renderer.paint(compatibleImage.getGraphics());
 
-		// analyze top
-		int top = 0;
-		for (int i = 0; i < 25; i++) {
-			int rgba = compatibleImage.getRGB(50, i);
-			int alpha = (rgba >>> 24) & 0xFF;
-			if (alpha == 255) {
-				top = i;
-				break;
-			}
-		}
-		// analyze bottom
-		int bottom = 0;
-		for (int i = 49; i > 25; i--) {
-			int rgba = compatibleImage.getRGB(50, i);
-			int alpha = (rgba >>> 24) & 0xFF;
-			if (alpha == 255) {
-				bottom = 49 - i;
-				break;
-			}
-		}
-		// analyze left
-		int left = 0;
-		for (int i = 0; i < 50; i++) {
-			int rgba = compatibleImage.getRGB(i, 25);
-			int alpha = (rgba >>> 24) & 0xFF;
-			if (alpha == 255) {
-				left = i;
-				break;
-			}
-		}
-		// analyze right
-		int right = 0;
-		for (int i = 99; i > 50; i--) {
-			int rgba = compatibleImage.getRGB(i, 25);
-			int alpha = (rgba >>> 24) & 0xFF;
-			if (alpha == 255) {
-				right = 99 - i;
-				break;
-			}
-		}
+        // analyze top
+        int top = 0;
+        for (int i = 0; i < 25; i++) {
+            int rgba = compatibleImage.getRGB(50, i);
+            int alpha = (rgba >>> 24) & 0xFF;
+            if (alpha == 255) {
+                top = i;
+                break;
+            }
+        }
+        // analyze bottom
+        int bottom = 0;
+        for (int i = 49; i > 25; i--) {
+            int rgba = compatibleImage.getRGB(50, i);
+            int alpha = (rgba >>> 24) & 0xFF;
+            if (alpha == 255) {
+                bottom = 49 - i;
+                break;
+            }
+        }
+        // analyze left
+        int left = 0;
+        for (int i = 0; i < 50; i++) {
+            int rgba = compatibleImage.getRGB(i, 25);
+            int alpha = (rgba >>> 24) & 0xFF;
+            if (alpha == 255) {
+                left = i;
+                break;
+            }
+        }
+        // analyze right
+        int right = 0;
+        for (int i = 99; i > 50; i--) {
+            int rgba = compatibleImage.getRGB(i, 25);
+            int alpha = (rgba >>> 24) & 0xFF;
+            if (alpha == 255) {
+                right = 99 - i;
+                break;
+            }
+        }
 
-		return new Insets(top, left, bottom, right);
-	}
+        return new Insets(top, left, bottom, right);
+    }
 
-	public Insets getOutsets() {
-		return new Insets(outsets.top, outsets.left, outsets.bottom,
-				outsets.right);
-	}
+    public Insets getOutsets() {
+        return new Insets(outsets.top, outsets.left, outsets.bottom, outsets.right);
+    }
 
-	public Insets getToggleOutsets() {
-		return new Insets(toggleOutsets.top, toggleOutsets.left,
-				toggleOutsets.bottom, toggleOutsets.right);
-	}
+    public Insets getToggleOutsets() {
+        return new Insets(toggleOutsets.top, toggleOutsets.left, toggleOutsets.bottom,
+                toggleOutsets.right);
+    }
 }

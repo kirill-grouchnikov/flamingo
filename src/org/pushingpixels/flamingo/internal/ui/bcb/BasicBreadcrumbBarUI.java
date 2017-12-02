@@ -666,16 +666,13 @@ public class BasicBreadcrumbBarUI extends BreadcrumbBarUI {
         button.setDisplayState(CommandButtonDisplayState.MEDIUM);
         button.setPopupOrientationKind(CommandButtonPopupOrientationKind.SIDEWARD);
         button.setHGapScaleFactor(0.75);
-        button.getPopupModel().addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                PopupButtonModel model = button.getPopupModel();
-                boolean displayDownwards = model.isRollover() || model.isPopupShowing();
-                CommandButtonPopupOrientationKind popupOrientationKind = displayDownwards
-                        ? CommandButtonPopupOrientationKind.DOWNWARD
-                        : CommandButtonPopupOrientationKind.SIDEWARD;
-                button.setPopupOrientationKind(popupOrientationKind);
-            }
+        button.getPopupModel().addChangeListener((ChangeEvent e) -> {
+            PopupButtonModel model = button.getPopupModel();
+            boolean displayDownwards = model.isRollover() || model.isPopupShowing();
+            CommandButtonPopupOrientationKind popupOrientationKind = displayDownwards
+                    ? CommandButtonPopupOrientationKind.DOWNWARD
+                    : CommandButtonPopupOrientationKind.SIDEWARD;
+            button.setPopupOrientationKind(popupOrientationKind);
         });
     }
 
