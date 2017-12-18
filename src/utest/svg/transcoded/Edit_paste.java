@@ -413,7 +413,9 @@ g.setTransform(defaultTransform_);
                g2d.translate(extraDx, 0);
             }
         }
-        innerPaint(g2d);
+        Graphics2D g2ForInner = (Graphics2D) g2d.create();
+        innerPaint(g2ForInner);
+        g2ForInner.dispose();
         g2d.dispose();
 	}
     
