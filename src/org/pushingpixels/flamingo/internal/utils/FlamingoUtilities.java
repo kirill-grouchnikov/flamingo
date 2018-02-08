@@ -393,7 +393,7 @@ public class FlamingoUtilities {
      * @return Transparent image of specified dimension.
      */
     public static BufferedImage getBlankImage(int width, int height) {
-        if (UIUtil.isRetina()) {
+        if (UIUtil.getScaleFactor() > 1.0) {
             return new JBHiDPIScaledImage(width, height, BufferedImage.TYPE_INT_ARGB);
         } else {
             GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();

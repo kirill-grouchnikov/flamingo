@@ -75,7 +75,7 @@ public class KeyTipRenderingUtilities {
 		Graphics2D g2d = (Graphics2D) g.create();
 
 		g2d.setComposite(AlphaComposite.SrcOver.derive(toPaintEnabled ? 1.0f : 0.5f));
-		g2d.setStroke(new BasicStroke(UIUtil.isRetina() ? 0.5f : 1.0f));
+		g2d.setStroke(new BasicStroke(1.0f / (float) UIUtil.getScaleFactor()));
 
 		Shape clip = g2d.getClip();
 		RoundRectangle2D.Double roundRect = new RoundRectangle2D.Double(rect.x, rect.y,

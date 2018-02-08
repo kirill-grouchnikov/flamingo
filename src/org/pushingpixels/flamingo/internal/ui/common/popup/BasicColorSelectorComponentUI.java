@@ -223,7 +223,7 @@ public class BasicColorSelectorComponentUI extends ColorSelectorComponentUI {
         float brightness = hsb[2] * 0.7f;
         g2d.setColor(new Color(brightness, brightness, brightness));
 
-        float borderThickness = UIUtil.isRetina() ? 0.5f : 1.0f;
+        float borderThickness = 1.0f / (float) UIUtil.getScaleFactor();
         float ty = this.colorSelectorComponent.isTopOpen() ? borderThickness : 0;
         float by = this.colorSelectorComponent.isBottomOpen() ? borderThickness : 0;
         g2d.setStroke(
@@ -241,7 +241,7 @@ public class BasicColorSelectorComponentUI extends ColorSelectorComponentUI {
     protected void paintRolloverIndication(Graphics g) {
         int w = this.colorSelectorComponent.getWidth();
         int h = this.colorSelectorComponent.getHeight();
-        float borderThickness = UIUtil.isRetina() ? 0.5f : 1.0f;
+        float borderThickness = 1.0f / (float) UIUtil.getScaleFactor();
 
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setComposite(AlphaComposite.SrcOver.derive(this.rollover));
