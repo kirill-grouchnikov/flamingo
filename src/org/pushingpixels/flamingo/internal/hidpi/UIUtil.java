@@ -33,6 +33,8 @@ public class UIUtil {
             getSystemProperty("java.vendor"), "Apple");
     public static final boolean IS_JAVA_9 = startsWith(
             getSystemProperty("java.specification.version"), "9");
+    public static final boolean IS_JAVA_10 = startsWith(
+            getSystemProperty("java.specification.version"), "10");
 
 	private static String getSystemProperty(String key) {
 		try {
@@ -154,7 +156,7 @@ public class UIUtil {
                 return devicesScaleFactorCacheMap.get(device);
             }
 
-            double result = IS_JAVA_9 ? getScaleFactorModern(device)
+            double result = IS_JAVA_9 || IS_JAVA_10 ? getScaleFactorModern(device)
                     : getScaleFactorLegacy(device);
 
             devicesScaleFactorCacheMap.put(device, result);
