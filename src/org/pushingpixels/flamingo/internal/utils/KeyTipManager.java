@@ -261,7 +261,8 @@ public class KeyTipManager {
         // task toggle buttons
         RibbonUI ui = ribbon.getUI();
         if (ui instanceof BasicRibbonUI) {
-            for (Map.Entry<RibbonTask, JRibbonTaskToggleButton> ttbEntry : ((BasicRibbonUI) ui)
+            BasicRibbonUI brui = (BasicRibbonUI) ui;
+            for (Map.Entry<RibbonTask, JRibbonTaskToggleButton> ttbEntry : brui
                     .getTaskToggleButtons().entrySet()) {
                 final RibbonTask task = ttbEntry.getKey();
                 final JRibbonTaskToggleButton taskToggleButton = ttbEntry.getValue();
@@ -287,10 +288,20 @@ public class KeyTipManager {
                     root.addLink(taskToggleButtonLink);
                 }
             }
+
+            // anchored commands
+            for (JCommandButton anchored : brui.getAnchoredCommandButtons()) {
+                KeyTipLink actionLink = getCommandButtonActionLink(anchored);
+                if (actionLink != null) {
+                    root.addLink(actionLink);
+                }
+            }
         }
+
         this.keyTipChains.add(root);
         this.fireKeyTipsShown(ribbonFrame);
         ribbonFrame.repaint();
+
     }
 
     public Collection<KeyTipLink> getCurrentlyShownKeyTips() {

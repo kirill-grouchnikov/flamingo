@@ -49,7 +49,6 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -86,6 +85,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
@@ -98,6 +98,7 @@ import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
 import org.pushingpixels.flamingo.api.ribbon.AbstractRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonCommand;
 import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
@@ -143,7 +144,7 @@ public class BasicRibbonUI extends RibbonUI {
 
     protected JRibbonApplicationMenuButton applicationMenuButton;
 
-    protected JCommandButton helpButton;
+    protected Container anchoredButtons;
 
     /**
      * Map of toggle buttons of all tasks.
@@ -427,8 +428,9 @@ public class BasicRibbonUI extends RibbonUI {
         this.ribbon.remove(this.taskToggleButtonsScrollablePanel);
 
         this.ribbon.remove(this.applicationMenuButton);
-        if (this.helpButton != null)
-            this.ribbon.remove(this.helpButton);
+        if (this.anchoredButtons != null) {
+            this.ribbon.remove(this.anchoredButtons);
+        }
 
         this.ribbon.setLayout(null);
     }
@@ -724,6 +726,18 @@ public class BasicRibbonUI extends RibbonUI {
             return new Dimension(width, maxMinBandHeight + extraHeight + ins.top + ins.bottom);
         }
 
+        private int getAnchoredButtonsWidth(CommandButtonDisplayState state) {
+            int result = 0;
+
+            for (Component comp : anchoredButtons.getComponents()) {
+                AbstractCommandButton anchoredButton = (AbstractCommandButton) comp;
+                result += state.createLayoutManager(anchoredButton)
+                        .getPreferredSize(anchoredButton).width;
+            }
+
+            return result;
+        }
+
         /*
          * (non-Javadoc)
          * 
@@ -777,33 +791,73 @@ public class BasicRibbonUI extends RibbonUI {
                 applicationMenuButton.setVisible(false);
             }
             x = ltr ? x + 2 : x - 2;
-            if (FlamingoUtilities
-                    .getApplicationMenuButton(SwingUtilities.getWindowAncestor(ribbon)) != null) {
+            boolean isShowingAppMenuButton = (FlamingoUtilities
+                    .getApplicationMenuButton(SwingUtilities.getWindowAncestor(ribbon)) != null);
+            if (isShowingAppMenuButton) {
                 x = ltr ? x + appMenuButtonSize : x - appMenuButtonSize;
             }
 
-            // the help button
-            if (helpButton != null) {
-                Dimension preferred = helpButton.getPreferredSize();
+            // how much horizontal space do anchored buttons need in expanded (text + icon) and
+            // collapsed (icon only) modes?
+            int anchoredButtonsCollapsedWidth = getAnchoredButtonsWidth(
+                    CommandButtonDisplayState.SMALL);
+            int anchoredButtonsExpandedWidth = getAnchoredButtonsWidth(
+                    CommandButtonDisplayState.MEDIUM);
+
+            // if anchored buttons are expanded, do we have enough horizontal space to display
+            // the task toggle buttons in their preferred size (without cutting off on the sides
+            // or kicking in the scrolling)?
+            TaskToggleButtonsHostPanel taskToggleButtonsStrip = taskToggleButtonsScrollablePanel
+                    .getView();
+            taskToggleButtonsStrip.setPreferredSize(null);
+
+            int fullPreferredContentWidth = ins.left + ins.right + 2
+                    + (isShowingAppMenuButton ? appMenuButtonSize : 0)
+                    + ((anchoredButtons.getComponentCount() > 0)
+                            ? (anchoredButtonsExpandedWidth + tabButtonGap)
+                            : 0)
+                    + taskToggleButtonsStrip.getPreferredSize().width;
+
+            int anchoredButtonPanelWidth = 0;
+            if (fullPreferredContentWidth <= c.getWidth()) {
+                // can fit everything with no cuts
+                for (Component comp : anchoredButtons.getComponents()) {
+                    AbstractCommandButton anchoredButton = (AbstractCommandButton) comp;
+                    anchoredButton.setDisplayState(CommandButtonDisplayState.MEDIUM);
+                }
+                anchoredButtonPanelWidth = anchoredButtonsExpandedWidth;
+            } else {
+                // switch anchored buttons to icon-only mode
+                for (Component comp : anchoredButtons.getComponents()) {
+                    AbstractCommandButton anchoredButton = (AbstractCommandButton) comp;
+                    anchoredButton.setDisplayState(CommandButtonDisplayState.SMALL);
+                }
+                anchoredButtonPanelWidth = anchoredButtonsCollapsedWidth;
+            }
+
+            if (anchoredButtons.getComponentCount() > 0) {
                 // Note that here we're using the height of task toggle buttons so that all the
                 // content in that row has consistent vertical size.
                 if (ltr) {
-                    helpButton.setBounds(width - ins.right - preferred.width, y, preferred.width,
-                            taskToggleButtonHeight);
+                    anchoredButtons.setBounds(width - ins.right - anchoredButtonPanelWidth, y,
+                            anchoredButtonPanelWidth, taskToggleButtonHeight);
                 } else {
-                    helpButton.setBounds(ins.left, y, preferred.width, taskToggleButtonHeight);
+                    anchoredButtons.setBounds(ins.left, y, anchoredButtonPanelWidth,
+                            taskToggleButtonHeight);
                 }
+                anchoredButtons.doLayout();
             }
 
             // task buttons
             if (ltr) {
-                int taskButtonsWidth = (helpButton != null) ? (helpButton.getX() - tabButtonGap - x)
+                int taskButtonsWidth = (anchoredButtons.getComponentCount() > 0)
+                        ? (anchoredButtons.getX() - tabButtonGap - x)
                         : (c.getWidth() - ins.right - x);
                 taskToggleButtonsScrollablePanel.setBounds(x, y, taskButtonsWidth,
                         taskToggleButtonHeight);
             } else {
-                int taskButtonsWidth = (helpButton != null)
-                        ? (x - tabButtonGap - helpButton.getX() - helpButton.getWidth())
+                int taskButtonsWidth = (anchoredButtons.getComponentCount() > 0)
+                        ? (x - tabButtonGap - anchoredButtons.getX() - anchoredButtons.getWidth())
                         : (x - ins.left);
                 taskToggleButtonsScrollablePanel.setBounds(x - taskButtonsWidth, y,
                         taskButtonsWidth, taskToggleButtonHeight);
@@ -1678,6 +1732,55 @@ public class BasicRibbonUI extends RibbonUI {
             }
         }
     }
+    
+    private class AnchoredButtonsPanelLayout implements LayoutManager {
+        @Override
+        public void addLayoutComponent(String name, Component comp) {
+        }
+        
+        @Override
+        public void removeLayoutComponent(Component comp) {
+        }
+        
+        @Override
+        public Dimension minimumLayoutSize(Container parent) {
+            int minWidth = 0;
+            for (Component comp : parent.getComponents()) {
+                minWidth += comp.getMinimumSize().width;
+            }
+            return new Dimension(minWidth, getTaskToggleButtonHeight());
+        }
+        
+        @Override
+        public Dimension preferredLayoutSize(Container parent) {
+            int prefWidth = 0;
+            for (Component comp : parent.getComponents()) {
+                prefWidth += comp.getPreferredSize().width;
+            }
+            return new Dimension(prefWidth, getTaskToggleButtonHeight());
+        }
+        
+        @Override
+        public void layoutContainer(Container parent) {
+            boolean ltr = ribbon.getComponentOrientation().isLeftToRight();
+            if (ltr) {
+                int x = 0;
+                for (Component comp : parent.getComponents()) {
+                    int prefWidth = comp.getPreferredSize().width;
+                    comp.setBounds(x, 0, prefWidth, parent.getHeight());
+                    x += prefWidth;
+                }                
+            } else {
+                int x = parent.getWidth();
+                for (Component comp : parent.getComponents()) {
+                    int prefWidth = comp.getPreferredSize().width;
+                    comp.setBounds(x - prefWidth, 0, prefWidth, parent.getHeight());
+                    x -= prefWidth;
+                }                
+            }
+        }
+        
+    }
 
     protected void syncRibbonState() {
         // remove all existing ribbon bands
@@ -1689,10 +1792,10 @@ public class BasicRibbonUI extends RibbonUI {
                 .getView();
         taskToggleButtonsHostPanel.removeAll();
 
-        // remove the help button
-        if (this.helpButton != null) {
-            this.ribbon.remove(this.helpButton);
-            this.helpButton = null;
+        // remove the anchored buttons
+        if (this.anchoredButtons != null) {
+            this.ribbon.remove(this.anchoredButtons);
+            this.anchoredButtons = null;
         }
 
         // go over all visible ribbon tasks and create a toggle button
@@ -1861,14 +1964,21 @@ public class BasicRibbonUI extends RibbonUI {
             }
         }
 
-        ActionListener helpListener = this.ribbon.getHelpActionListener();
-        if (helpListener != null) {
-            this.helpButton = new JCommandButton("", this.ribbon.getHelpIcon());
-            this.helpButton.setDisplayState(CommandButtonDisplayState.SMALL);
-            this.helpButton.setCommandButtonKind(CommandButtonKind.ACTION_ONLY);
-            this.helpButton.getActionModel().addActionListener(helpListener);
-            this.helpButton.setActionRichTooltip(this.ribbon.getHelpRichTooltip());
-            this.ribbon.add(this.helpButton);
+        List<RibbonCommand> anchoredCommands = this.ribbon.getAnchoredCommands();
+        if (anchoredCommands != null) {
+            this.anchoredButtons = new Container();
+            this.anchoredButtons.setLayout(new AnchoredButtonsPanelLayout());
+            for (RibbonCommand anchoredCommand : anchoredCommands) {
+                JCommandButton anchoredButton = new JCommandButton(anchoredCommand.getText(),
+                        anchoredCommand.getIcon());
+                anchoredButton.setDisplayState(CommandButtonDisplayState.SMALL);
+                anchoredButton.setCommandButtonKind(CommandButtonKind.ACTION_ONLY);
+                anchoredButton.getActionModel().addActionListener(anchoredCommand.getAction());
+                anchoredButton.setActionRichTooltip(anchoredCommand.getRichTooltip());
+                anchoredButton.setActionKeyTip(anchoredCommand.getActionKeyTip());
+                this.anchoredButtons.add(anchoredButton);
+            }
+            this.ribbon.add(this.anchoredButtons);
         }
 
         this.ribbon.revalidate();
@@ -1923,6 +2033,14 @@ public class BasicRibbonUI extends RibbonUI {
 
     public Map<RibbonTask, JRibbonTaskToggleButton> getTaskToggleButtons() {
         return Collections.unmodifiableMap(taskToggleButtons);
+    }
+    
+    public List<JCommandButton> getAnchoredCommandButtons() {
+        List<JCommandButton> result = new ArrayList<>();
+        for (Component anchored : this.anchoredButtons.getComponents()) {
+            result.add((JCommandButton) anchored);
+        }
+        return Collections.unmodifiableList(result);
     }
 
     protected static class BandHostPopupPanel extends JPopupPanel {

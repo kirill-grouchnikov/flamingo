@@ -51,8 +51,8 @@
 	<property name="flamingo.drop.dir" value="${module.flamingo.basedir}/drop" />
 	<property name="flamingo.lib.dir" value="${module.flamingo.basedir}/lib" />
 	<property name="flamingo.src.dir" value="${module.flamingo.basedir}/src/" />
-	<property name="flamingo.version" value="5.3.00" />
-	<property name="flamingo.versionKey" value="5.3.00 Liadan" />
+	<property name="flamingo.version" value="6.0.00-dev" />
+	<property name="flamingo.versionKey" value="6.0.00dev Muireann" />
 
     <property name="trident.basedir" value="${module.flamingo.basedir}/../trident" />
     <property name="trident.version" value="1.5.00" />

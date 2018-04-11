@@ -60,44 +60,39 @@ import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonUI;
  * <li>Ribbon tasks added with {@link #addTask(RibbonTask)}</li>
  * <li>Contextual ribbon task groups added with
  * {@link #addContextualTaskGroup(RibbonContextualTaskGroup)}</li>
- * <li>Application menu button set by
- * {@link #setApplicationMenu(RibbonApplicationMenu)}</li>
+ * <li>Application menu button set by {@link #setApplicationMenu(RibbonApplicationMenu)}</li>
  * <li>Taskbar panel populated by {@link #addTaskbarComponent(Component)}</li>
  * <li>Help button set by {@link #configureHelp(ResizableIcon, ActionListener)}</li>
  * </ul>
  * 
  * <p>
- * While multiple ribbon tasks can be added to the ribbon, only one is visible
- * at any given time. This task is called the <strong>selected</strong> task.
- * Tasks can be switched with the task buttons placed along the top part of the
- * ribbon. Once a task has been added to the ribbon, it cannot be removed.
+ * While multiple ribbon tasks can be added to the ribbon, only one is visible at any given time.
+ * This task is called the <strong>selected</strong> task. Tasks can be switched with the task
+ * buttons placed along the top part of the ribbon. Once a task has been added to the ribbon, it
+ * cannot be removed.
  * </p>
  * 
  * <p>
- * The contextual ribbon task groups allow showing and hiding ribbon tasks based
- * on the current selection in the application. For example, Word only shows the
- * table tasks when a table is selected in the document. By default, tasks
- * belonging to the groups adde by
- * {@link #addContextualTaskGroup(RibbonContextualTaskGroup)} are not visible.
- * To show the tasks belonging to the specific group, call
- * {@link #setVisible(RibbonContextualTaskGroup, boolean)} API. Note that you
- * can have multiple task groups visible at the same time.
+ * The contextual ribbon task groups allow showing and hiding ribbon tasks based on the current
+ * selection in the application. For example, Word only shows the table tasks when a table is
+ * selected in the document. By default, tasks belonging to the groups adde by
+ * {@link #addContextualTaskGroup(RibbonContextualTaskGroup)} are not visible. To show the tasks
+ * belonging to the specific group, call {@link #setVisible(RibbonContextualTaskGroup, boolean)}
+ * API. Note that you can have multiple task groups visible at the same time.
  * </p>
  * 
  * <p>
- * The application menu button is a big round button shown in the top left
- * corner of the ribbon. If the
- * {@link #setApplicationMenu(RibbonApplicationMenu)} is not called, or called
- * with the <code>null</code> value, the application menu button is not shown,
- * and ribbon task buttons are shifted to the left.
+ * The application menu button is a big round button shown in the top left corner of the ribbon. If
+ * the {@link #setApplicationMenu(RibbonApplicationMenu)} is not called, or called with the
+ * <code>null</code> value, the application menu button is not shown, and ribbon task buttons are
+ * shifted to the left.
  * </p>
  * 
  * <p>
- * The taskbar panel allows showing controls that are visible no matter what
- * ribbon task is selected. To add a taskbar component use the
- * {@link #addTaskbarComponent(Component)} API. The taskbar panel lives to the
- * right of the application menu button. Taskbar components can be removed with
- * the {@link #removeTaskbarComponent(Component)} API.
+ * The taskbar panel allows showing controls that are visible no matter what ribbon task is
+ * selected. To add a taskbar component use the {@link #addTaskbarComponent(Component)} API. The
+ * taskbar panel lives to the right of the application menu button. Taskbar components can be
+ * removed with the {@link #removeTaskbarComponent(Component)} API.
  * </p>
  * 
  * <p>
@@ -110,691 +105,608 @@ import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonUI;
  * </ul>
  * 
  * <p>
- * A minimized ribbon shows the application menu button, taskbar panel, task
- * buttons and help button, but not the ribbon bands of the selected task.
- * Clicking a task button shows the ribbon bands of that task in a popup
- * <strong>without</strong> shifting the application content down.
+ * A minimized ribbon shows the application menu button, taskbar panel, task buttons and help
+ * button, but not the ribbon bands of the selected task. Clicking a task button shows the ribbon
+ * bands of that task in a popup <strong>without</strong> shifting the application content down.
  * </p>
  * 
  * @author Kirill Grouchnikov
  */
 public class JRibbon extends JComponent {
-	/**
-	 * The general tasks.
-	 * 
-	 * @see #addTask(RibbonTask)
-	 * @see #getTaskCount()
-	 * @see #getTask(int)
-	 */
-	private ArrayList<RibbonTask> tasks;
-
-	/**
-	 * The contextual task groups.
-	 * 
-	 * @see #addContextualTaskGroup(RibbonContextualTaskGroup)
-	 * @see #setVisible(RibbonContextualTaskGroup, boolean)
-	 * @see #isVisible(RibbonContextualTaskGroup)
-	 * @see #getContextualTaskGroupCount()
-	 * @see #getContextualTaskGroup(int)
-	 */
-	private ArrayList<RibbonContextualTaskGroup> contextualTaskGroups;
-
-	/**
-	 * The taskbar components (to the right of the application menu button).
-	 * 
-	 * @see #addTaskbarComponent(Component)
-	 * @see #getTaskbarComponents()
-	 * @see #removeTaskbarComponent(Component)
-	 */
-	private ArrayList<Component> taskbarComponents;
-
-	/**
-	 * Bands of the currently shown task.
-	 */
-	private ArrayList<AbstractRibbonBand> bands;
-
-	/**
-	 * Currently selected (shown) task.
-	 */
-	private RibbonTask currentlySelectedTask;
-
-	/**
-	 * Help icon. When not <code>null</code>, the ribbon will display a help
-	 * button at the far edge of the tab area (right under LTR and left under RTL)
-	 * 
-	 * @see #helpActionListener
-	 * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
-	 * @see #getHelpIcon()
-	 * @see #getHelpRichTooltip()
-	 */
-	private ResizableIcon helpIcon;
-
-	/**
-	 * When the {@link #helpIcon} is not <code>null</code>, this listener will
-	 * be invoked when the user activates the help button.
-	 * 
-	 * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
-	 * @see #getHelpActionListener()
-     * @see #getHelpRichTooltip()
-	 */
-	private ActionListener helpActionListener;
-	
-	/**
-	 * When the {@link helpIcon} is not <code>null</code>, this tooltip will be set
-	 * on the help button.
+    /**
+     * The general tasks.
      * 
-     * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
-     * @see #getHelpIcon()
-     * @see #getHelpRichTooltip()
-	 */
-	private RichTooltip helpRichTooltip;
-
-	/**
-	 * Visibility status of the contextual task group. Must contain a value for
-	 * each group in {@link #contextualTaskGroups}.
-	 * 
-	 * @see #setVisible(RibbonContextualTaskGroup, boolean)
-	 * @see #isVisible(RibbonContextualTaskGroup)
-	 */
-	private Map<RibbonContextualTaskGroup, Boolean> groupVisibilityMap;
-
-	/**
-	 * The application menu.
-	 * 
-	 * @see #setApplicationMenu(RibbonApplicationMenu)
-	 * @see #getApplicationMenu()
-	 */
-	private RibbonApplicationMenu applicationMenu;
-
-	/**
-	 * The rich tooltip of {@link #applicationMenu} button.
-	 * 
-	 * @see #applicationMenu
-	 * @see #setApplicationMenuRichTooltip(RichTooltip)
-	 * @see #getApplicationMenuRichTooltip()
-	 */
-	private RichTooltip applicationMenuRichTooltip;
-
-	/**
-	 * The key tip of {@link #applicationMenu} button.
-	 * 
-	 * @see #applicationMenu
-	 * @see #setApplicationMenuKeyTip(String)
-	 * @see #getApplicationMenuKeyTip()
-	 */
-	private String applicationMenuKeyTip;
-
-	/**
-	 * Indicates whether the ribbon is currently minimized.
-	 * 
-	 * @see #setMinimized(boolean)
-	 * @see #isMinimized()
-	 */
-	private boolean isMinimized;
-
-	/**
-	 * The host ribbon frame. Is <code>null</code> when the ribbon is not hosted
-	 * in a {@link JRibbonFrame}.
-	 */
-	private JRibbonFrame ribbonFrame;
-
-	/**
-	 * The UI class ID string.
-	 */
-	public static final String uiClassID = "RibbonUI";
-
-	/**
-	 * Creates a new empty ribbon. Applications are highly encouraged to use
-	 * {@link JRibbonFrame} and access the ribbon with
-	 * {@link JRibbonFrame#getRibbon()} API.
-	 */
-	public JRibbon() {
-		this.tasks = new ArrayList<RibbonTask>();
-		this.contextualTaskGroups = new ArrayList<RibbonContextualTaskGroup>();
-		this.taskbarComponents = new ArrayList<Component>();
-		this.bands = new ArrayList<AbstractRibbonBand>();
-		this.currentlySelectedTask = null;
-		this.groupVisibilityMap = new HashMap<RibbonContextualTaskGroup, Boolean>();
-
-		updateUI();
-	}
-
-	/**
-	 * Creates an empty ribbon for the specified ribbon frame.
-	 * 
-	 * @param ribbonFrame
-	 *            Host ribbon frame.
-	 */
-	JRibbon(JRibbonFrame ribbonFrame) {
-		this();
-		this.ribbonFrame = ribbonFrame;
-	}
-
-	/**
-	 * Adds the specified taskbar component to this ribbon.
-	 * 
-	 * @param comp
-	 *            The taskbar component to add.
-	 * @see #removeTaskbarComponent(Component)
-	 * @see #getTaskbarComponents()
-	 */
-	public synchronized void addTaskbarComponent(Component comp) {
-		if (comp instanceof AbstractCommandButton) {
-			AbstractCommandButton button = (AbstractCommandButton) comp;
-			button.setDisplayState(CommandButtonDisplayState.SMALL);
-			button.setGapScaleFactor(0.5);
-			button.setFocusable(false);
-		}
-		this.taskbarComponents.add(comp);
-		this.fireStateChanged();
-	}
-
-	/**
-	 * Removes the specified taskbar component from this ribbon.
-	 * 
-	 * @param comp
-	 *            The taskbar component to remove.
-	 * @see #addTaskbarComponent(Component)
-	 * @see #getTaskbarComponents()
-	 */
-	public synchronized void removeTaskbarComponent(Component comp) {
-		this.taskbarComponents.remove(comp);
-		this.fireStateChanged();
-	}
-
-	/**
-	 * Adds the specified task to this ribbon.
-	 * 
-	 * @param task
-	 *            The ribbon task to add.
-	 * @see #addContextualTaskGroup(RibbonContextualTaskGroup)
-	 * @see #getTaskCount()
-	 * @see #getTask(int)
-	 */
-	public synchronized void addTask(RibbonTask task) {
-		task.setRibbon(this);
-
-		this.tasks.add(task);
-
-		if (this.tasks.size() == 1) {
-			this.setSelectedTask(task);
-		}
-
-		this.fireStateChanged();
-	}
-
-	/**
-	 * Configures the help button of this ribbon.
-	 * 
-	 * @param helpIcon
-	 *            The icon for the help button.
-	 * @param helpRichTooltip
-	 *             The optional rich tooltip for the help button. 
-	 * @param helpActionListener
-	 *            The action listener for the help button.
-	 * @see #getHelpIcon()
-	 * @see #getHelpActionListener()
-	 */
-	public synchronized void configureHelp(ResizableIcon helpIcon,
-	        RichTooltip helpRichTooltip, ActionListener helpActionListener) {
-		this.helpIcon = helpIcon;
-		this.helpRichTooltip = helpRichTooltip;
-		this.helpActionListener = helpActionListener;
-		this.fireStateChanged();
-	}
-
-	/**
-	 * Returns the icon for the help button. Will return <code>null</code> if
-	 * the help button has not been configured with the
-	 * {@link #configureHelp(ResizableIcon, RichTooltip, ActionListener)} API.
-	 * 
-	 * @return The icon for the help button.
-	 * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
-	 * @see #getHelpActionListener()
-	 * @see #getHelpRichTooltip()
-	 */
-	public ResizableIcon getHelpIcon() {
-		return this.helpIcon;
-	}
+     * @see #addTask(RibbonTask)
+     * @see #getTaskCount()
+     * @see #getTask(int)
+     */
+    private ArrayList<RibbonTask> tasks;
 
     /**
-     * Returns the rich tooltip for the help button. Will return
-     * <code>null</code> if the help button has not been configured with the
-     * {@link #configureHelp(ResizableIcon, RichTooltip, ActionListener)} API.
+     * The contextual task groups.
      * 
-     * @return The action listener for the help button.
-     * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
-     * @see #getHelpIcon()
-     * @see #getHelpActionListener()
+     * @see #addContextualTaskGroup(RibbonContextualTaskGroup)
+     * @see #setVisible(RibbonContextualTaskGroup, boolean)
+     * @see #isVisible(RibbonContextualTaskGroup)
+     * @see #getContextualTaskGroupCount()
+     * @see #getContextualTaskGroup(int)
      */
-    public RichTooltip getHelpRichTooltip() {
-        return this.helpRichTooltip;
+    private ArrayList<RibbonContextualTaskGroup> contextualTaskGroups;
+
+    /**
+     * The taskbar components (to the right of the application menu button).
+     * 
+     * @see #addTaskbarComponent(Component)
+     * @see #getTaskbarComponents()
+     * @see #removeTaskbarComponent(Component)
+     */
+    private ArrayList<Component> taskbarComponents;
+
+    /**
+     * Bands of the currently shown task.
+     */
+    private ArrayList<AbstractRibbonBand> bands;
+
+    /**
+     * Currently selected (shown) task.
+     */
+    private RibbonTask currentlySelectedTask;
+
+    /**
+     * Commands anchored to the far edge of the task toggle strip (right under LTR and left under
+     * RTL).
+     * 
+     * @see #addAnchoredCommand(RibbonCommand)
+     * @see #getAnchoredCommands()
+     */
+    private ArrayList<RibbonCommand> anchoredCommands;
+
+    /**
+     * Visibility status of the contextual task group. Must contain a value for each group in
+     * {@link #contextualTaskGroups}.
+     * 
+     * @see #setVisible(RibbonContextualTaskGroup, boolean)
+     * @see #isVisible(RibbonContextualTaskGroup)
+     */
+    private Map<RibbonContextualTaskGroup, Boolean> groupVisibilityMap;
+
+    /**
+     * The application menu.
+     * 
+     * @see #setApplicationMenu(RibbonApplicationMenu)
+     * @see #getApplicationMenu()
+     */
+    private RibbonApplicationMenu applicationMenu;
+
+    /**
+     * The rich tooltip of {@link #applicationMenu} button.
+     * 
+     * @see #applicationMenu
+     * @see #setApplicationMenuRichTooltip(RichTooltip)
+     * @see #getApplicationMenuRichTooltip()
+     */
+    private RichTooltip applicationMenuRichTooltip;
+
+    /**
+     * The key tip of {@link #applicationMenu} button.
+     * 
+     * @see #applicationMenu
+     * @see #setApplicationMenuKeyTip(String)
+     * @see #getApplicationMenuKeyTip()
+     */
+    private String applicationMenuKeyTip;
+
+    /**
+     * Indicates whether the ribbon is currently minimized.
+     * 
+     * @see #setMinimized(boolean)
+     * @see #isMinimized()
+     */
+    private boolean isMinimized;
+
+    /**
+     * The host ribbon frame. Is <code>null</code> when the ribbon is not hosted in a
+     * {@link JRibbonFrame}.
+     */
+    private JRibbonFrame ribbonFrame;
+
+    /**
+     * The UI class ID string.
+     */
+    public static final String uiClassID = "RibbonUI";
+
+    /**
+     * Creates a new empty ribbon. Applications are highly encouraged to use {@link JRibbonFrame}
+     * and access the ribbon with {@link JRibbonFrame#getRibbon()} API.
+     */
+    public JRibbon() {
+        this.tasks = new ArrayList<RibbonTask>();
+        this.contextualTaskGroups = new ArrayList<>();
+        this.taskbarComponents = new ArrayList<>();
+        this.bands = new ArrayList<>();
+        this.currentlySelectedTask = null;
+        this.groupVisibilityMap = new HashMap<>();
+        this.anchoredCommands = new ArrayList<>();
+
+        updateUI();
     }
 
     /**
-     * Returns the action listener for the help button. Will return
-     * <code>null</code> if the help button has not been configured with the
-     * {@link #configureHelp(ResizableIcon, RichTooltip, ActionListener)} API.
+     * Creates an empty ribbon for the specified ribbon frame.
      * 
-     * @return The action listener for the help button.
-     * @see #configureHelp(ResizableIcon, RichTooltip, ActionListener)
-     * @see #getHelpIcon()
-     * @see #getHelpRichTooltip()
+     * @param ribbonFrame
+     *            Host ribbon frame.
      */
-    public ActionListener getHelpActionListener() {
-        return this.helpActionListener;
+    JRibbon(JRibbonFrame ribbonFrame) {
+        this();
+        this.ribbonFrame = ribbonFrame;
     }
 
-	/**
-	 * Adds the specified contextual task group to this ribbon.
-	 * 
-	 * @param group
-	 *            Task group to add.
-	 * @see #addTask(RibbonTask)
-	 * @see #setVisible(RibbonContextualTaskGroup, boolean)
-	 * @see #isVisible(RibbonContextualTaskGroup)
-	 */
-	public synchronized void addContextualTaskGroup(
-			RibbonContextualTaskGroup group) {
-		group.setRibbon(this);
+    /**
+     * Adds the specified taskbar component to this ribbon.
+     * 
+     * @param comp
+     *            The taskbar component to add.
+     * @see #removeTaskbarComponent(Component)
+     * @see #getTaskbarComponents()
+     */
+    public synchronized void addTaskbarComponent(Component comp) {
+        if (comp instanceof AbstractCommandButton) {
+            AbstractCommandButton button = (AbstractCommandButton) comp;
+            button.setDisplayState(CommandButtonDisplayState.SMALL);
+            button.setGapScaleFactor(0.5);
+            button.setFocusable(false);
+        }
+        this.taskbarComponents.add(comp);
+        this.fireStateChanged();
+    }
 
-		this.contextualTaskGroups.add(group);
-		this.groupVisibilityMap.put(group, Boolean.valueOf(false));
+    /**
+     * Removes the specified taskbar component from this ribbon.
+     * 
+     * @param comp
+     *            The taskbar component to remove.
+     * @see #addTaskbarComponent(Component)
+     * @see #getTaskbarComponents()
+     */
+    public synchronized void removeTaskbarComponent(Component comp) {
+        this.taskbarComponents.remove(comp);
+        this.fireStateChanged();
+    }
 
-		this.fireStateChanged();
-	}
+    /**
+     * Adds the specified task to this ribbon.
+     * 
+     * @param task
+     *            The ribbon task to add.
+     * @see #addContextualTaskGroup(RibbonContextualTaskGroup)
+     * @see #getTaskCount()
+     * @see #getTask(int)
+     */
+    public synchronized void addTask(RibbonTask task) {
+        task.setRibbon(this);
 
-	/**
-	 * Returns the number of regular tasks in <code>this</code> ribbon.
-	 * 
-	 * @return Number of regular tasks in <code>this</code> ribbon.
-	 * @see #getTask(int)
-	 * @see #addTask(RibbonTask)
-	 */
-	public synchronized int getTaskCount() {
-		return this.tasks.size();
-	}
+        this.tasks.add(task);
 
-	/**
-	 * Retrieves the regular task at specified index.
-	 * 
-	 * @param index
-	 *            Task index.
-	 * @return Task that matches the specified index.
-	 * @see #getTaskCount()
-	 * @see #addTask(RibbonTask)
-	 */
-	public synchronized RibbonTask getTask(int index) {
-		return this.tasks.get(index);
-	}
+        if (this.tasks.size() == 1) {
+            this.setSelectedTask(task);
+        }
 
-	/**
-	 * Returns the number of contextual task groups in <code>this</code> ribbon.
-	 * 
-	 * @return Number of contextual task groups in <code>this</code> ribbon.
-	 * @see #addContextualTaskGroup(RibbonContextualTaskGroup)
-	 * @see #getContextualTaskGroup(int)
-	 */
-	public synchronized int getContextualTaskGroupCount() {
-		return this.contextualTaskGroups.size();
-	}
+        this.fireStateChanged();
+    }
 
-	/**
-	 * Retrieves contextual task group at specified index.
-	 * 
-	 * @param index
-	 *            Group index.
-	 * @return Group that matches the specified index.
-	 * @see #addContextualTaskGroup(RibbonContextualTaskGroup)
-	 * @see #getContextualTaskGroupCount()
-	 */
-	public synchronized RibbonContextualTaskGroup getContextualTaskGroup(
-			int index) {
-		return this.contextualTaskGroups.get(index);
-	}
+    /**
+     * Adds the specified ribbon command to the trailing edge of the task toggle strip of this
+     * ribbon.
+     * 
+     * @param ribbonCommand
+     *            Command to add.
+     * 
+     * @see #getAnchoredCommands()
+     */
+    public synchronized void addAnchoredCommand(RibbonCommand ribbonCommand) {
+        this.anchoredCommands.add(ribbonCommand);
+        this.fireStateChanged();
+    }
 
-	/**
-	 * Selects the specified task. The task can be either regular (added with
-	 * {@link #addTask(RibbonTask)}) or a task in a visible contextual task
-	 * group (added with
-	 * {@link #addContextualTaskGroup(RibbonContextualTaskGroup)}. Fires a
-	 * <code>selectedTask</code> property change event.
-	 * 
-	 * @param task
-	 *            Task to select.
-	 * @throws IllegalArgumentException
-	 *             If the specified task is not in the ribbon or not visible.
-	 * @see #getSelectedTask()
-	 */
-	public synchronized void setSelectedTask(RibbonTask task) {
-		boolean valid = this.tasks.contains(task);
-		if (!valid) {
-			for (int i = 0; i < this.getContextualTaskGroupCount(); i++) {
-				RibbonContextualTaskGroup group = this
-						.getContextualTaskGroup(i);
-				if (!this.isVisible(group))
-					continue;
-				for (int j = 0; j < group.getTaskCount(); j++) {
-					if (group.getTask(j) == task) {
-						valid = true;
-						break;
-					}
-				}
-				if (valid)
-					break;
-			}
-		}
-		if (!valid) {
-			throw new IllegalArgumentException(
-					"The specified task to be selected is either not "
-							+ "part of this ribbon or not marked as visible");
-		}
+    /**
+     * Returns the anchored commands for this ribbon.
+     * 
+     * @return This ribbon's anchored commands.
+     * 
+     * @see #addAnchoredCommand(RibbonCommand)
+     */
+    public synchronized List<RibbonCommand> getAnchoredCommands() {
+        return Collections.unmodifiableList(this.anchoredCommands);
+    }
 
-		for (AbstractRibbonBand ribbonBand : this.bands) {
-			ribbonBand.setVisible(false);
-		}
-		this.bands.clear();
+    /**
+     * Adds the specified contextual task group to this ribbon.
+     * 
+     * @param group
+     *            Task group to add.
+     * @see #addTask(RibbonTask)
+     * @see #setVisible(RibbonContextualTaskGroup, boolean)
+     * @see #isVisible(RibbonContextualTaskGroup)
+     */
+    public synchronized void addContextualTaskGroup(RibbonContextualTaskGroup group) {
+        group.setRibbon(this);
 
-		for (int i = 0; i < task.getBandCount(); i++) {
-			AbstractRibbonBand ribbonBand = task.getBand(i);
-			ribbonBand.setVisible(true);
-			this.bands.add(ribbonBand);
-		}
+        this.contextualTaskGroups.add(group);
+        this.groupVisibilityMap.put(group, Boolean.valueOf(false));
 
-		RibbonTask old = this.currentlySelectedTask;
-		this.currentlySelectedTask = task;
+        this.fireStateChanged();
+    }
 
-		this.revalidate();
-		this.repaint();
+    /**
+     * Returns the number of regular tasks in <code>this</code> ribbon.
+     * 
+     * @return Number of regular tasks in <code>this</code> ribbon.
+     * @see #getTask(int)
+     * @see #addTask(RibbonTask)
+     */
+    public synchronized int getTaskCount() {
+        return this.tasks.size();
+    }
 
-		this
-				.firePropertyChange("selectedTask", old,
-						this.currentlySelectedTask);
-	}
+    /**
+     * Retrieves the regular task at specified index.
+     * 
+     * @param index
+     *            Task index.
+     * @return Task that matches the specified index.
+     * @see #getTaskCount()
+     * @see #addTask(RibbonTask)
+     */
+    public synchronized RibbonTask getTask(int index) {
+        return this.tasks.get(index);
+    }
 
-	/**
-	 * Returns the currently selected task.
-	 * 
-	 * @return The currently selected task.
-	 * @see #setSelectedTask(RibbonTask)
-	 */
-	public synchronized RibbonTask getSelectedTask() {
-		return this.currentlySelectedTask;
-	}
+    /**
+     * Returns the number of contextual task groups in <code>this</code> ribbon.
+     * 
+     * @return Number of contextual task groups in <code>this</code> ribbon.
+     * @see #addContextualTaskGroup(RibbonContextualTaskGroup)
+     * @see #getContextualTaskGroup(int)
+     */
+    public synchronized int getContextualTaskGroupCount() {
+        return this.contextualTaskGroups.size();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.JComponent#updateUI()
-	 */
-	@Override
-	public void updateUI() {
-		if (UIManager.get(getUIClassID()) != null) {
-			setUI(UIManager.getUI(this));
-		} else {
-			setUI(new BasicRibbonUI());
-		}
-		for (Component comp : this.taskbarComponents) {
-			SwingUtilities.updateComponentTreeUI(comp);
-		}
-	}
+    /**
+     * Retrieves contextual task group at specified index.
+     * 
+     * @param index
+     *            Group index.
+     * @return Group that matches the specified index.
+     * @see #addContextualTaskGroup(RibbonContextualTaskGroup)
+     * @see #getContextualTaskGroupCount()
+     */
+    public synchronized RibbonContextualTaskGroup getContextualTaskGroup(int index) {
+        return this.contextualTaskGroups.get(index);
+    }
 
-	/**
-	 * Returns the UI object which implements the L&F for this component.
-	 * 
-	 * @return a <code>RibbonUI</code> object
-	 * @see #setUI
-	 */
-	public RibbonUI getUI() {
-		return (RibbonUI) ui;
-	}
+    /**
+     * Selects the specified task. The task can be either regular (added with
+     * {@link #addTask(RibbonTask)}) or a task in a visible contextual task group (added with
+     * {@link #addContextualTaskGroup(RibbonContextualTaskGroup)}. Fires a <code>selectedTask</code>
+     * property change event.
+     * 
+     * @param task
+     *            Task to select.
+     * @throws IllegalArgumentException
+     *             If the specified task is not in the ribbon or not visible.
+     * @see #getSelectedTask()
+     */
+    public synchronized void setSelectedTask(RibbonTask task) {
+        boolean valid = this.tasks.contains(task);
+        if (!valid) {
+            for (int i = 0; i < this.getContextualTaskGroupCount(); i++) {
+                RibbonContextualTaskGroup group = this.getContextualTaskGroup(i);
+                if (!this.isVisible(group))
+                    continue;
+                for (int j = 0; j < group.getTaskCount(); j++) {
+                    if (group.getTask(j) == task) {
+                        valid = true;
+                        break;
+                    }
+                }
+                if (valid)
+                    break;
+            }
+        }
+        if (!valid) {
+            throw new IllegalArgumentException("The specified task to be selected is either not "
+                    + "part of this ribbon or not marked as visible");
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.JComponent#getUIClassID()
-	 */
-	@Override
-	public String getUIClassID() {
-		return uiClassID;
-	}
+        for (AbstractRibbonBand ribbonBand : this.bands) {
+            ribbonBand.setVisible(false);
+        }
+        this.bands.clear();
 
-	/**
-	 * Gets an unmodifiable list of all taskbar components of <code>this</code>
-	 * ribbon.
-	 * 
-	 * @return All taskbar components of <code>this</code> ribbon.
-	 * @see #addTaskbarComponent(Component)
-	 * @see #removeTaskbarComponent(Component)
-	 */
-	public synchronized List<Component> getTaskbarComponents() {
-		return Collections.unmodifiableList(this.taskbarComponents);
-	}
+        for (int i = 0; i < task.getBandCount(); i++) {
+            AbstractRibbonBand ribbonBand = task.getBand(i);
+            ribbonBand.setVisible(true);
+            this.bands.add(ribbonBand);
+        }
 
-	/**
-	 * Adds the specified change listener to track changes to this ribbon.
-	 * 
-	 * @param l
-	 *            Change listener to add.
-	 * @see #removeChangeListener(ChangeListener)
-	 */
-	public void addChangeListener(ChangeListener l) {
-		this.listenerList.add(ChangeListener.class, l);
-	}
+        RibbonTask old = this.currentlySelectedTask;
+        this.currentlySelectedTask = task;
 
-	/**
-	 * Removes the specified change listener from tracking changes to this
-	 * ribbon.
-	 * 
-	 * @param l
-	 *            Change listener to remove.
-	 * @see #addChangeListener(ChangeListener)
-	 */
-	public void removeChangeListener(ChangeListener l) {
-		this.listenerList.remove(ChangeListener.class, l);
-	}
+        this.revalidate();
+        this.repaint();
 
-	/**
-	 * Notifies all registered listeners that the state of this ribbon has
-	 * changed.
-	 */
-	protected void fireStateChanged() {
-		// Guaranteed to return a non-null array
-		Object[] listeners = this.listenerList.getListenerList();
-		// Process the listeners last to first, notifying
-		// those that are interested in this event
-		ChangeEvent event = new ChangeEvent(this);
-		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == ChangeListener.class) {
-				((ChangeListener) listeners[i + 1]).stateChanged(event);
-			}
-		}
-	}
+        this.firePropertyChange("selectedTask", old, this.currentlySelectedTask);
+    }
 
-	/**
-	 * Sets the visibility of ribbon tasks in the specified contextual task
-	 * group. Visibility of all ribbon tasks in the specified group is affected.
-	 * Note that the ribbon can show ribbon tasks of multiple groups at the same
-	 * time.
-	 * 
-	 * @param group
-	 *            Contextual task group.
-	 * @param isVisible
-	 *            If <code>true</code>, all ribbon tasks in the specified group
-	 *            will be visible. If <code>false</code>, all ribbon tasks in
-	 *            the specified group will be hidden.
-	 * @see #isVisible(RibbonContextualTaskGroup)
-	 */
-	public synchronized void setVisible(RibbonContextualTaskGroup group,
-			boolean isVisible) {
-		this.groupVisibilityMap.put(group, Boolean.valueOf(isVisible));
+    /**
+     * Returns the currently selected task.
+     * 
+     * @return The currently selected task.
+     * @see #setSelectedTask(RibbonTask)
+     */
+    public synchronized RibbonTask getSelectedTask() {
+        return this.currentlySelectedTask;
+    }
 
-		// special handling of selected tab
-		if (!isVisible) {
-			boolean isSelectedBeingHidden = false;
-			for (int i = 0; i < group.getTaskCount(); i++) {
-				if (this.getSelectedTask() == group.getTask(i)) {
-					isSelectedBeingHidden = true;
-					break;
-				}
-			}
-			if (isSelectedBeingHidden) {
-				this.setSelectedTask(this.getTask(0));
-			}
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.JComponent#updateUI()
+     */
+    @Override
+    public void updateUI() {
+        if (UIManager.get(getUIClassID()) != null) {
+            setUI(UIManager.getUI(this));
+        } else {
+            setUI(new BasicRibbonUI());
+        }
+        for (Component comp : this.taskbarComponents) {
+            SwingUtilities.updateComponentTreeUI(comp);
+        }
+    }
 
-		this.fireStateChanged();
-		this.revalidate();
-		SwingUtilities.getWindowAncestor(this).repaint();
-	}
+    /**
+     * Returns the UI object which implements the L&F for this component.
+     * 
+     * @return a <code>RibbonUI</code> object
+     * @see #setUI
+     */
+    public RibbonUI getUI() {
+        return (RibbonUI) ui;
+    }
 
-	/**
-	 * Returns the visibility of ribbon tasks in the specified contextual task
-	 * group.
-	 * 
-	 * @param group
-	 *            Contextual task group.
-	 * @return <code>true</code> if the ribbon tasks in the specified group are
-	 *         visible, <code>false</code> otherwise.
-	 */
-	public synchronized boolean isVisible(RibbonContextualTaskGroup group) {
-		return this.groupVisibilityMap.get(group);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.JComponent#getUIClassID()
+     */
+    @Override
+    public String getUIClassID() {
+        return uiClassID;
+    }
 
-	/**
-	 * Sets the application menu for this ribbon. If <code>null</code> is
-	 * passed, the application menu button is hidden. Fires an
-	 * <code>applicationMenu</code> property change event.
-	 * 
-	 * @param applicationMenu
-	 *            The new application menu. Can be <code>null</code>.
-	 * @see #getApplicationMenu()
-	 */
-	public synchronized void setApplicationMenu(
-			RibbonApplicationMenu applicationMenu) {
-		RibbonApplicationMenu old = this.applicationMenu;
-		if (old != applicationMenu) {
-			this.applicationMenu = applicationMenu;
-			if (this.applicationMenu != null) {
-				this.applicationMenu.setFrozen();
-			}
-			this.firePropertyChange("applicationMenu", old,
-					this.applicationMenu);
-		}
-	}
+    /**
+     * Gets an unmodifiable list of all taskbar components of <code>this</code> ribbon.
+     * 
+     * @return All taskbar components of <code>this</code> ribbon.
+     * @see #addTaskbarComponent(Component)
+     * @see #removeTaskbarComponent(Component)
+     */
+    public synchronized List<Component> getTaskbarComponents() {
+        return Collections.unmodifiableList(this.taskbarComponents);
+    }
 
-	/**
-	 * Returns the application menu of this ribbon.
-	 * 
-	 * @return The application menu of this ribbon.
-	 * @see #setApplicationMenu(RibbonApplicationMenu)
-	 */
-	public synchronized RibbonApplicationMenu getApplicationMenu() {
-		return this.applicationMenu;
-	}
+    /**
+     * Adds the specified change listener to track changes to this ribbon.
+     * 
+     * @param l
+     *            Change listener to add.
+     * @see #removeChangeListener(ChangeListener)
+     */
+    public void addChangeListener(ChangeListener l) {
+        this.listenerList.add(ChangeListener.class, l);
+    }
 
-	/**
-	 * Sets the rich tooltip of the application menu button. Fires an
-	 * <code>applicationMenuRichTooltip</code> property change event.
-	 * 
-	 * @param tooltip
-	 *            The rich tooltip of the application menu button.
-	 * @see #getApplicationMenuRichTooltip()
-	 * @see #setApplicationMenu(RibbonApplicationMenu)
-	 */
-	public synchronized void setApplicationMenuRichTooltip(RichTooltip tooltip) {
-		RichTooltip old = this.applicationMenuRichTooltip;
-		this.applicationMenuRichTooltip = tooltip;
-		this.firePropertyChange("applicationMenuRichTooltip", old,
-				this.applicationMenuRichTooltip);
-	}
+    /**
+     * Removes the specified change listener from tracking changes to this ribbon.
+     * 
+     * @param l
+     *            Change listener to remove.
+     * @see #addChangeListener(ChangeListener)
+     */
+    public void removeChangeListener(ChangeListener l) {
+        this.listenerList.remove(ChangeListener.class, l);
+    }
 
-	/**
-	 * Returns the rich tooltip of the application menu button.
-	 * 
-	 * @return The rich tooltip of the application menu button.
-	 * @see #setApplicationMenuRichTooltip(RichTooltip)
-	 * @see #setApplicationMenu(RibbonApplicationMenu)
-	 */
-	public synchronized RichTooltip getApplicationMenuRichTooltip() {
-		return this.applicationMenuRichTooltip;
-	}
+    /**
+     * Notifies all registered listeners that the state of this ribbon has changed.
+     */
+    protected void fireStateChanged() {
+        // Guaranteed to return a non-null array
+        Object[] listeners = this.listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        ChangeEvent event = new ChangeEvent(this);
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == ChangeListener.class) {
+                ((ChangeListener) listeners[i + 1]).stateChanged(event);
+            }
+        }
+    }
 
-	/**
-	 * Sets the key tip of the application menu button. Fires an
-	 * <code>applicationMenuKeyTip</code> property change event.
-	 * 
-	 * @param keyTip
-	 *            The new key tip for the application menu button.
-	 * @see #setApplicationMenu(RibbonApplicationMenu)
-	 * @see #getApplicationMenuKeyTip()
-	 */
-	public synchronized void setApplicationMenuKeyTip(String keyTip) {
-		String old = this.applicationMenuKeyTip;
-		this.applicationMenuKeyTip = keyTip;
-		this.firePropertyChange("applicationMenuKeyTip", old,
-				this.applicationMenuKeyTip);
-	}
+    /**
+     * Sets the visibility of ribbon tasks in the specified contextual task group. Visibility of all
+     * ribbon tasks in the specified group is affected. Note that the ribbon can show ribbon tasks
+     * of multiple groups at the same time.
+     * 
+     * @param group
+     *            Contextual task group.
+     * @param isVisible
+     *            If <code>true</code>, all ribbon tasks in the specified group will be visible. If
+     *            <code>false</code>, all ribbon tasks in the specified group will be hidden.
+     * @see #isVisible(RibbonContextualTaskGroup)
+     */
+    public synchronized void setVisible(RibbonContextualTaskGroup group, boolean isVisible) {
+        this.groupVisibilityMap.put(group, Boolean.valueOf(isVisible));
 
-	/**
-	 * Returns the key tip of the application menu button.
-	 * 
-	 * @return The key tip of the application menu button.
-	 * @see #setApplicationMenuKeyTip(String)
-	 * @see #setApplicationMenu(RibbonApplicationMenu)
-	 */
-	public synchronized String getApplicationMenuKeyTip() {
-		return this.applicationMenuKeyTip;
-	}
+        // special handling of selected tab
+        if (!isVisible) {
+            boolean isSelectedBeingHidden = false;
+            for (int i = 0; i < group.getTaskCount(); i++) {
+                if (this.getSelectedTask() == group.getTask(i)) {
+                    isSelectedBeingHidden = true;
+                    break;
+                }
+            }
+            if (isSelectedBeingHidden) {
+                this.setSelectedTask(this.getTask(0));
+            }
+        }
 
-	/**
-	 * Returns the indication whether this ribbon is minimized.
-	 * 
-	 * @return <code>true</code> if this ribbon is minimized, <code>false</code>
-	 *         otherwise.
-	 * @see #setMinimized(boolean)
-	 */
-	public synchronized boolean isMinimized() {
-		return this.isMinimized;
-	}
+        this.fireStateChanged();
+        this.revalidate();
+        SwingUtilities.getWindowAncestor(this).repaint();
+    }
 
-	/**
-	 * Changes the minimized state of this ribbon. Fires a
-	 * <code>minimized</code> property change event.
-	 * 
-	 * @param isMinimized
-	 *            if <code>true</code>, this ribbon becomes minimized, otherwise
-	 *            it is unminimized.
-	 */
-	public synchronized void setMinimized(boolean isMinimized) {
-		// System.out.println("Ribbon minimized -> " + isMinimized);
-		boolean old = this.isMinimized;
-		if (old != isMinimized) {
-			this.isMinimized = isMinimized;
-			this.firePropertyChange("minimized", old, this.isMinimized);
-		}
-	}
+    /**
+     * Returns the visibility of ribbon tasks in the specified contextual task group.
+     * 
+     * @param group
+     *            Contextual task group.
+     * @return <code>true</code> if the ribbon tasks in the specified group are visible,
+     *         <code>false</code> otherwise.
+     */
+    public synchronized boolean isVisible(RibbonContextualTaskGroup group) {
+        return this.groupVisibilityMap.get(group);
+    }
 
-	/**
-	 * Returns the ribbon frame that hosts this ribbon. The result can be
-	 * <code>null</code>.
-	 * 
-	 * @return The ribbon frame that hosts this ribbon.
-	 */
-	public JRibbonFrame getRibbonFrame() {
-		return this.ribbonFrame;
-	}
+    /**
+     * Sets the application menu for this ribbon. If <code>null</code> is passed, the application
+     * menu button is hidden. Fires an <code>applicationMenu</code> property change event.
+     * 
+     * @param applicationMenu
+     *            The new application menu. Can be <code>null</code>.
+     * @see #getApplicationMenu()
+     */
+    public synchronized void setApplicationMenu(RibbonApplicationMenu applicationMenu) {
+        RibbonApplicationMenu old = this.applicationMenu;
+        if (old != applicationMenu) {
+            this.applicationMenu = applicationMenu;
+            if (this.applicationMenu != null) {
+                this.applicationMenu.setFrozen();
+            }
+            this.firePropertyChange("applicationMenu", old, this.applicationMenu);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.JComponent#setVisible(boolean)
-	 */
-	@Override
-	public void setVisible(boolean flag) {
-		if (!flag && (getRibbonFrame() != null))
-			throw new IllegalArgumentException(
-					"Can't hide ribbon on JRibbonFrame");
-		super.setVisible(flag);
-	}
+    /**
+     * Returns the application menu of this ribbon.
+     * 
+     * @return The application menu of this ribbon.
+     * @see #setApplicationMenu(RibbonApplicationMenu)
+     */
+    public synchronized RibbonApplicationMenu getApplicationMenu() {
+        return this.applicationMenu;
+    }
+
+    /**
+     * Sets the rich tooltip of the application menu button. Fires an
+     * <code>applicationMenuRichTooltip</code> property change event.
+     * 
+     * @param tooltip
+     *            The rich tooltip of the application menu button.
+     * @see #getApplicationMenuRichTooltip()
+     * @see #setApplicationMenu(RibbonApplicationMenu)
+     */
+    public synchronized void setApplicationMenuRichTooltip(RichTooltip tooltip) {
+        RichTooltip old = this.applicationMenuRichTooltip;
+        this.applicationMenuRichTooltip = tooltip;
+        this.firePropertyChange("applicationMenuRichTooltip", old, this.applicationMenuRichTooltip);
+    }
+
+    /**
+     * Returns the rich tooltip of the application menu button.
+     * 
+     * @return The rich tooltip of the application menu button.
+     * @see #setApplicationMenuRichTooltip(RichTooltip)
+     * @see #setApplicationMenu(RibbonApplicationMenu)
+     */
+    public synchronized RichTooltip getApplicationMenuRichTooltip() {
+        return this.applicationMenuRichTooltip;
+    }
+
+    /**
+     * Sets the key tip of the application menu button. Fires an <code>applicationMenuKeyTip</code>
+     * property change event.
+     * 
+     * @param keyTip
+     *            The new key tip for the application menu button.
+     * @see #setApplicationMenu(RibbonApplicationMenu)
+     * @see #getApplicationMenuKeyTip()
+     */
+    public synchronized void setApplicationMenuKeyTip(String keyTip) {
+        String old = this.applicationMenuKeyTip;
+        this.applicationMenuKeyTip = keyTip;
+        this.firePropertyChange("applicationMenuKeyTip", old, this.applicationMenuKeyTip);
+    }
+
+    /**
+     * Returns the key tip of the application menu button.
+     * 
+     * @return The key tip of the application menu button.
+     * @see #setApplicationMenuKeyTip(String)
+     * @see #setApplicationMenu(RibbonApplicationMenu)
+     */
+    public synchronized String getApplicationMenuKeyTip() {
+        return this.applicationMenuKeyTip;
+    }
+
+    /**
+     * Returns the indication whether this ribbon is minimized.
+     * 
+     * @return <code>true</code> if this ribbon is minimized, <code>false</code> otherwise.
+     * @see #setMinimized(boolean)
+     */
+    public synchronized boolean isMinimized() {
+        return this.isMinimized;
+    }
+
+    /**
+     * Changes the minimized state of this ribbon. Fires a <code>minimized</code> property change
+     * event.
+     * 
+     * @param isMinimized
+     *            if <code>true</code>, this ribbon becomes minimized, otherwise it is unminimized.
+     */
+    public synchronized void setMinimized(boolean isMinimized) {
+        // System.out.println("Ribbon minimized -> " + isMinimized);
+        boolean old = this.isMinimized;
+        if (old != isMinimized) {
+            this.isMinimized = isMinimized;
+            this.firePropertyChange("minimized", old, this.isMinimized);
+        }
+    }
+
+    /**
+     * Returns the ribbon frame that hosts this ribbon. The result can be <code>null</code>.
+     * 
+     * @return The ribbon frame that hosts this ribbon.
+     */
+    public JRibbonFrame getRibbonFrame() {
+        return this.ribbonFrame;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.JComponent#setVisible(boolean)
+     */
+    @Override
+    public void setVisible(boolean flag) {
+        if (!flag && (getRibbonFrame() != null))
+            throw new IllegalArgumentException("Can't hide ribbon on JRibbonFrame");
+        super.setVisible(flag);
+    }
 }
