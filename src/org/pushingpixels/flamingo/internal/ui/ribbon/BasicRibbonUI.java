@@ -89,7 +89,6 @@ import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
-import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.JScrollablePanel;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
@@ -1732,16 +1731,16 @@ public class BasicRibbonUI extends RibbonUI {
             }
         }
     }
-    
+
     private class AnchoredButtonsPanelLayout implements LayoutManager {
         @Override
         public void addLayoutComponent(String name, Component comp) {
         }
-        
+
         @Override
         public void removeLayoutComponent(Component comp) {
         }
-        
+
         @Override
         public Dimension minimumLayoutSize(Container parent) {
             int minWidth = 0;
@@ -1750,7 +1749,7 @@ public class BasicRibbonUI extends RibbonUI {
             }
             return new Dimension(minWidth, getTaskToggleButtonHeight());
         }
-        
+
         @Override
         public Dimension preferredLayoutSize(Container parent) {
             int prefWidth = 0;
@@ -1759,7 +1758,7 @@ public class BasicRibbonUI extends RibbonUI {
             }
             return new Dimension(prefWidth, getTaskToggleButtonHeight());
         }
-        
+
         @Override
         public void layoutContainer(Container parent) {
             boolean ltr = ribbon.getComponentOrientation().isLeftToRight();
@@ -1769,17 +1768,17 @@ public class BasicRibbonUI extends RibbonUI {
                     int prefWidth = comp.getPreferredSize().width;
                     comp.setBounds(x, 0, prefWidth, parent.getHeight());
                     x += prefWidth;
-                }                
+                }
             } else {
                 int x = parent.getWidth();
                 for (Component comp : parent.getComponents()) {
                     int prefWidth = comp.getPreferredSize().width;
                     comp.setBounds(x - prefWidth, 0, prefWidth, parent.getHeight());
                     x -= prefWidth;
-                }                
+                }
             }
         }
-        
+
     }
 
     protected void syncRibbonState() {
@@ -1969,14 +1968,7 @@ public class BasicRibbonUI extends RibbonUI {
             this.anchoredButtons = new Container();
             this.anchoredButtons.setLayout(new AnchoredButtonsPanelLayout());
             for (RibbonCommand anchoredCommand : anchoredCommands) {
-                JCommandButton anchoredButton = new JCommandButton(anchoredCommand.getText(),
-                        anchoredCommand.getIcon());
-                anchoredButton.setDisplayState(CommandButtonDisplayState.SMALL);
-                anchoredButton.setCommandButtonKind(CommandButtonKind.ACTION_ONLY);
-                anchoredButton.getActionModel().addActionListener(anchoredCommand.getAction());
-                anchoredButton.setActionRichTooltip(anchoredCommand.getRichTooltip());
-                anchoredButton.setActionKeyTip(anchoredCommand.getActionKeyTip());
-                this.anchoredButtons.add(anchoredButton);
+                this.anchoredButtons.add(anchoredCommand.buildButton());
             }
             this.ribbon.add(this.anchoredButtons);
         }
@@ -2034,7 +2026,7 @@ public class BasicRibbonUI extends RibbonUI {
     public Map<RibbonTask, JRibbonTaskToggleButton> getTaskToggleButtons() {
         return Collections.unmodifiableMap(taskToggleButtons);
     }
-    
+
     public List<JCommandButton> getAnchoredCommandButtons() {
         List<JCommandButton> result = new ArrayList<>();
         for (Component anchored : this.anchoredButtons.getComponents()) {

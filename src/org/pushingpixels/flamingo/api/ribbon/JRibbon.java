@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JComponent;
+import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -243,6 +244,42 @@ public class JRibbon extends JComponent {
     }
 
     /**
+     * Adds the specified taskbar command to this ribbon.
+     * 
+     * @param comp
+     *            The taskbar command to add.
+     * @see #removeTaskbarComponent(Component)
+     * @see #getTaskbarComponents()
+     */
+    public synchronized Component addTaskbarCommand(RibbonCommand command) {
+        AbstractCommandButton cb = command.buildButton();
+        
+        cb.setDisplayState(CommandButtonDisplayState.SMALL);
+        cb.setGapScaleFactor(0.5);
+        cb.setFocusable(false);
+        
+        this.taskbarComponents.add(cb);
+        this.fireStateChanged();
+        
+        return cb;
+    }
+
+    /**
+     * Adds a taskbar separator to this ribbon.
+     * 
+     * @see #removeTaskbarComponent(Component)
+     * @see #getTaskbarComponents()
+     */
+    public synchronized Component addTaskbarSeparator() {
+        Component result = new JSeparator(JSeparator.VERTICAL);
+        
+        this.taskbarComponents.add(result);
+        this.fireStateChanged();
+        
+        return result;
+    }
+
+    /**
      * Adds the specified taskbar component to this ribbon.
      * 
      * @param comp
@@ -252,10 +289,10 @@ public class JRibbon extends JComponent {
      */
     public synchronized void addTaskbarComponent(Component comp) {
         if (comp instanceof AbstractCommandButton) {
-            AbstractCommandButton button = (AbstractCommandButton) comp;
-            button.setDisplayState(CommandButtonDisplayState.SMALL);
-            button.setGapScaleFactor(0.5);
-            button.setFocusable(false);
+            throw new UnsupportedOperationException("Use addTaskbarCommand instead");
+        }
+        if (comp instanceof JSeparator) {
+            throw new UnsupportedOperationException("Use addTaskbarSeparator instead");
         }
         this.taskbarComponents.add(comp);
         this.fireStateChanged();

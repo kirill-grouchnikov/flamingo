@@ -31,68 +31,168 @@ package org.pushingpixels.flamingo.api.ribbon;
 
 import java.awt.event.ActionListener;
 
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
+import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 
 public class RibbonCommand {
-    private String text;
+    private String title;
     private ResizableIcon icon;
     private ActionListener action;
-    private RichTooltip richTooltip;
+    private RichTooltip actionRichTooltip;
     private String actionKeyTip;
+    private PopupPanelCallback popupCallback;
+    private RichTooltip popupRichTooltip;
+    private String popupKeyTip;
+    private boolean isTitleClickAction;
+    private boolean isTitleClickPopup;
+    private boolean isEnabled;
 
-    public RibbonCommand() {
+    private RibbonCommand() {
     }
 
-    public String getText() {
-        return text;
+    private void checkConsistency() {
+        if (icon == null) {
+            throw new IllegalStateException("Must have icon");
+        }
+        if (action == null) {
+            if (actionRichTooltip != null) {
+                throw new IllegalStateException("Configured action rich tooltip with no action");
+            }
+            if (actionKeyTip != null) {
+                throw new IllegalStateException("Configured action key tip with no action");
+            }
+        }
+        if (popupCallback == null) {
+            if (popupRichTooltip != null) {
+                throw new IllegalStateException("Configured popup rich tooltip with no callback");
+            }
+            if (popupKeyTip != null) {
+                throw new IllegalStateException("Configured popup key tip with no callback");
+            }
+        }
+
+        if ((action == null) && (popupCallback == null)) {
+            throw new IllegalStateException("Command configured with no action or popup callback");
+        }
+
+        if ((action != null) && (popupCallback == null) && isTitleClickPopup) {
+            throw new IllegalStateException(
+                    "Action-only command configured to activate popup on title click");
+        }
+
+        if ((popupCallback != null) && (action == null) && isTitleClickAction) {
+            throw new IllegalStateException(
+                    "Popup-only command configured to activate action on title click");
+        }
+
+        if ((action != null) && (popupCallback != null)) {
+            if (isTitleClickAction && isTitleClickPopup) {
+                throw new IllegalStateException(
+                        "Command configured to have both action and popup can't have both activated on title click");
+            }
+            if (!isTitleClickAction && !isTitleClickPopup) {
+                throw new IllegalStateException(
+                        "Command configured to have both action and popup must have one activated on title click");
+            }
+        }
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public String getTitle() {
+        return this.title;
     }
 
     public ResizableIcon getIcon() {
-        return icon;
-    }
-
-    public void setIcon(ResizableIcon icon) {
-        this.icon = icon;
+        return this.icon;
     }
 
     public ActionListener getAction() {
-        return action;
+        return this.action;
     }
 
-    public void setAction(ActionListener action) {
-        this.action = action;
-    }
-
-    public RichTooltip getRichTooltip() {
-        return richTooltip;
-    }
-
-    public void setRichTooltip(RichTooltip richTooltip) {
-        this.richTooltip = richTooltip;
+    public RichTooltip getActionRichTooltip() {
+        return this.actionRichTooltip;
     }
 
     public String getActionKeyTip() {
-        return actionKeyTip;
+        return this.actionKeyTip;
     }
 
-    public void setActionKeyTip(String actionKeyTip) {
-        this.actionKeyTip = actionKeyTip;
+    public PopupPanelCallback getPopupCallback() {
+        return this.popupCallback;
+    }
+
+    public RichTooltip getPopupRichTooltip() {
+        return this.popupRichTooltip;
+    }
+
+    public String getPopupKeyTip() {
+        return this.popupKeyTip;
+    }
+
+    public boolean isTitleClickAction() {
+        return this.isTitleClickAction;
+    }
+
+    public boolean isTitleClickPopup() {
+        return this.isTitleClickPopup;
+    }
+    
+    public boolean isEnabled() {
+        return this.isEnabled;
+    }
+
+    public AbstractCommandButton buildButton() {
+        JCommandButton jcb = new JCommandButton(this.getTitle(), this.getIcon());
+
+        boolean hasAction = (this.getAction() != null);
+        boolean hasPopup = (this.getPopupCallback() != null);
+
+        if (hasAction) {
+            jcb.addActionListener(this.getAction());
+            jcb.setActionRichTooltip(this.getActionRichTooltip());
+            jcb.setActionKeyTip(this.getActionKeyTip());
+        }
+
+        if (hasPopup) {
+            jcb.setPopupCallback(this.getPopupCallback());
+            jcb.setPopupRichTooltip(this.getPopupRichTooltip());
+            jcb.setPopupKeyTip(this.getPopupKeyTip());
+        }
+
+        if (hasAction && hasPopup) {
+            jcb.setCommandButtonKind(
+                    this.isTitleClickAction ? CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION
+                            : CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
+        } else if (hasAction) {
+            jcb.setCommandButtonKind(CommandButtonKind.ACTION_ONLY);
+        } else {
+            jcb.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
+        }
+        
+        jcb.setEnabled(this.isEnabled());
+
+        return jcb;
     }
 
     public static class RibbonCommandBuilder {
-        private String text;
+        private String title;
         private ResizableIcon icon;
         private ActionListener action;
-        private RichTooltip richTooltip;
+        private RichTooltip actionRichTooltip;
         private String actionKeyTip;
+        private PopupPanelCallback popupCallback;
+        private RichTooltip popupRichTooltip;
+        private String popupKeyTip;
+        private boolean isTitleClickAction;
+        private boolean isTitleClickPopup;
+        private boolean isEnabled = true;
 
-        public RibbonCommandBuilder setText(String text) {
-            this.text = text;
+        public RibbonCommandBuilder setTitle(String title) {
+            this.title = title;
             return this;
         }
 
@@ -106,8 +206,8 @@ public class RibbonCommand {
             return this;
         }
 
-        public RibbonCommandBuilder setRichTooltip(RichTooltip richTooltip) {
-            this.richTooltip = richTooltip;
+        public RibbonCommandBuilder setActionRichTooltip(RichTooltip actionRichTooltip) {
+            this.actionRichTooltip = actionRichTooltip;
             return this;
         }
 
@@ -115,14 +215,53 @@ public class RibbonCommand {
             this.actionKeyTip = actionKeyTip;
             return this;
         }
-        
+
+        public RibbonCommandBuilder setPopupCallback(PopupPanelCallback popupCallback) {
+            this.popupCallback = popupCallback;
+            return this;
+        }
+
+        public RibbonCommandBuilder setPopupRichTooltip(RichTooltip popupRichTooltip) {
+            this.popupRichTooltip = popupRichTooltip;
+            return this;
+        }
+
+        public RibbonCommandBuilder setPopupKeyTip(String popupKeyTip) {
+            this.popupKeyTip = popupKeyTip;
+            return this;
+        }
+
+        public RibbonCommandBuilder setTitleClickAction() {
+            this.isTitleClickAction = true;
+            return this;
+        }
+
+        public RibbonCommandBuilder setTitleClickPopup() {
+            this.isTitleClickPopup = true;
+            return this;
+        }
+
+        public RibbonCommandBuilder setEnabled(boolean isEnabled) {
+            this.isEnabled = isEnabled;
+            return this;
+        }
+
         public RibbonCommand build() {
             RibbonCommand command = new RibbonCommand();
-            command.setText(this.text);
-            command.setIcon(this.icon);
-            command.setAction(this.action);
-            command.setRichTooltip(this.richTooltip);
-            command.setActionKeyTip(this.actionKeyTip);
+            command.title = this.title;
+            command.icon = this.icon;
+            command.action = this.action;
+            command.actionRichTooltip = this.actionRichTooltip;
+            command.actionKeyTip = this.actionKeyTip;
+            command.popupCallback = this.popupCallback;
+            command.popupRichTooltip = this.popupRichTooltip;
+            command.popupKeyTip = this.popupKeyTip;
+            command.isTitleClickAction = this.isTitleClickAction;
+            command.isTitleClickPopup = this.isTitleClickPopup;
+            command.isEnabled = this.isEnabled;
+
+            command.checkConsistency();
+
             return command;
         }
 
