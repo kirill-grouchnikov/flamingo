@@ -32,9 +32,11 @@ package org.pushingpixels.flamingo.api.ribbon;
 import java.awt.event.ActionListener;
 
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
-import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
+import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
+import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 
@@ -50,6 +52,9 @@ public class RibbonCommand {
     private boolean isTitleClickAction;
     private boolean isTitleClickPopup;
     private boolean isEnabled;
+    private boolean isToggle;
+    private boolean isToggleSelected;
+    private RibbonCommandToggleGroup toggleGroup;
 
     private RibbonCommand() {
     }
@@ -99,6 +104,19 @@ public class RibbonCommand {
                         "Command configured to have both action and popup must have one activated on title click");
             }
         }
+
+        if (isToggle && (popupCallback != null)) {
+            throw new IllegalStateException("Command configured to be toggle can't have popups");
+        }
+
+        if ((toggleGroup != null) && !isToggle) {
+            throw new IllegalStateException(
+                    "Command configured to not be a toggle but is in a toggle toggleGroup");
+        }
+        if (isToggleSelected && !isToggle) {
+            throw new IllegalStateException(
+                    "Command configured to not be a toggle but is selected");
+        }
     }
 
     public String getTitle() {
@@ -140,42 +158,71 @@ public class RibbonCommand {
     public boolean isTitleClickPopup() {
         return this.isTitleClickPopup;
     }
-    
+
     public boolean isEnabled() {
         return this.isEnabled;
     }
 
+    public boolean isToggle() {
+        return this.isToggle;
+    }
+    
+    public boolean isToggleSelected() {
+        return this.isToggleSelected;
+    }
+
+    public RibbonCommandToggleGroup getToggleGroup() {
+        return this.toggleGroup;
+    }
+
     public AbstractCommandButton buildButton() {
-        JCommandButton jcb = new JCommandButton(this.getTitle(), this.getIcon());
+        AbstractCommandButton result = this.isToggle()
+                ? new JCommandToggleButton(this.getTitle(), this.getIcon())
+                : new JCommandButton(this.getTitle(), this.getIcon());
 
         boolean hasAction = (this.getAction() != null);
         boolean hasPopup = (this.getPopupCallback() != null);
 
         if (hasAction) {
-            jcb.addActionListener(this.getAction());
-            jcb.setActionRichTooltip(this.getActionRichTooltip());
-            jcb.setActionKeyTip(this.getActionKeyTip());
+            result.addActionListener(this.getAction());
+            result.setActionRichTooltip(this.getActionRichTooltip());
+            result.setActionKeyTip(this.getActionKeyTip());
         }
 
-        if (hasPopup) {
-            jcb.setPopupCallback(this.getPopupCallback());
-            jcb.setPopupRichTooltip(this.getPopupRichTooltip());
-            jcb.setPopupKeyTip(this.getPopupKeyTip());
+        if (!isToggle) {
+            JCommandButton jcb = (JCommandButton) result;
+            if (hasPopup) {
+                jcb.setPopupCallback(this.getPopupCallback());
+                jcb.setPopupRichTooltip(this.getPopupRichTooltip());
+                jcb.setPopupKeyTip(this.getPopupKeyTip());
+            }
+
+            if (hasAction && hasPopup) {
+                jcb.setCommandButtonKind(
+                        this.isTitleClickAction ? CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION
+                                : CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
+            } else if (hasAction) {
+                jcb.setCommandButtonKind(CommandButtonKind.ACTION_ONLY);
+            } else {
+                jcb.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
+            }
         }
 
-        if (hasAction && hasPopup) {
-            jcb.setCommandButtonKind(
-                    this.isTitleClickAction ? CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION
-                            : CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
-        } else if (hasAction) {
-            jcb.setCommandButtonKind(CommandButtonKind.ACTION_ONLY);
-        } else {
-            jcb.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
+        result.setEnabled(this.isEnabled());
+
+        if (this.getToggleGroup() != null) {
+            this.getToggleGroup().toggleButtonGroup.add((JCommandToggleButton) result);
         }
         
-        jcb.setEnabled(this.isEnabled());
+        if (this.isToggleSelected()) {
+            result.getActionModel().setSelected(true);
+        }
 
-        return jcb;
+        return result;
+    }
+
+    public static class RibbonCommandToggleGroup {
+        private CommandToggleButtonGroup toggleButtonGroup = new CommandToggleButtonGroup();
     }
 
     public static class RibbonCommandBuilder {
@@ -190,6 +237,9 @@ public class RibbonCommand {
         private boolean isTitleClickAction;
         private boolean isTitleClickPopup;
         private boolean isEnabled = true;
+        private boolean isToggle;
+        private boolean isToggleSelected;
+        private RibbonCommandToggleGroup toggleGroup;
 
         public RibbonCommandBuilder setTitle(String title) {
             this.title = title;
@@ -246,6 +296,22 @@ public class RibbonCommand {
             return this;
         }
 
+        public RibbonCommandBuilder setToggle() {
+            this.isToggle = true;
+            return this;
+        }
+
+        public RibbonCommandBuilder setToggleSelected() {
+            this.isToggle = true;
+            this.isToggleSelected = true;
+            return this;
+        }
+
+        public RibbonCommandBuilder inToggleGroup(RibbonCommandToggleGroup toggleGroup) {
+            this.toggleGroup = toggleGroup;
+            return this;
+        }
+
         public RibbonCommand build() {
             RibbonCommand command = new RibbonCommand();
             command.title = this.title;
@@ -259,6 +325,9 @@ public class RibbonCommand {
             command.isTitleClickAction = this.isTitleClickAction;
             command.isTitleClickPopup = this.isTitleClickPopup;
             command.isEnabled = this.isEnabled;
+            command.isToggle = this.isToggle;
+            command.isToggleSelected = this.isToggleSelected;
+            command.toggleGroup = this.toggleGroup;
 
             command.checkConsistency();
 

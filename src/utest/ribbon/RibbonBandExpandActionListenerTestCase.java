@@ -20,6 +20,7 @@ import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
@@ -31,258 +32,236 @@ import utest.svg.transcoded.Edit_copy;
 import utest.svg.transcoded.Edit_cut;
 import utest.svg.transcoded.Edit_paste;
 
-public class RibbonBandExpandActionListenerTestCase extends
-		FestSwingJUnitTestCase {
-	JRibbonFrame ribbonFrame;
+public class RibbonBandExpandActionListenerTestCase extends FestSwingJUnitTestCase {
+    JRibbonFrame ribbonFrame;
 
-	JRibbonBand ribbonBand1;
+    JRibbonBand ribbonBand1;
 
-	JRibbonBand ribbonBand2;
+    JRibbonBand ribbonBand2;
 
-	int count1;
+    int count1;
 
-	int count2;
+    int count2;
 
-	private class ExpandActionListener1 implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			count1++;
-		}
-	}
+    private class ExpandActionListener1 implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            count1++;
+        }
+    }
 
-	private class ExpandActionListener2 implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			count2++;
-		}
-	}
+    private class ExpandActionListener2 implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            count2++;
+        }
+    }
 
-	private static JRibbonBand getSampleRibbonBand(
-			ActionListener expandActionListener) {
-		JRibbonBand clipboardBand = new JRibbonBand("Clipboard",
-				new Edit_paste(), expandActionListener);
+    private static JRibbonBand getSampleRibbonBand(ActionListener expandActionListener) {
+        JRibbonBand clipboardBand = new JRibbonBand("Clipboard", new Edit_paste(),
+                expandActionListener);
 
-		JCommandButton mainButton = new JCommandButton("Paste",
-				new Edit_paste());
-		mainButton
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
-		clipboardBand.addCommandButton(mainButton, RibbonElementPriority.TOP);
+        clipboardBand.addRibbonCommand(new RibbonCommandBuilder().setTitle("Paste")
+                .setIcon(Edit_paste.of(16, 16))
+                .setAction((ActionEvent e) -> System.out.println("Pasted!"))
+                .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
+                        commandButton.getComponentOrientation()))
+                .setTitleClickAction().build(), RibbonElementPriority.TOP);
 
-		JCommandButton cutButton = new JCommandButton("Cut", new Edit_cut());
-		cutButton
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
-		clipboardBand.addCommandButton(cutButton, RibbonElementPriority.MEDIUM);
+        clipboardBand.addRibbonCommand(new RibbonCommandBuilder().setTitle("Cut")
+                .setIcon(Edit_cut.of(16, 16))
+                .setAction((ActionEvent e) -> System.out.println("Cut!"))
+                .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
+                        commandButton.getComponentOrientation()))
+                .setTitleClickAction().build(), RibbonElementPriority.MEDIUM);
 
-		JCommandButton copyButton = new JCommandButton("Copy", new Edit_copy());
-		copyButton
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
-		clipboardBand
-				.addCommandButton(copyButton, RibbonElementPriority.MEDIUM);
+        clipboardBand.addRibbonCommand(new RibbonCommandBuilder().setTitle("Copy")
+                .setIcon(Edit_copy.of(16, 16))
+                .setAction((ActionEvent e) -> System.out.println("Copy!"))
+                .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
+                        commandButton.getComponentOrientation()))
+                .setTitleClickPopup().build(), RibbonElementPriority.MEDIUM);
 
-		JCommandButton formatButton = new JCommandButton("Format",
-				new Edit_paste());
-		formatButton
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
-		clipboardBand.addCommandButton(formatButton,
-				RibbonElementPriority.MEDIUM);
+        clipboardBand.addRibbonCommand(new RibbonCommandBuilder().setTitle("Format")
+                .setIcon(Edit_paste.of(16, 16))
+                .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
+                        commandButton.getComponentOrientation()))
+                .build(), RibbonElementPriority.MEDIUM);
 
-		List<RibbonBandResizePolicy> resizePolicies = new ArrayList<RibbonBandResizePolicy>();
-		resizePolicies.add(new CoreRibbonResizePolicies.Mirror(clipboardBand
-				.getControlPanel()));
-		resizePolicies.add(new CoreRibbonResizePolicies.Mid2Low(clipboardBand
-				.getControlPanel()));
-		resizePolicies.add(new IconRibbonBandResizePolicy(clipboardBand
-				.getControlPanel()));
-		clipboardBand.setResizePolicies(resizePolicies);
+        List<RibbonBandResizePolicy> resizePolicies = new ArrayList<RibbonBandResizePolicy>();
+        resizePolicies.add(new CoreRibbonResizePolicies.Mirror(clipboardBand.getControlPanel()));
+        resizePolicies.add(new CoreRibbonResizePolicies.Mid2Low(clipboardBand.getControlPanel()));
+        resizePolicies.add(new IconRibbonBandResizePolicy(clipboardBand.getControlPanel()));
+        clipboardBand.setResizePolicies(resizePolicies);
 
-		return clipboardBand;
-	}
+        return clipboardBand;
+    }
 
-	@Override
-	protected void onSetUp() {
-		GuiActionRunner.execute(new GuiTask() {
-			@Override
-			protected void executeInEDT() throws Throwable {
-				count1 = 0;
-				count2 = 0;
+    @Override
+    protected void onSetUp() {
+        GuiActionRunner.execute(new GuiTask() {
+            @Override
+            protected void executeInEDT() throws Throwable {
+                count1 = 0;
+                count2 = 0;
 
-				ribbonFrame = new JRibbonFrame();
+                ribbonFrame = new JRibbonFrame();
 
-				ribbonBand1 = getSampleRibbonBand(null);
-				ribbonBand2 = getSampleRibbonBand(new ExpandActionListener1());
-				ribbonFrame.getRibbon().addTask(
-						new RibbonTask("Task", ribbonBand1, ribbonBand2));
+                ribbonBand1 = getSampleRibbonBand(null);
+                ribbonBand2 = getSampleRibbonBand(new ExpandActionListener1());
+                ribbonFrame.getRibbon().addTask(new RibbonTask("Task", ribbonBand1, ribbonBand2));
 
-				Rectangle r = GraphicsEnvironment.getLocalGraphicsEnvironment()
-						.getMaximumWindowBounds();
-				ribbonFrame.setPreferredSize(new Dimension(r.width,
-						r.height / 2));
-				ribbonFrame.pack();
-				ribbonFrame.setLocation(r.x, r.y);
-				ribbonFrame.setVisible(true);
-				ribbonFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			}
-		});
-	}
+                Rectangle r = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                        .getMaximumWindowBounds();
+                ribbonFrame.setPreferredSize(new Dimension(r.width, r.height / 2));
+                ribbonFrame.pack();
+                ribbonFrame.setLocation(r.x, r.y);
+                ribbonFrame.setVisible(true);
+                ribbonFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            }
+        });
+    }
 
-	@Test
-	public void testDefaultActionListeners() {
-		AbstractCommandButton expandButton1 = GuiActionRunner
-				.execute(new GuiQuery<AbstractCommandButton>() {
-					@Override
-					protected AbstractCommandButton executeInEDT()
-							throws Throwable {
-						return ((BasicRibbonBandUI) ribbonBand1.getUI())
-								.getExpandButton();
-					}
-				});
-		robot().waitForIdle();
+    @Test
+    public void testDefaultActionListeners() {
+        AbstractCommandButton expandButton1 = GuiActionRunner
+                .execute(new GuiQuery<AbstractCommandButton>() {
+                    @Override
+                    protected AbstractCommandButton executeInEDT() throws Throwable {
+                        return ((BasicRibbonBandUI) ribbonBand1.getUI()).getExpandButton();
+                    }
+                });
+        robot().waitForIdle();
 
-		Assertions.assertThat(expandButton1).isNull();
+        Assertions.assertThat(expandButton1).isNull();
 
-		AbstractCommandButton expandButton2 = GuiActionRunner
-				.execute(new GuiQuery<AbstractCommandButton>() {
-					@Override
-					protected AbstractCommandButton executeInEDT()
-							throws Throwable {
-						return ((BasicRibbonBandUI) ribbonBand2.getUI())
-								.getExpandButton();
-					}
-				});
-		robot().waitForIdle();
+        AbstractCommandButton expandButton2 = GuiActionRunner
+                .execute(new GuiQuery<AbstractCommandButton>() {
+                    @Override
+                    protected AbstractCommandButton executeInEDT() throws Throwable {
+                        return ((BasicRibbonBandUI) ribbonBand2.getUI()).getExpandButton();
+                    }
+                });
+        robot().waitForIdle();
 
-		Assertions.assertThat(expandButton2).isNotNull();
+        Assertions.assertThat(expandButton2).isNotNull();
 
-		robot().click(expandButton2);
-		robot().waitForIdle();
+        robot().click(expandButton2);
+        robot().waitForIdle();
 
-		Assertions.assertThat(count1).isEqualTo(1);
-		Assertions.assertThat(count2).isZero();
-	}
+        Assertions.assertThat(count1).isEqualTo(1);
+        Assertions.assertThat(count2).isZero();
+    }
 
-	@Test
-	public void testSwitchFromNoListener() {
-		AbstractCommandButton expandButton1 = GuiActionRunner
-				.execute(new GuiQuery<AbstractCommandButton>() {
-					@Override
-					protected AbstractCommandButton executeInEDT()
-							throws Throwable {
-						return ((BasicRibbonBandUI) ribbonBand1.getUI())
-								.getExpandButton();
-					}
-				});
-		robot().waitForIdle();
+    @Test
+    public void testSwitchFromNoListener() {
+        AbstractCommandButton expandButton1 = GuiActionRunner
+                .execute(new GuiQuery<AbstractCommandButton>() {
+                    @Override
+                    protected AbstractCommandButton executeInEDT() throws Throwable {
+                        return ((BasicRibbonBandUI) ribbonBand1.getUI()).getExpandButton();
+                    }
+                });
+        robot().waitForIdle();
 
-		Assertions.assertThat(expandButton1).isNull();
-		Assertions.assertThat(count1).isZero();
-		Assertions.assertThat(count2).isZero();
+        Assertions.assertThat(expandButton1).isNull();
+        Assertions.assertThat(count1).isZero();
+        Assertions.assertThat(count2).isZero();
 
-		// set a non-null expand action listener on the first ribbon band
-		GuiActionRunner.execute(new GuiTask() {
-			@Override
-			protected void executeInEDT() throws Throwable {
-				ribbonBand1
-						.setExpandActionListener(new ExpandActionListener1());
-			}
-		});
-		robot().waitForIdle();
+        // set a non-null expand action listener on the first ribbon band
+        GuiActionRunner.execute(new GuiTask() {
+            @Override
+            protected void executeInEDT() throws Throwable {
+                ribbonBand1.setExpandActionListener(new ExpandActionListener1());
+            }
+        });
+        robot().waitForIdle();
 
-		expandButton1 = GuiActionRunner
-				.execute(new GuiQuery<AbstractCommandButton>() {
-					@Override
-					protected AbstractCommandButton executeInEDT()
-							throws Throwable {
-						return ((BasicRibbonBandUI) ribbonBand1.getUI())
-								.getExpandButton();
-					}
-				});
-		robot().waitForIdle();
+        expandButton1 = GuiActionRunner.execute(new GuiQuery<AbstractCommandButton>() {
+            @Override
+            protected AbstractCommandButton executeInEDT() throws Throwable {
+                return ((BasicRibbonBandUI) ribbonBand1.getUI()).getExpandButton();
+            }
+        });
+        robot().waitForIdle();
 
-		Assertions.assertThat(expandButton1).isNotNull();
+        Assertions.assertThat(expandButton1).isNotNull();
 
-		robot().click(expandButton1);
-		robot().waitForIdle();
+        robot().click(expandButton1);
+        robot().waitForIdle();
 
-		Assertions.assertThat(count1).isEqualTo(1);
-		Assertions.assertThat(count2).isZero();
-	}
+        Assertions.assertThat(count1).isEqualTo(1);
+        Assertions.assertThat(count2).isZero();
+    }
 
-	@Test
-	public void testSwitchToNoListener() {
-		AbstractCommandButton expandButton2 = GuiActionRunner
-				.execute(new GuiQuery<AbstractCommandButton>() {
-					@Override
-					protected AbstractCommandButton executeInEDT()
-							throws Throwable {
-						return ((BasicRibbonBandUI) ribbonBand2.getUI())
-								.getExpandButton();
-					}
-				});
-		robot().waitForIdle();
+    @Test
+    public void testSwitchToNoListener() {
+        AbstractCommandButton expandButton2 = GuiActionRunner
+                .execute(new GuiQuery<AbstractCommandButton>() {
+                    @Override
+                    protected AbstractCommandButton executeInEDT() throws Throwable {
+                        return ((BasicRibbonBandUI) ribbonBand2.getUI()).getExpandButton();
+                    }
+                });
+        robot().waitForIdle();
 
-		Assertions.assertThat(expandButton2).isNotNull();
-		Assertions.assertThat(count1).isZero();
-		Assertions.assertThat(count2).isZero();
+        Assertions.assertThat(expandButton2).isNotNull();
+        Assertions.assertThat(count1).isZero();
+        Assertions.assertThat(count2).isZero();
 
-		// set a null expand action listener on the second ribbon band
-		GuiActionRunner.execute(new GuiTask() {
-			@Override
-			protected void executeInEDT() throws Throwable {
-				ribbonBand2.setExpandActionListener(null);
-			}
-		});
-		robot().waitForIdle();
+        // set a null expand action listener on the second ribbon band
+        GuiActionRunner.execute(new GuiTask() {
+            @Override
+            protected void executeInEDT() throws Throwable {
+                ribbonBand2.setExpandActionListener(null);
+            }
+        });
+        robot().waitForIdle();
 
-		expandButton2 = GuiActionRunner
-				.execute(new GuiQuery<AbstractCommandButton>() {
-					@Override
-					protected AbstractCommandButton executeInEDT()
-							throws Throwable {
-						return ((BasicRibbonBandUI) ribbonBand2.getUI())
-								.getExpandButton();
-					}
-				});
-		robot().waitForIdle();
+        expandButton2 = GuiActionRunner.execute(new GuiQuery<AbstractCommandButton>() {
+            @Override
+            protected AbstractCommandButton executeInEDT() throws Throwable {
+                return ((BasicRibbonBandUI) ribbonBand2.getUI()).getExpandButton();
+            }
+        });
+        robot().waitForIdle();
 
-		Assertions.assertThat(expandButton2).isNull();
-	}
+        Assertions.assertThat(expandButton2).isNull();
+    }
 
-	@Test
-	public void testSwitchToAnotherListener() {
-		AbstractCommandButton expandButton2 = GuiActionRunner
-				.execute(new GuiQuery<AbstractCommandButton>() {
-					@Override
-					protected AbstractCommandButton executeInEDT()
-							throws Throwable {
-						return ((BasicRibbonBandUI) ribbonBand2.getUI())
-								.getExpandButton();
-					}
-				});
-		robot().waitForIdle();
+    @Test
+    public void testSwitchToAnotherListener() {
+        AbstractCommandButton expandButton2 = GuiActionRunner
+                .execute(new GuiQuery<AbstractCommandButton>() {
+                    @Override
+                    protected AbstractCommandButton executeInEDT() throws Throwable {
+                        return ((BasicRibbonBandUI) ribbonBand2.getUI()).getExpandButton();
+                    }
+                });
+        robot().waitForIdle();
 
-		Assertions.assertThat(expandButton2).isNotNull();
-		Assertions.assertThat(count1).isZero();
-		Assertions.assertThat(count2).isZero();
+        Assertions.assertThat(expandButton2).isNotNull();
+        Assertions.assertThat(count1).isZero();
+        Assertions.assertThat(count2).isZero();
 
-		robot().click(expandButton2);
-		robot().waitForIdle();
+        robot().click(expandButton2);
+        robot().waitForIdle();
 
-		Assertions.assertThat(count1).isEqualTo(1);
-		Assertions.assertThat(count2).isZero();
+        Assertions.assertThat(count1).isEqualTo(1);
+        Assertions.assertThat(count2).isZero();
 
-		// set another expand action listener on the second ribbon band
-		GuiActionRunner.execute(new GuiTask() {
-			@Override
-			protected void executeInEDT() throws Throwable {
-				ribbonBand2
-						.setExpandActionListener(new ExpandActionListener2());
-			}
-		});
-		robot().waitForIdle();
+        // set another expand action listener on the second ribbon band
+        GuiActionRunner.execute(new GuiTask() {
+            @Override
+            protected void executeInEDT() throws Throwable {
+                ribbonBand2.setExpandActionListener(new ExpandActionListener2());
+            }
+        });
+        robot().waitForIdle();
 
-		robot().click(expandButton2);
-		robot().waitForIdle();
+        robot().click(expandButton2);
+        robot().waitForIdle();
 
-		Assertions.assertThat(count1).isEqualTo(1);
-		Assertions.assertThat(count2).isEqualTo(1);
-	}
+        Assertions.assertThat(count1).isEqualTo(1);
+        Assertions.assertThat(count2).isEqualTo(1);
+    }
 
 }

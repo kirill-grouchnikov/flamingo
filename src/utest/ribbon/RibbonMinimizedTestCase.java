@@ -29,10 +29,12 @@ import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.ribbon.JRibbon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
@@ -93,51 +95,48 @@ public class RibbonMinimizedTestCase extends TestCase {
         JRibbonBand clipboardBand = new JRibbonBand("Clipboard", new Edit_paste());
         clipboardBand.setExpandButtonKeyTip("FO");
 
-        JCommandButton mainButton = new JCommandButton("Paste", new Edit_paste());
-        mainButton.addActionListener((ActionEvent e) -> System.out.println("Pasted!"));
-        mainButton.setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
-                commandButton.getComponentOrientation()));
-        mainButton.setCommandButtonKind(
-                JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
         RichTooltip mainRichTooltip = new RichTooltip();
         mainRichTooltip.setTitle("Paste");
         mainRichTooltip.addDescriptionSection("Paste the contents of the Clipboard");
-        mainButton.setActionRichTooltip(mainRichTooltip);
-        mainButton.setPopupKeyTip("V");
 
         RichTooltip mainPopupRichTooltip = new RichTooltip();
         mainPopupRichTooltip.setTitle("Paste");
         mainPopupRichTooltip.addDescriptionSection(
                 "Click here for more options such as pasting only the values or formatting");
-        mainButton.setPopupRichTooltip(mainPopupRichTooltip);
 
-        clipboardBand.addCommandButton(mainButton, RibbonElementPriority.TOP);
+        clipboardBand.addRibbonCommand(
+                new RibbonCommandBuilder().setTitle("Paste").setIcon(Edit_paste.of(16, 16))
+                        .setAction((ActionEvent e) -> System.out.println("Pasted!"))
+                        .setActionRichTooltip(mainRichTooltip)
+                        .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
+                                commandButton.getComponentOrientation()))
+                        .setPopupRichTooltip(mainPopupRichTooltip).setPopupKeyTip("V")
+                        .setTitleClickAction().build(),
+                RibbonElementPriority.TOP);
 
-        JCommandButton cutButton = new JCommandButton("Cut", new Edit_cut());
-        cutButton.setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
-                commandButton.getComponentOrientation()));
-        cutButton.setCommandButtonKind(
-                JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
         RichTooltip cutRichTooltip = new RichTooltip();
         cutRichTooltip.setTitle("Cut");
         cutRichTooltip.addDescriptionSection(
                 "Cut the selection from the document and put it on the Clipboard");
-        cutButton.setActionRichTooltip(cutRichTooltip);
-        cutButton.setPopupKeyTip("X");
 
-        clipboardBand.addCommandButton(cutButton, RibbonElementPriority.MEDIUM);
+        clipboardBand.addRibbonCommand(
+                new RibbonCommandBuilder().setTitle("Cut").setIcon(Edit_cut.of(16, 16))
+                        .setAction((ActionEvent e) -> System.out.println("Cut!"))
+                        .setActionRichTooltip(cutRichTooltip)
+                        .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
+                                commandButton.getComponentOrientation()))
+                        .setPopupKeyTip("X").setTitleClickAction().build(),
+                RibbonElementPriority.MEDIUM);
 
-        JCommandButton copyButton = new JCommandButton("Copy", new Edit_copy());
-        copyButton.setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
-                commandButton.getComponentOrientation()));
-        copyButton
-                .setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
-        copyButton.setPopupKeyTip("C");
+        clipboardBand.addRibbonCommand(
+                new RibbonCommandBuilder().setTitle("Copy").setIcon(Edit_copy.of(16, 16))
+                        .setAction((ActionEvent e) -> System.out.println("Copy!"))
+                        .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
+                                commandButton.getComponentOrientation()))
+                        .setPopupKeyTip("C").setTitleClickPopup().build(),
+                RibbonElementPriority.MEDIUM);
 
-        clipboardBand.addCommandButton(copyButton, RibbonElementPriority.MEDIUM);
-
-        JCommandButton formatButton = new JCommandButton("Format", new Edit_paste());
-        formatButton.setPopupCallback((JCommandButton commandButton) -> {
+        PopupPanelCallback formatButtonPopupCallback = (JCommandButton commandButton) -> {
             JCommandPopupMenu popupMenu = new JCommandPopupMenu(new QuickStylesPanel(), 5, 3);
             JCommandMenuButton saveSelectionButton = new JCommandMenuButton("Save Selection",
                     new EmptyResizableIcon(16));
@@ -161,14 +160,12 @@ public class RibbonMinimizedTestCase extends TestCase {
             applyStylesButton.setActionKeyTip("SA");
             popupMenu.addMenuButton(applyStylesButton);
             return popupMenu;
-        });
+        };
 
-        formatButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
-        // pasteButton.addPopupActionListener(new SamplePopupActionListener());
-        formatButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
-        formatButton.setPopupKeyTip("FP");
-
-        clipboardBand.addCommandButton(formatButton, RibbonElementPriority.MEDIUM);
+        clipboardBand.addRibbonCommand(
+                new RibbonCommandBuilder().setTitle("Format").setIcon(Edit_paste.of(16, 16))
+                        .setPopupCallback(formatButtonPopupCallback).setPopupKeyTip("FP").build(),
+                RibbonElementPriority.MEDIUM);
 
         List<RibbonBandResizePolicy> resizePolicies = new ArrayList<RibbonBandResizePolicy>();
         resizePolicies.add(new CoreRibbonResizePolicies.Mirror(clipboardBand.getControlPanel()));
