@@ -280,25 +280,6 @@ public class JRibbon extends JComponent {
     }
 
     /**
-     * Adds the specified taskbar component to this ribbon.
-     * 
-     * @param comp
-     *            The taskbar component to add.
-     * @see #removeTaskbarComponent(Component)
-     * @see #getTaskbarComponents()
-     */
-    public synchronized void addTaskbarComponent(Component comp) {
-        if (comp instanceof AbstractCommandButton) {
-            throw new UnsupportedOperationException("Use addTaskbarCommand instead");
-        }
-        if (comp instanceof JSeparator) {
-            throw new UnsupportedOperationException("Use addTaskbarSeparator instead");
-        }
-        this.taskbarComponents.add(comp);
-        this.fireStateChanged();
-    }
-
-    /**
      * Removes the specified taskbar component from this ribbon.
      * 
      * @param comp

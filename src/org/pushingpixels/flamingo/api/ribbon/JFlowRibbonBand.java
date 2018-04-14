@@ -85,11 +85,6 @@ public class JFlowRibbonBand extends AbstractRibbonBand<JFlowBandControlPanel> {
 		this.controlPanel.addFlowComponent(comp);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvnet.flamingo.ribbon.AbstractRibbonBand#cloneBand()
-	 */
 	@Override
 	public AbstractRibbonBand<JFlowBandControlPanel> cloneBand() {
 		AbstractRibbonBand<JFlowBandControlPanel> result = new JFlowRibbonBand(

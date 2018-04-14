@@ -29,7 +29,6 @@
  */
 package org.pushingpixels.flamingo.internal.ui.ribbon;
 
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,14 +48,16 @@ import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand.RibbonGalleryPopupCallback;
+import org.pushingpixels.flamingo.api.ribbon.RibbonCommand;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 
 /**
- * In-ribbon gallery. This class is for internal use only and should not be
- * directly used by the applications.
+ * In-ribbon gallery. This class is for internal use only and should not be directly used by the
+ * applications.
  * 
  * @author Kirill Grouchnikov
- * @see JRibbonBand#addRibbonGallery(String, List, Map, int, int,
+ * @see JRibbonBand#addRibbonGallery(String, List, Map, int, int, RibbonElementPriority)
+ * @see JRibbonBand#addRibbonGallery(String, List, Map, int, int, CommandButtonDisplayState,
  *      RibbonElementPriority)
  */
 public class JRibbonGallery extends JComponent {
@@ -64,6 +65,11 @@ public class JRibbonGallery extends JComponent {
      * The buttons of <code>this</code> gallery.
      */
     protected List<JCommandToggleButton> buttons;
+
+    /**
+     * The commands of <code>this</code> gallery.
+     */
+    protected List<RibbonCommand> commands;
 
     /**
      * Button group for ensuring that only one button is selected.
@@ -76,15 +82,15 @@ public class JRibbonGallery extends JComponent {
     protected RibbonElementPriority displayPriority;
 
     /**
-     * Preferred widths for each possible display state (set in the user code
-     * according to design preferences).
+     * Preferred widths for each possible display state (set in the user code according to design
+     * preferences).
      */
     protected Map<RibbonElementPriority, Integer> preferredVisibleIconCount;
 
     /**
-     * Gallery button groups.
+     * Gallery command groups.
      */
-    protected List<StringValuePair<List<JCommandToggleButton>>> buttonGroups;
+    protected List<StringValuePair<List<RibbonCommand>>> commandGroups;
 
     /**
      * Preferred maximum number of button columns for the popup panel.
@@ -108,13 +114,6 @@ public class JRibbonGallery extends JComponent {
      */
     public static final String uiClassID = "RibbonGalleryUI";
 
-    /**
-     * Action listener wired to all the buttons in this gallery. If
-     * {@link #toDismissOnButtonClick} is <code>true</code>, the listener
-     * dismissed this gallery.
-     */
-    protected ActionListener dismissActionListener;
-
     private String expandKeyTip;
 
     private CommandButtonDisplayState buttonDisplayState;
@@ -123,7 +122,8 @@ public class JRibbonGallery extends JComponent {
      * Creates new in-ribbon gallery.
      */
     public JRibbonGallery() {
-        this.buttons = new ArrayList<JCommandToggleButton>();
+        this.buttons = new ArrayList<>();
+        this.commands = new ArrayList<>();
         this.buttonSelectionGroup = new CommandToggleButtonGroup();
         this.buttonSelectionGroup.addPropertyChangeListener((PropertyChangeEvent evt) -> {
             if (CommandToggleButtonGroup.SELECTED_PROPERTY.equals(evt.getPropertyName())) {
@@ -166,9 +166,6 @@ public class JRibbonGallery extends JComponent {
         } else {
             setUI(new BasicRibbonGalleryUI());
         }
-        //
-        // if (this.popupPanel != null)
-        // SwingUtilities.updateComponentTreeUI(this.popupPanel);
     }
 
     /**
@@ -182,8 +179,7 @@ public class JRibbonGallery extends JComponent {
     }
 
     /**
-     * Returns the name of the UI class that implements the L&F for this
-     * component.
+     * Returns the name of the UI class that implements the L&F for this component.
      * 
      * @return the string "RibbonGalleryUI"
      * @see JComponent#getUIClassID
@@ -195,60 +191,59 @@ public class JRibbonGallery extends JComponent {
     }
 
     /**
-     * Adds new gallery button to <code>this</code> in-ribbon gallery.
+     * Adds new gallery command to <code>this</code> in-ribbon gallery.
      * 
-     * @param buttonGroup
-     *            Button group.
-     * @param button
-     *            Gallery button to add.
+     * @param commandGroup
+     *            Command group.
+     * @param command
+     *            Command to add.
      */
-    private void addGalleryButton(StringValuePair<List<JCommandToggleButton>> buttonGroup,
-            JCommandToggleButton button) {
-        String buttonGroupName = buttonGroup.getKey();
+    private void addGalleryCommand(StringValuePair<List<RibbonCommand>> commandGroup,
+            RibbonCommand command) {
+        String commandGroupName = commandGroup.getKey();
         // find the index to add
         int indexToAdd = 0;
-        for (int i = 0; i < this.buttonGroups.size(); i++) {
-            StringValuePair<List<JCommandToggleButton>> buttonGroupPair = this.buttonGroups.get(i);
-            String currGroupName = buttonGroupPair.getKey();
-            indexToAdd += buttonGroupPair.getValue().size();
-            if ((currGroupName == null) && (buttonGroupName == null)) {
+        for (int i = 0; i < this.commandGroups.size(); i++) {
+            StringValuePair<List<RibbonCommand>> commandGroupPair = this.commandGroups.get(i);
+            String currGroupName = commandGroupPair.getKey();
+            indexToAdd += commandGroupPair.getValue().size();
+            if ((currGroupName == null) && (commandGroupName == null)) {
                 break;
             }
-            if (currGroupName.compareTo(buttonGroupName) == 0) {
+            if (currGroupName.compareTo(commandGroupName) == 0) {
                 break;
             }
         }
         // System.out.println("Added " + button.getText() + " at " +
         // indexToAdd);
+        JCommandToggleButton button = (JCommandToggleButton) command.buildButton();
         this.buttons.add(indexToAdd, button);
         this.buttonSelectionGroup.add(button);
-        buttonGroup.getValue().add(button);
+        this.commands.add(indexToAdd, command);
+        commandGroup.getValue().add(command);
         button.setDisplayState(this.buttonDisplayState);
-
-        button.addActionListener(this.dismissActionListener);
 
         super.add(button);
     }
 
     /**
-     * Removes an existing gallery button from <code>this</code> in-ribbon
-     * gallery.
+     * Removes an existing gallery command from <code>this</code> in-ribbon gallery.
      * 
-     * @param button
-     *            Gallery button to remove.
+     * @param command
+     *            Gallery command to remove.
      */
-    private void removeGalleryButton(JCommandToggleButton button) {
+    private void removeGalleryCommand(RibbonCommand command) {
+        int index = this.commands.indexOf(command);
+        this.commands.remove(command);
+        JCommandToggleButton button = this.buttons.get(index);
         this.buttons.remove(button);
         this.buttonSelectionGroup.remove(button);
-
-        button.removeActionListener(this.dismissActionListener);
 
         super.remove(button);
     }
 
     /**
-     * Set preferred width of <code>this</code> in-ribbon gallery for the
-     * specified display state.
+     * Set preferred width of <code>this</code> in-ribbon gallery for the specified display state.
      * 
      * @param state
      *            Display state.
@@ -261,15 +256,15 @@ public class JRibbonGallery extends JComponent {
     }
 
     /**
-     * Returns the preferred width of <code>this</code> in-ribbon gallery for
-     * the specified display state.
+     * Returns the preferred width of <code>this</code> in-ribbon gallery for the specified display
+     * state.
      * 
      * @param state
      *            Display state.
      * @param availableHeight
      *            Available height in pixels.
-     * @return The preferred width of <code>this</code> in-ribbon gallery for
-     *         the specified display state.
+     * @return The preferred width of <code>this</code> in-ribbon gallery for the specified display
+     *         state.
      */
     public int getPreferredWidth(RibbonElementPriority state, int availableHeight) {
         int preferredVisibleButtonCount = this.preferredVisibleIconCount.get(state);
@@ -289,51 +284,56 @@ public class JRibbonGallery extends JComponent {
     }
 
     /**
-     * Returns the current display priority for <code>this</code> in-ribbon
-     * gallery.
+     * Returns the current display priority for <code>this</code> in-ribbon gallery.
      * 
-     * @return The current display priority for <code>this</code> in-ribbon
-     *         gallery.
+     * @return The current display priority for <code>this</code> in-ribbon gallery.
      */
     public RibbonElementPriority getDisplayPriority() {
         return this.displayPriority;
     }
 
     /**
-     * Returns the number of button groups in <code>this</code> in-ribbon
-     * gallery.
+     * Returns the number of command groups in <code>this</code> in-ribbon gallery.
      * 
-     * @return The number of button groups in <code>this</code> in-ribbon
-     *         gallery.
+     * @return The number of command groups in <code>this</code> in-ribbon gallery.
      */
-    public int getButtonGroupCount() {
-        return this.buttonGroups.size();
+    public int getCommandGroupCount() {
+        return this.commandGroups.size();
     }
 
     /**
-     * Returns the list of buttons in the specifed button group.
+     * Returns the list of commands in the specified command group.
      * 
-     * @param buttonGroupName
-     *            Button group name.
-     * @return The list of buttons in the specifed button group.
+     * @param commandGroupName
+     *            Command group name.
+     * @return The list of commands in the specified command group.
      */
-    public List<JCommandToggleButton> getButtonGroup(String buttonGroupName) {
-        for (StringValuePair<List<JCommandToggleButton>> group : this.buttonGroups) {
-            if (group.getKey().compareTo(buttonGroupName) == 0)
+    public List<RibbonCommand> getCommandGroup(String commandGroupName) {
+        for (StringValuePair<List<RibbonCommand>> group : this.commandGroups) {
+            if (group.getKey().compareTo(commandGroupName) == 0)
                 return group.getValue();
         }
         return null;
     }
 
     /**
-     * Returns the number of gallery buttons in <code>this</code> in-ribbon
-     * gallery.
+     * Returns the number of gallery commands in <code>this</code> in-ribbon gallery.
      * 
-     * @return The number of gallery buttons in <code>this</code> in-ribbon
-     *         gallery.
+     * @return The number of gallery commands in <code>this</code> in-ribbon gallery.
      */
-    public int getButtonCount() {
-        return this.buttons.size();
+    public int getCommandCount() {
+        return this.commands.size();
+    }
+
+    /**
+     * Returns the gallery command at specified index.
+     * 
+     * @param index
+     *            Gallery command index.
+     * @return Gallery command at specified index.
+     */
+    public RibbonCommand getCommandAt(int index) {
+        return this.commands.get(index);
     }
 
     /**
@@ -344,6 +344,14 @@ public class JRibbonGallery extends JComponent {
      * @return Gallery button at specified index.
      */
     public JCommandToggleButton getButtonAt(int index) {
+        return this.buttons.get(index);
+    }
+    
+    public JCommandToggleButton getButtonForCommand(RibbonCommand command) {
+        int index = this.commands.indexOf(command);
+        if (index < 0) {
+            return null;
+        }
         return this.buttons.get(index);
     }
 
@@ -357,13 +365,38 @@ public class JRibbonGallery extends JComponent {
     }
 
     /**
-     * Sets new value for the currently selected gallery button.
+     * Returns the currently selected gallery command.
+     * 
+     * @return The currently selected gallery command.
+     */
+    public RibbonCommand getSelectedCommand() {
+        JCommandToggleButton selectedButton = getSelectedButton();
+        if (selectedButton == null) {
+            return null;
+        }
+        int commandIndex = this.buttons.indexOf(selectedButton);
+        return this.commands.get(commandIndex);
+    }
+
+    /**
+     * Changes the selection to the specified button.
      * 
      * @param selectedButton
      *            New value for the currently selected gallery button.
      */
     public void setSelectedButton(JCommandToggleButton selectedButton) {
         this.buttonSelectionGroup.setSelected(selectedButton, true);
+    }
+
+    /**
+     * Changes the selection to the specified button.
+     * 
+     * @param selectedButton
+     *            New value for the currently selected gallery button.
+     */
+    public void setSelectedCommand(RibbonCommand selectedCommand) {
+        int buttonIndex = this.commands.indexOf(selectedCommand);
+        setSelectedButton(this.buttons.get(buttonIndex));
     }
 
     /**
@@ -375,13 +408,14 @@ public class JRibbonGallery extends JComponent {
         JCommandButtonPanel buttonPanel = new JCommandButtonPanel(this.buttonDisplayState);
         buttonPanel.setMaxButtonColumns(this.preferredPopupMaxButtonColumns);
         buttonPanel.setToShowGroupLabels(true);
-        for (StringValuePair<List<JCommandToggleButton>> buttonGroupEntry : this.buttonGroups) {
-            String groupName = buttonGroupEntry.getKey();
+        for (StringValuePair<List<RibbonCommand>> commandGroupEntry : this.commandGroups) {
+            String groupName = commandGroupEntry.getKey();
             if (groupName == null) {
                 buttonPanel.setToShowGroupLabels(false);
             }
             buttonPanel.addButtonGroup(groupName);
-            for (JCommandToggleButton button : buttonGroupEntry.getValue()) {
+            for (RibbonCommand command : commandGroupEntry.getValue()) {
+                JCommandToggleButton button = this.buttons.get(this.commands.indexOf(command));
                 // set the button to visible (the gallery hides the buttons
                 // that don't fit the front row).
                 button.setVisible(true);
@@ -405,8 +439,9 @@ public class JRibbonGallery extends JComponent {
 
         if (!isShowingPopupPanel) {
             // populate the ribbon gallery back
-            for (StringValuePair<List<JCommandToggleButton>> buttonGroupEntry : this.buttonGroups) {
-                for (JCommandToggleButton button : buttonGroupEntry.getValue()) {
+            for (StringValuePair<List<RibbonCommand>> commandGroupEntry : this.commandGroups) {
+                for (RibbonCommand command : commandGroupEntry.getValue()) {
+                    JCommandToggleButton button = this.buttons.get(this.commands.indexOf(command));
                     button.setDisplayState(this.buttonDisplayState);
                     this.add(button);
                 }
@@ -419,24 +454,35 @@ public class JRibbonGallery extends JComponent {
     /**
      * Returns indication whether the popup panel is showing.
      * 
-     * @return <code>true</code> if the popup panel is showing,
-     *         <code>false</code> otherwise.
+     * @return <code>true</code> if the popup panel is showing, <code>false</code> otherwise.
      */
     public boolean isShowingPopupPanel() {
         return this.isShowingPopupPanel;
     }
 
     /**
-     * Sets the button groups for this ribbon gallery.
+     * Sets the command groups for this ribbon gallery.
      * 
      * @param buttons
      *            Button groups.
      */
-    public void setGroupMapping(List<StringValuePair<List<JCommandToggleButton>>> buttons) {
-        this.buttonGroups = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
+    public void setGroupMapping(List<StringValuePair<List<RibbonCommand>>> commands) {
+        for (StringValuePair<List<RibbonCommand>> commandGroupPair : commands) {
+            for (RibbonCommand command : commandGroupPair.getValue()) {
+                if (!command.isToggle()) {
+                    throw new IllegalStateException("Gallery command must be toggle");
+                }
+                if (command.getToggleGroup() != null) {
+                    throw new IllegalStateException(
+                            "Gallery toggle command should not be associated with a toggle group");
+                }
+            }
+        }
+
+        this.commandGroups = new ArrayList<StringValuePair<List<RibbonCommand>>>();
         boolean hasGroupWithNullTitle = false;
-        for (StringValuePair<List<JCommandToggleButton>> buttonGroupPair : buttons) {
-            if (buttonGroupPair.getKey() == null) {
+        for (StringValuePair<List<RibbonCommand>> commandGroupPair : commands) {
+            if (commandGroupPair.getKey() == null) {
                 if (hasGroupWithNullTitle) {
                     throw new IllegalArgumentException(
                             "Can't have more than one ribbon gallery group with null name");
@@ -444,34 +490,32 @@ public class JRibbonGallery extends JComponent {
                 hasGroupWithNullTitle = true;
             }
 
-            // create the list of buttons for this group
-            List<JCommandToggleButton> buttonGroupCopy = new ArrayList<JCommandToggleButton>();
+            // create the list of commands for this group
+            List<RibbonCommand> commandGroupCopy = new ArrayList<RibbonCommand>();
             // add it to the groups list
-            StringValuePair<List<JCommandToggleButton>> buttonGroupInfo = new StringValuePair<List<JCommandToggleButton>>(
-                    buttonGroupPair.getKey(), buttonGroupCopy);
-            this.buttonGroups.add(buttonGroupInfo);
-            // add all the buttons to the control
-            for (JCommandToggleButton button : buttonGroupPair.getValue()) {
-                this.addGalleryButton(buttonGroupInfo, button);
+            StringValuePair<List<RibbonCommand>> commandGroupInfo = new StringValuePair<List<RibbonCommand>>(
+                    commandGroupPair.getKey(), commandGroupCopy);
+            this.commandGroups.add(commandGroupInfo);
+            // add all the commands to the control
+            for (RibbonCommand command : commandGroupPair.getValue()) {
+                this.addGalleryCommand(commandGroupInfo, command);
             }
         }
     }
 
     /**
-     * Adds toggle command buttons to the specified button group in this ribbon
-     * gallery.
+     * Adds commands to the specified command group in this ribbon gallery.
      * 
-     * @param buttonGroupName
-     *            Button group name.
-     * @param buttons
-     *            Toggle command buttons to add to the specified button group.
+     * @param commandGroupName
+     *            Command group name.
+     * @param commands
+     *            Commands to add to the specified command group.
      */
-    public void addRibbonGalleryButtons(String buttonGroupName, JCommandToggleButton... buttons) {
-        for (StringValuePair<List<JCommandToggleButton>> buttonGroup : this.buttonGroups) {
-            if (buttonGroup.getKey().compareTo(buttonGroupName) == 0) {
-                for (JCommandToggleButton button : buttons) {
-                    // buttonGroup.getValue().add(button);
-                    this.addGalleryButton(buttonGroup, button);
+    public void addRibbonGalleryCommands(String commandGroupName, RibbonCommand... commands) {
+        for (StringValuePair<List<RibbonCommand>> commandGroup : this.commandGroups) {
+            if (commandGroup.getKey().compareTo(commandGroupName) == 0) {
+                for (RibbonCommand command : commands) {
+                    this.addGalleryCommand(commandGroup, command);
                 }
                 return;
             }
@@ -481,20 +525,20 @@ public class JRibbonGallery extends JComponent {
     }
 
     /**
-     * Removes the specified toggle command buttons from this ribbon gallery.
+     * Removes the specified commands from this ribbon gallery.
      * 
-     * @param buttons
-     *            Toggle command buttons to remove from this gallery.
+     * @param commands
+     *            Commands to remove from this gallery.
      */
-    public void removeRibbonGalleryButtons(JCommandToggleButton... buttons) {
-        for (StringValuePair<List<JCommandToggleButton>> buttonGroup : this.buttonGroups) {
-            for (Iterator<JCommandToggleButton> it = buttonGroup.getValue().iterator(); it
+    public void removeRibbonGalleryCommands(RibbonCommand... commands) {
+        for (StringValuePair<List<RibbonCommand>> commandGroup : this.commandGroups) {
+            for (Iterator<RibbonCommand> it = commandGroup.getValue().iterator(); it
                     .hasNext();) {
-                JCommandToggleButton currButtonInGroup = it.next();
-                for (JCommandToggleButton toRemove : buttons) {
-                    if (toRemove == currButtonInGroup) {
+                RibbonCommand currCommandInGroup = it.next();
+                for (RibbonCommand toRemove : commands) {
+                    if (toRemove == currCommandInGroup) {
                         it.remove();
-                        this.removeGalleryButton(toRemove);
+                        this.removeGalleryCommand(toRemove);
                     }
                 }
             }
@@ -507,11 +551,9 @@ public class JRibbonGallery extends JComponent {
      * Sets the preferred dimension of the popup panel.
      * 
      * @param preferredPopupMaxButtonColumns
-     *            Preferred maximum number of button columns for the popup
-     *            panel.
+     *            Preferred maximum number of button columns for the popup panel.
      * @param preferredPopupMaxVisibleButtonRows
-     *            Preferred maximum number of visible button rows for the popup
-     *            panel.
+     *            Preferred maximum number of visible button rows for the popup panel.
      */
     public void setPreferredPopupPanelDimension(int preferredPopupMaxButtonColumns,
             int preferredPopupMaxVisibleButtonRows) {
@@ -549,25 +591,25 @@ public class JRibbonGallery extends JComponent {
         return this.buttonDisplayState;
     }
 
-    public void setButtonDisplayState(CommandButtonDisplayState buttonDisplayState) {
-        if (this.getButtonCount() > 0) {
+    public void setCommandDisplayState(CommandButtonDisplayState commandDisplayState) {
+        if (this.getCommandCount() > 0) {
             throw new IllegalStateException(
-                    "Cannot change button display state on ribbon gallery with existing buttons");
+                    "Cannot change command display state on ribbon gallery with existing commands");
         }
-        boolean isSupported = (buttonDisplayState == JRibbonBand.BIG_FIXED)
-                || (buttonDisplayState == CommandButtonDisplayState.SMALL)
-                || (buttonDisplayState == JRibbonBand.BIG_FIXED_LANDSCAPE);
+        boolean isSupported = (commandDisplayState == JRibbonBand.BIG_FIXED)
+                || (commandDisplayState == CommandButtonDisplayState.SMALL)
+                || (commandDisplayState == JRibbonBand.BIG_FIXED_LANDSCAPE);
         if (!isSupported) {
             throw new IllegalArgumentException(
-                    "Display state " + buttonDisplayState.getDisplayName()
+                    "Display state " + commandDisplayState.getDisplayName()
                             + " is not supported in ribbon galleries");
         }
-        if (!buttonDisplayState.equals(this.buttonDisplayState)) {
+        if (!commandDisplayState.equals(this.buttonDisplayState)) {
             CommandButtonDisplayState old = this.buttonDisplayState;
-            this.buttonDisplayState = buttonDisplayState;
+            this.buttonDisplayState = commandDisplayState;
 
             for (JCommandToggleButton button : this.buttons)
-                button.setDisplayState(buttonDisplayState);
+                button.setDisplayState(commandDisplayState);
 
             this.firePropertyChange("buttonDisplayState", old, this.buttonDisplayState);
         }

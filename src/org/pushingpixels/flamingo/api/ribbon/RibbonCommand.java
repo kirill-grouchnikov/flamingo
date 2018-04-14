@@ -301,9 +301,9 @@ public class RibbonCommand {
             return this;
         }
 
-        public RibbonCommandBuilder setToggleSelected() {
+        public RibbonCommandBuilder setToggleSelected(boolean toggleSelected) {
             this.isToggle = true;
-            this.isToggleSelected = true;
+            this.isToggleSelected = toggleSelected;
             return this;
         }
 

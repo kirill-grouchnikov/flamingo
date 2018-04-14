@@ -40,7 +40,6 @@ import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
-import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
@@ -81,9 +80,9 @@ import org.pushingpixels.flamingo.internal.ui.ribbon.JRibbonGallery;
  * </p>
  * 
  * <ul>
- * <li>{@link #addRibbonGalleryButtons(String, String, JCommandToggleButton...)}</li>
- * <li>{@link #removeRibbonGalleryButtons(String, JCommandToggleButton...)}</li>
- * <li>{@link #setSelectedRibbonGalleryButton(String, JCommandToggleButton)}</li>
+ * <li>{@link #addRibbonGalleryCommands(String, String, RibbonCommand...)}</li>
+ * <li>{@link #removeRibbonGalleryCommands(String, RibbonCommand...)}</li>
+ * <li>{@link #setSelectedRibbonGalleryCommand(String, RibbonCommand)}</li>
  * <li>{@link #setRibbonGalleryExpandKeyTip(String, String)}</li>
  * <li>{@link #setRibbonGalleryPopupCallback(String, RibbonGalleryPopupCallback)}</li>
  * </ul>
@@ -184,12 +183,12 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
     }
 
     public void addRibbonGallery(String galleryName,
-            List<StringValuePair<List<JCommandToggleButton>>> buttons,
-            Map<RibbonElementPriority, Integer> preferredVisibleButtonCounts,
-            int preferredPopupMaxButtonColumns, int preferredPopupMaxVisibleButtonRows,
+            List<StringValuePair<List<RibbonCommand>>> commands,
+            Map<RibbonElementPriority, Integer> preferredVisibleCommandCounts,
+            int preferredPopupMaxCommandColumns, int preferredPopupMaxVisibleCommandRows,
             RibbonElementPriority priority) {
-        this.addRibbonGallery(galleryName, buttons, preferredVisibleButtonCounts,
-                preferredPopupMaxButtonColumns, preferredPopupMaxVisibleButtonRows,
+        this.addRibbonGallery(galleryName, commands, preferredVisibleCommandCounts,
+                preferredPopupMaxCommandColumns, preferredPopupMaxVisibleCommandRows,
                 JRibbonBand.BIG_FIXED_LANDSCAPE, priority);
     }
 
@@ -198,113 +197,115 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
      * 
      * @param galleryName
      *            Gallery name.
-     * @param buttons
-     *            Button groups.
-     * @param preferredVisibleButtonCounts
-     *            Preferred count of visible buttons of the ribbon gallery under different states.
-     * @param preferredPopupMaxButtonColumns
+     * @param commands
+     *            Command groups.
+     * @param preferredVisibleCommandCounts
+     *            Preferred count of visible commands of the ribbon gallery under different states.
+     * @param preferredPopupMaxCommandColumns
      *            Preferred maximum columns in the popup gallery associated with the ribbon gallery.
-     * @param preferredPopupMaxVisibleButtonRows
+     * @param preferredPopupMaxVisibleCommandRows
      *            Preferred maximum visible rows in the popup gallery associated with the ribbon
      *            gallery.
      * @param priority
      *            The initial ribbon gallery priority.
-     * @see #addRibbonGalleryButtons(String, String, JCommandToggleButton...)
-     * @see #removeRibbonGalleryButtons(String, JCommandToggleButton...)
-     * @see #setSelectedRibbonGalleryButton(String, JCommandToggleButton)
+     * @see #addRibbonGalleryCommands(String, String, RibbonCommand...)
+     * @see #removeRibbonGalleryCommands(String, RibbonCommand...)
+     * @see #setSelectedRibbonGalleryCommand(String, RibbonCommand)
      */
     public void addRibbonGallery(String galleryName,
-            List<StringValuePair<List<JCommandToggleButton>>> buttons,
-            Map<RibbonElementPriority, Integer> preferredVisibleButtonCounts,
-            int preferredPopupMaxButtonColumns, int preferredPopupMaxVisibleButtonRows,
-            CommandButtonDisplayState ribbonButtonDisplayState, RibbonElementPriority priority) {
+            List<StringValuePair<List<RibbonCommand>>> commands,
+            Map<RibbonElementPriority, Integer> preferredVisibleCommandCounts,
+            int preferredPopupMaxCommandColumns, int preferredPopupMaxVisibleCommandRows,
+            CommandButtonDisplayState commandDisplayState, RibbonElementPriority priority) {
         JRibbonGallery gallery = new JRibbonGallery();
-        gallery.setButtonDisplayState(ribbonButtonDisplayState);
+        gallery.setCommandDisplayState(commandDisplayState);
         gallery.setName(galleryName);
-        for (Map.Entry<RibbonElementPriority, Integer> prefCountEntry : preferredVisibleButtonCounts
+        for (Map.Entry<RibbonElementPriority, Integer> prefCountEntry : preferredVisibleCommandCounts
                 .entrySet()) {
             gallery.setPreferredVisibleButtonCount(prefCountEntry.getKey(),
                     prefCountEntry.getValue());
         }
-        gallery.setGroupMapping(buttons);
-        gallery.setPreferredPopupPanelDimension(preferredPopupMaxButtonColumns,
-                preferredPopupMaxVisibleButtonRows);
+        gallery.setGroupMapping(commands);
+        gallery.setPreferredPopupPanelDimension(preferredPopupMaxCommandColumns,
+                preferredPopupMaxVisibleCommandRows);
 
         this.controlPanel.addRibbonGallery(gallery, priority);
     }
 
     /**
-     * Adds the specified command toggle buttons to a button group in the specified ribbon gallery.
+     * Adds the specified command toggle commands to a command group in the specified ribbon gallery.
      * 
      * @param galleryName
      *            Ribbon gallery name.
-     * @param buttonGroupName
-     *            Button group name.
-     * @param buttons
-     *            Buttons to add.
+     * @param commandGroupName
+     *            Command group name.
+     * @param commands
+     *            Commands to add.
      * @see #addRibbonGallery(String, List, Map, int, int, RibbonElementPriority)
-     * @see #removeRibbonGalleryButtons(String, JCommandToggleButton...)
-     * @see #setSelectedRibbonGalleryButton(String, JCommandToggleButton)
+     * @see #addRibbonGallery(String, List, Map, int, int, CommandButtonDisplayState, RibbonElementPriority)
+     * @see #removeRibbonGalleryCommands(String, RibbonCommand...)
+     * @see #setSelectedRibbonGalleryCommand(String, RibbonCommand)
      */
-    public void addRibbonGalleryButtons(String galleryName, String buttonGroupName,
-            JCommandToggleButton... buttons) {
+    public void addRibbonGalleryCommands(String galleryName, String commandGroupName,
+            RibbonCommand... commands) {
         JRibbonGallery gallery = this.controlPanel.getRibbonGallery(galleryName);
         if (gallery == null)
             return;
-        gallery.addRibbonGalleryButtons(buttonGroupName, buttons);
+        gallery.addRibbonGalleryCommands(commandGroupName, commands);
     }
 
     /**
-     * Removes command toggle buttons from the specified ribbon gallery.
+     * Removes commands from the specified ribbon gallery.
      * 
      * @param galleryName
      *            Ribbon gallery name.
-     * @param buttons
-     *            Buttons to remove.
-     * @see #addRibbonGallery(String, List, Map, int, int, RibbonElementPriority)
-     * @see #addRibbonGalleryButtons(String, String, JCommandToggleButton...)
-     * @see #setSelectedRibbonGalleryButton(String, JCommandToggleButton)
+     * @param commands
+     *            Commands to remove.
+     * @see #addRibbonGallery(String, List, Map, int, int, CommandButtonDisplayState, RibbonElementPriority)
+     * @see #addRibbonGalleryCommands(String, String, RibbonCommand...)
+     * @see #setSelectedRibbonGalleryCommand(String, RibbonCommand)
      */
-    public void removeRibbonGalleryButtons(String galleryName, JCommandToggleButton... buttons) {
+    public void removeRibbonGalleryCommands(String galleryName, RibbonCommand... commands) {
         JRibbonGallery gallery = this.controlPanel.getRibbonGallery(galleryName);
         if (gallery == null)
             return;
-        gallery.removeRibbonGalleryButtons(buttons);
+        gallery.removeRibbonGalleryCommands(commands);
     }
 
     /**
-     * Selects the specified command toggle button in the specified ribbon gallery.
+     * Selects the specified command in the specified ribbon gallery.
      * 
      * @param galleryName
      *            Ribbon gallery name.
-     * @param buttonToSelect
-     *            Button to select.
+     * @param commandToSelect
+     *            Command to select.
      * @see #addRibbonGallery(String, List, Map, int, int, RibbonElementPriority)
-     * @see #addRibbonGalleryButtons(String, String, JCommandToggleButton...)
-     * @see #removeRibbonGalleryButtons(String, JCommandToggleButton...)
+     * @see #addRibbonGallery(String, List, Map, int, int, CommandButtonDisplayState, RibbonElementPriority)
+     * @see #addRibbonGalleryCommands(String, String, RibbonCommand...)
+     * @see #removeRibbonGalleryCommands(String, RibbonCommand...)
      */
-    public void setSelectedRibbonGalleryButton(String galleryName,
-            JCommandToggleButton buttonToSelect) {
+    public void setSelectedRibbonGalleryCommand(String galleryName,
+            RibbonCommand commandToSelect) {
         JRibbonGallery gallery = this.controlPanel.getRibbonGallery(galleryName);
         if (gallery == null)
             return;
-        gallery.setSelectedButton(buttonToSelect);
+        gallery.setSelectedCommand(commandToSelect);
     }
 
     /**
-     * Sets the display state for the buttons of the specified ribbon gallery.
+     * Sets the display state for the commands of the specified ribbon gallery.
      * 
      * @param galleryName
      *            Ribbon gallery name.
      * @param displayState
-     *            Display state for the buttons of the matching ribbon gallery.
+     *            Display state for the commands of the matching ribbon gallery.
      */
-    public void setRibbonGalleryButtonDisplayState(String galleryName,
+    public void setRibbonGalleryCommandDisplayState(String galleryName,
             CommandButtonDisplayState displayState) {
         JRibbonGallery gallery = this.controlPanel.getRibbonGallery(galleryName);
         if (gallery == null)
             return;
-        gallery.setButtonDisplayState(displayState);
+        gallery.setCommandDisplayState(displayState);
     }
 
     /**
@@ -412,11 +413,6 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
         return this.controlPanel.getRibbonComponents(groupIndex);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jvnet.flamingo.ribbon.AbstractRibbonBand#cloneBand()
-     */
     @Override
     public AbstractRibbonBand<JBandControlPanel> cloneBand() {
         AbstractRibbonBand<JBandControlPanel> result = new JRibbonBand(this.getTitle(),

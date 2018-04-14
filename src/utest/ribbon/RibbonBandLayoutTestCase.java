@@ -41,25 +41,41 @@ public class RibbonBandLayoutTestCase extends FestSwingJUnitTestCase {
                 JRibbonBand findBand = new JRibbonBand("Find", new EmptyResizableIcon(32));
                 findBand.setCollapsedStateKeyTip("ZY");
 
-                findButton = findBand.addRibbonCommand(new RibbonCommandBuilder().setTitle("Find")
-                        .setIcon(new EmptyResizableIcon(32))
-                        .setAction((ActionEvent ae) -> System.out.println("Invoked"))
-                        .setToggleSelected().build(), RibbonElementPriority.TOP);
+                findButton = findBand
+                        .addRibbonCommand(
+                                new RibbonCommandBuilder().setTitle("Find")
+                                        .setIcon(new EmptyResizableIcon(32))
+                                        .setAction(
+                                                (ActionEvent ae) -> System.out.println("Invoked"))
+                                        .setToggleSelected(true).build(),
+                                RibbonElementPriority.TOP);
 
-                replaceButton = findBand.addRibbonCommand(new RibbonCommandBuilder()
-                        .setTitle("Replace").setIcon(new EmptyResizableIcon(32))
-                        .setAction((ActionEvent ae) -> System.out.println("Invoked"))
-                        .setToggleSelected().build(), RibbonElementPriority.MEDIUM);
+                replaceButton = findBand
+                        .addRibbonCommand(
+                                new RibbonCommandBuilder().setTitle("Replace")
+                                        .setIcon(new EmptyResizableIcon(32))
+                                        .setAction(
+                                                (ActionEvent ae) -> System.out.println("Invoked"))
+                                        .setToggleSelected(true).build(),
+                                RibbonElementPriority.MEDIUM);
 
-                findReplaceButton = findBand.addRibbonCommand(new RibbonCommandBuilder()
-                        .setTitle("Find replace").setIcon(new EmptyResizableIcon(32))
-                        .setAction((ActionEvent ae) -> System.out.println("Invoked"))
-                        .setToggleSelected().build(), RibbonElementPriority.MEDIUM);
+                findReplaceButton = findBand
+                        .addRibbonCommand(
+                                new RibbonCommandBuilder().setTitle("Find replace")
+                                        .setIcon(new EmptyResizableIcon(32))
+                                        .setAction(
+                                                (ActionEvent ae) -> System.out.println("Invoked"))
+                                        .setToggleSelected(true).build(),
+                                RibbonElementPriority.MEDIUM);
 
-                selectAllButton = findBand.addRibbonCommand(new RibbonCommandBuilder()
-                        .setTitle("Select all").setIcon(new EmptyResizableIcon(32))
-                        .setAction((ActionEvent ae) -> System.out.println("Invoked"))
-                        .setToggleSelected().build(), RibbonElementPriority.MEDIUM);
+                selectAllButton = findBand
+                        .addRibbonCommand(
+                                new RibbonCommandBuilder().setTitle("Select all")
+                                        .setIcon(new EmptyResizableIcon(32))
+                                        .setAction(
+                                                (ActionEvent ae) -> System.out.println("Invoked"))
+                                        .setToggleSelected(true).build(),
+                                RibbonElementPriority.MEDIUM);
 
                 List<RibbonBandResizePolicy> resizePolicies = new ArrayList<RibbonBandResizePolicy>();
                 resizePolicies.add(new CoreRibbonResizePolicies.Mirror(findBand.getControlPanel()));

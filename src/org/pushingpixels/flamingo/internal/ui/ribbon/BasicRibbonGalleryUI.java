@@ -395,7 +395,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
                 if (event.getPopupOriginator() == ribbonGallery) {
                     // reset the rollover state for all the buttons
                     // in the gallery
-                    for (int i = 0; i < ribbonGallery.getButtonCount(); i++) {
+                    for (int i = 0; i < ribbonGallery.getCommandCount(); i++) {
                         ribbonGallery.getButtonAt(i).getActionModel().setRollover(false);
                     }
                     ribbonGallery.setShowingPopupPanel(false);
@@ -555,7 +555,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
                 if (galleryButtonDisplayState == JRibbonBand.BIG_FIXED_LANDSCAPE) {
                     maxButtonWidth = maxButtonWidth * 5 / 4;
                 }
-                for (int i = 0; i < ribbonGallery.getButtonCount(); i++) {
+                for (int i = 0; i < ribbonGallery.getCommandCount(); i++) {
                     JCommandToggleButton currButton = ribbonGallery.getButtonAt(i);
                     currButton.setVisible(false);
                 }
@@ -595,7 +595,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
                 int lastVisibleButtonIndex = firstVisibleButtonIndex
                         + visibleButtonRowNumber * visibleButtonsInEachRow - 1;
                 lastVisibleButtonIndex = Math.min(lastVisibleButtonIndex,
-                        ribbonGallery.getButtonCount() - 1);
+                        ribbonGallery.getCommandCount() - 1);
                 int currCountInRow = 0;
                 int buttonY = margin.top + borderInsets.top;
                 int singleButtonWidth = maxButtonWidth + toAddToButtonWidth;
@@ -623,7 +623,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
                         buttonY += buttonHeight;
                     }
                 }
-                if (ribbonGallery.getButtonCount() == 0) {
+                if (ribbonGallery.getCommandCount() == 0) {
                     scrollDownButton.setEnabled(false);
                     scrollUpButton.setEnabled(false);
                     expandActionButton.setEnabled(false);
@@ -631,7 +631,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
                     // Scroll down button is enabled when the last button is not
                     // showing
                     scrollDownButton.setEnabled(!ribbonGallery
-                            .getButtonAt(ribbonGallery.getButtonCount() - 1).isVisible());
+                            .getButtonAt(ribbonGallery.getCommandCount() - 1).isVisible());
                     // Scroll up button is enabled when the first button is not
                     // showing
                     scrollUpButton.setEnabled(!ribbonGallery.getButtonAt(0).isVisible());
@@ -759,7 +759,7 @@ public class BasicRibbonGalleryUI extends RibbonGalleryUI {
         if (selected == null)
             return;
         int selIndex = -1;
-        for (int i = 0; i < this.ribbonGallery.getButtonCount(); i++) {
+        for (int i = 0; i < this.ribbonGallery.getCommandCount(); i++) {
             if (this.ribbonGallery.getButtonAt(i) == selected) {
                 selIndex = i;
                 break;
