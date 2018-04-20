@@ -136,12 +136,12 @@ public class JRibbon extends JComponent {
 
     /**
      * The taskbar components (to the right of the application menu button).
-     * 
-     * @see #addTaskbarComponent(Component)
-     * @see #getTaskbarComponents()
-     * @see #removeTaskbarComponent(Component)
      */
     private ArrayList<Component> taskbarComponents;
+
+    private ArrayList<RibbonCommand> taskbarCommands;
+
+    private Map<RibbonCommand, AbstractCommandButton> taskbarCommandMap;
 
     /**
      * Bands of the currently shown task.
@@ -224,6 +224,8 @@ public class JRibbon extends JComponent {
         this.tasks = new ArrayList<RibbonTask>();
         this.contextualTaskGroups = new ArrayList<>();
         this.taskbarComponents = new ArrayList<>();
+        this.taskbarCommandMap = new HashMap<>();
+        this.taskbarCommands = new ArrayList<>();
         this.bands = new ArrayList<>();
         this.currentlySelectedTask = null;
         this.groupVisibilityMap = new HashMap<>();
@@ -248,47 +250,89 @@ public class JRibbon extends JComponent {
      * 
      * @param comp
      *            The taskbar command to add.
-     * @see #removeTaskbarComponent(Component)
-     * @see #getTaskbarComponents()
+     * @see #removeTaskbarCommand(RibbonCommand)
+     * @see #getTaskbarCommands()
+     * @see #addTaskbarSeparator()
+     * @see #clearTaskbar()
      */
-    public synchronized Component addTaskbarCommand(RibbonCommand command) {
+    public synchronized void addTaskbarCommand(RibbonCommand command) {
         AbstractCommandButton cb = command.buildButton();
-        
+
         cb.setDisplayState(CommandButtonDisplayState.SMALL);
         cb.setGapScaleFactor(0.5);
         cb.setFocusable(false);
-        
+
         this.taskbarComponents.add(cb);
+        this.taskbarCommandMap.put(command, cb);
+        this.taskbarCommands.add(command);
         this.fireStateChanged();
-        
-        return cb;
+
+        return;
     }
 
     /**
      * Adds a taskbar separator to this ribbon.
      * 
-     * @see #removeTaskbarComponent(Component)
-     * @see #getTaskbarComponents()
+     * @see #addTaskbarCommand(RibbonCommand)
+     * @see #removeTaskbarCommand(RibbonCommand)
+     * @see #getTaskbarCommands()
+     * @see #clearTaskbar()
      */
-    public synchronized Component addTaskbarSeparator() {
-        Component result = new JSeparator(JSeparator.VERTICAL);
-        
+    public synchronized JSeparator addTaskbarSeparator() {
+        JSeparator result = new JSeparator(JSeparator.VERTICAL);
+
         this.taskbarComponents.add(result);
         this.fireStateChanged();
-        
+
         return result;
     }
 
     /**
-     * Removes the specified taskbar component from this ribbon.
+     * Removes the specified taskbar command from this ribbon.
      * 
-     * @param comp
-     *            The taskbar component to remove.
-     * @see #addTaskbarComponent(Component)
-     * @see #getTaskbarComponents()
+     * @param command
+     *            The taskbar command to remove.
+     * @see #addTaskbarCommand(RibbonCommand)
+     * @see #getTaskbarCommands()
+     * @see #clearTaskbar()
      */
-    public synchronized void removeTaskbarComponent(Component comp) {
-        this.taskbarComponents.remove(comp);
+    public synchronized void removeTaskbarCommand(RibbonCommand command) {
+        AbstractCommandButton cb = this.taskbarCommandMap.get(command);
+        if (cb != null) {
+            this.taskbarComponents.remove(cb);
+            this.taskbarCommandMap.remove(command);
+            this.taskbarCommands.remove(command);
+            this.fireStateChanged();
+        }
+    }
+
+    /**
+     * Removes the specified taskbar command from this ribbon.
+     * 
+     * @param command
+     *            The taskbar command to remove.
+     * @see #addTaskbarCommand(RibbonCommand)
+     * @see #removeTaskbarCommand(RibbonCommand)
+     * @see #clearTaskbar()
+     * @see #getTaskbarCommands()
+     */
+    public synchronized void removeTaskbarSeparator(JSeparator separator) {
+        this.taskbarComponents.remove(separator);
+        this.fireStateChanged();
+    }
+
+    /**
+     * Removes all taskbar content from this ribbon.
+     * 
+     * @see #addTaskbarCommand(RibbonCommand)
+     * @see #addTaskbarSeparator()
+     * @see #removeTaskbarCommand(RibbonCommand)
+     * @see #getTaskbarCommands()
+     */
+    public synchronized void clearTaskbar() {
+        this.taskbarCommandMap.clear();
+        this.taskbarCommands.clear();
+        this.taskbarComponents.clear();
         this.fireStateChanged();
     }
 
@@ -321,9 +365,25 @@ public class JRibbon extends JComponent {
      *            Command to add.
      * 
      * @see #getAnchoredCommands()
+     * @see #removeAnchoredCommand(RibbonCommand)
      */
     public synchronized void addAnchoredCommand(RibbonCommand ribbonCommand) {
         this.anchoredCommands.add(ribbonCommand);
+        this.fireStateChanged();
+    }
+
+    /**
+     * Removes the specified ribbon command from the trailing edge of the task toggle strip of this
+     * ribbon.
+     * 
+     * @param ribbonCommand
+     *            Command to remove.
+     * 
+     * @see #getAnchoredCommands()
+     * @see #addAnchoredCommand(RibbonCommand)
+     */
+    public synchronized void removeAnchoredCommand(RibbonCommand ribbonCommand) {
+        this.anchoredCommands.remove(ribbonCommand);
         this.fireStateChanged();
     }
 
@@ -333,6 +393,7 @@ public class JRibbon extends JComponent {
      * @return This ribbon's anchored commands.
      * 
      * @see #addAnchoredCommand(RibbonCommand)
+     * @see #removeAnchoredCommand(RibbonCommand)
      */
     public synchronized List<RibbonCommand> getAnchoredCommands() {
         return Collections.unmodifiableList(this.anchoredCommands);
@@ -506,12 +567,16 @@ public class JRibbon extends JComponent {
     }
 
     /**
-     * Gets an unmodifiable list of all taskbar components of <code>this</code> ribbon.
+     * Gets an unmodifiable list of all taskbar commands of <code>this</code> ribbon.
      * 
-     * @return All taskbar components of <code>this</code> ribbon.
-     * @see #addTaskbarComponent(Component)
-     * @see #removeTaskbarComponent(Component)
+     * @return All taskbar commands of <code>this</code> ribbon.
+     * @see #addTaskbarCommand(RibbonCommand)
+     * @see #removeTaskbarCommand(RibbonCommand)
      */
+    public synchronized List<RibbonCommand> getTaskbarCommands() {
+        return Collections.unmodifiableList(this.taskbarCommands);
+    }
+    
     public synchronized List<Component> getTaskbarComponents() {
         return Collections.unmodifiableList(this.taskbarComponents);
     }

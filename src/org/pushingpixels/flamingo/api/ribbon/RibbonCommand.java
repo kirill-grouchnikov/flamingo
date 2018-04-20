@@ -30,6 +30,9 @@
 package org.pushingpixels.flamingo.api.ribbon;
 
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
@@ -40,6 +43,19 @@ import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 
+/**
+ * Encapsulates metadata associated with a single ribbon command. Use a new instance of
+ * {@link RibbonCommandBuilder} to configure a new command, and {@link RibbonCommandBuilder#build()}
+ * to build a command.
+ * 
+ * Note that while {@link #buildButton()} can be used to directly build the visual representation of
+ * a command, commands represented by this class are passed to various APIs on the {@link JRibbon}
+ * and {@link JRibbonBand} to construct and modify the ribbon content. Use {@link #setEnabled(boolean)}
+ * to control the enabled state of the command and, by extension, its visual representation that you
+ * acquire from the {@link #buildButton()} call.
+ * 
+ * @author Kirill Grouchnikov
+ */
 public class RibbonCommand {
     private String title;
     private ResizableIcon icon;
@@ -55,6 +71,16 @@ public class RibbonCommand {
     private boolean isToggle;
     private boolean isToggleSelected;
     private RibbonCommandToggleGroup toggleGroup;
+
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.removePropertyChangeListener(listener);
+    }
 
     private RibbonCommand() {
     }
@@ -162,11 +188,18 @@ public class RibbonCommand {
     public boolean isEnabled() {
         return this.isEnabled;
     }
+    
+    public void setEnabled(boolean enabled) {
+        if (this.isEnabled != enabled) {
+            this.isEnabled = enabled;
+            this.pcs.firePropertyChange("enabled", !this.isEnabled, this.isEnabled);
+        }
+    }
 
     public boolean isToggle() {
         return this.isToggle;
     }
-    
+
     public boolean isToggleSelected() {
         return this.isToggleSelected;
     }
@@ -213,10 +246,16 @@ public class RibbonCommand {
         if (this.getToggleGroup() != null) {
             this.getToggleGroup().toggleButtonGroup.add((JCommandToggleButton) result);
         }
-        
+
         if (this.isToggleSelected()) {
             result.getActionModel().setSelected(true);
         }
+        
+        this.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if ("enabled".equals(evt.getPropertyName())) {
+                result.setEnabled((Boolean) evt.getNewValue());
+            }
+        });
 
         return result;
     }
@@ -333,7 +372,5 @@ public class RibbonCommand {
 
             return command;
         }
-
     }
-
 }
