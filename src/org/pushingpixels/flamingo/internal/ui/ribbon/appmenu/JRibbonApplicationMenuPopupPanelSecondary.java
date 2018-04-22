@@ -37,8 +37,8 @@ import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonPopupOrientationKind;
 import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
-import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryPrimary;
-import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntrySecondary;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand;
+import org.pushingpixels.flamingo.api.ribbon.RibbonCommand;
 
 public class JRibbonApplicationMenuPopupPanelSecondary extends
 		JCommandButtonPanel {
@@ -52,7 +52,7 @@ public class JRibbonApplicationMenuPopupPanelSecondary extends
 	};
 
 	public JRibbonApplicationMenuPopupPanelSecondary(
-			RibbonApplicationMenuEntryPrimary primaryMenuEntry) {
+			RibbonApplicationMenuPrimaryCommand primaryMenuEntry) {
 		super(MENU_TILE_LEVEL_2);
 		this.setMaxButtonColumns(1);
 
@@ -61,25 +61,20 @@ public class JRibbonApplicationMenuPopupPanelSecondary extends
 			String groupDesc = primaryMenuEntry.getSecondaryGroupTitleAt(i);
 			this.addButtonGroup(groupDesc);
 
-			for (final RibbonApplicationMenuEntrySecondary menuEntry : primaryMenuEntry
-					.getSecondaryGroupEntries(i)) {
-				JCommandMenuButton commandButton = new JCommandMenuButton(
-						menuEntry.getText(), menuEntry.getIcon());
-				commandButton.setExtraText(menuEntry.getDescriptionText());
-				commandButton.setCommandButtonKind(menuEntry.getEntryKind());
-				commandButton.addActionListener(menuEntry
-						.getMainActionListener());
+			for (final RibbonCommand menuCommand : primaryMenuEntry
+					.getSecondaryGroupCommands(i)) {
+			    if (menuCommand.isToggle()) {
+			        throw new IllegalStateException("Secondary menu commands cannot be toggle");
+			    }
+			    
+			    
+				JCommandMenuButton commandButton = (JCommandMenuButton) menuCommand.buildMenuButton();
+
 				commandButton.setDisplayState(MENU_TILE_LEVEL_2);
 				commandButton.setHorizontalAlignment(SwingUtilities.LEADING);
 				commandButton
 						.setPopupOrientationKind(CommandButtonPopupOrientationKind.SIDEWARD);
-				commandButton.setEnabled(menuEntry.isEnabled());
-				commandButton.setPopupCallback(menuEntry.getPopupCallback());
-				commandButton.setActionKeyTip(menuEntry.getActionKeyTip());
-				commandButton.setPopupKeyTip(menuEntry.getPopupKeyTip());
-				if (menuEntry.getDisabledIcon() != null) {
-					commandButton.setDisabledIcon(menuEntry.getDisabledIcon());
-				}
+
 				this.addButtonToLastGroup(commandButton);
 			}
 		}
