@@ -29,15 +29,16 @@
  */
 package org.pushingpixels.flamingo.api.ribbon;
 
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.pushingpixels.flamingo.api.common.FlamingoCommand;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand.FlamingoCommandBuilder;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand.PrimaryClearRolloverCallback;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand.PrimaryRolloverCallback;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand.RibbonApplicationMenuPrimaryCommandBuilder;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 
 /**
  * Metadata description of the application menu of the {@link JRibbon} component. The ribbon
@@ -58,24 +59,21 @@ import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
  * 
  * <p>
  * The entries in the primary area are always visible. The secondary area entries are shown based on
- * the currently active element in the primary area. There are three different types of primary
+ * the currently active element in the primary area. There are two different types of primary
  * entries:
  * </p>
  * 
  * <ul>
- * <li>Associated {@link ActionListener} configured on the
- * {@link RibbonApplicationMenuPrimaryCommand}. When this entry is armed (with mouse rollover or via
- * keyboard navigation), the contents of the secondary area are cleared. The <code>Quit</code> menu
- * item is an example of such a primary menu entry.</li>
  * <li>Associated {@link PrimaryRolloverCallback} configured by the
  * {@link RibbonApplicationMenuPrimaryCommandBuilder#setRolloverCallback(org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand.RibbonApplicationMenuPrimaryCommandBuilder.PrimaryRolloverCallback)}
  * . When this entry is armed (with mouse rollover or via keyboard navigation), the contents of the
  * secondary area are populated by the application callback implementation of
  * {@link PrimaryRolloverCallback#menuEntryActivated(javax.swing.JPanel)}. The <code>Open</code>
- * menu item is an example of such a primary menu entry, showing a list of recently opened
- * files.</li>
- * <li>Associated list of {@link RibbonCommand}s added with the
- * {@link RibbonApplicationMenuPrimaryCommandBuilder#addSecondaryMenuGroup(String, RibbonCommand...)}
+ * menu item is an example of such a primary menu entry, showing a list of recently opened files.
+ * For a primary entry that is action-only, pass {@link PrimaryClearRolloverCallback} as the primary
+ * rollover callback to clear the secondary area.</li>
+ * <li>Associated list of {@link FlamingoCommand}s added with the
+ * {@link RibbonApplicationMenuPrimaryCommandBuilder#addSecondaryMenuGroup(String, FlamingoCommand...)}
  * API. When this entry is armed (with mouse rollover or via keyboard navigation), the secondary
  * area shows menu buttons for the registered secondary menu entries. The <code>Save As</code> menu
  * item is an example of such a primary menu item, showing a list of default save formats.</li>
@@ -85,16 +83,16 @@ import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
  * At runtime, the application menu entries are implemented as {@link JCommandMenuButton}, but the
  * application code does not operate on that level. Instead, the application code creates
  * metadata-driven description of the ribbon application menu with
- * {@link RibbonApplicationMenuPrimaryCommandBuilder} and {@link RibbonCommandBuilder}, and that
- * description is used to create and populate the "real" controls of the application menu popup.
+ * {@link RibbonApplicationMenuPrimaryCommandBuilder} and {@link FlamingoCommandBuilder}, and those
+ * commands is used to create and populate the "real" controls of the application menu popup.
  * </p>
  * 
  * <p>
  * Note that once a {@link RibbonApplicationMenu} is set on the {@link JRibbon} with the
  * {@link JRibbon#setApplicationMenu(RibbonApplicationMenu)}, its contents cannot be changed. An
  * {@link IllegalStateException} will be thrown from
- * {@link #addMenuCommand(RibbonApplicationMenuEntryPrimary)} and
- * {@link #addFooterCommand(RibbonApplicationMenuEntryFooter)}.
+ * {@link #addMenuCommand(RibbonApplicationMenuPrimaryCommand)} and
+ * {@link #addFooterCommand(FlamingoCommand)}.
  * </p>
  * 
  * @author Kirill Grouchnikov
@@ -104,11 +102,11 @@ public class RibbonApplicationMenu {
      * Indicates whether this ribbon application menu has been set on the {@link JRibbon} with the
      * {@link JRibbon#setApplicationMenu(RibbonApplicationMenu)}. Once that API is called, the
      * contents of this menu cannot be changed. An {@link IllegalStateException} will be thrown from
-     * {@link #addMenuCommand(RibbonCommand)} and
+     * {@link #addMenuCommand(FlamingoCommand)} and
      * {@link #addFooterCommand(RibbonApplicationMenuEntryFooter)}.
      * 
      * @see #setFrozen(boolean)
-     * @see #addMenuCommand(RibbonCommand)
+     * @see #addMenuCommand(FlamingoCommand)
      * @see #addFooterCommand(RibbonApplicationMenuEntryFooter)
      */
     private boolean isFrozen;
@@ -121,7 +119,7 @@ public class RibbonApplicationMenu {
     /**
      * Footer commands.
      */
-    private List<RibbonCommand> footerCommands;
+    private List<FlamingoCommand> footerCommands;
 
     /**
      * The default callback to be called when:
@@ -140,7 +138,7 @@ public class RibbonApplicationMenu {
     public RibbonApplicationMenu() {
         this.primaryCommands = new ArrayList<List<RibbonApplicationMenuPrimaryCommand>>();
         this.primaryCommands.add(new ArrayList<RibbonApplicationMenuPrimaryCommand>());
-        this.footerCommands = new ArrayList<RibbonCommand>();
+        this.footerCommands = new ArrayList<FlamingoCommand>();
     }
 
     /**
@@ -193,7 +191,7 @@ public class RibbonApplicationMenu {
      * @see #getFooterCommands()
      * @see #addMenuCommand(RibbonApplicationMenuPrimaryCommand)
      */
-    public synchronized void addFooterCommand(RibbonCommand entry) {
+    public synchronized void addFooterCommand(FlamingoCommand entry) {
         if (this.isFrozen) {
             throw new IllegalStateException(
                     "Cannot add footer commands after the menu has been set on the ribbon");
@@ -206,10 +204,10 @@ public class RibbonApplicationMenu {
      * guaranteed to be non-<code>null</code>.
      * 
      * @return An unmodifiable list of all footer commands of this application menu.
-     * @see #addFooterCommand(RibbonCommand)
+     * @see #addFooterCommand(FlamingoCommand)
      * @see #getPrimaryCommands()
      */
-    public List<RibbonCommand> getFooterCommands() {
+    public List<FlamingoCommand> getFooterCommands() {
         return Collections.unmodifiableList(this.footerCommands);
     }
 

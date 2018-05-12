@@ -34,11 +34,11 @@ import javax.swing.SwingUtilities;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonPopupOrientationKind;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand;
 import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
-import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand;
 
 public class JRibbonApplicationMenuPopupPanelSecondary extends
 		JCommandButtonPanel {
@@ -61,7 +61,7 @@ public class JRibbonApplicationMenuPopupPanelSecondary extends
 			String groupDesc = primaryMenuEntry.getSecondaryGroupTitleAt(i);
 			this.addButtonGroup(groupDesc);
 
-			for (final RibbonCommand menuCommand : primaryMenuEntry
+			for (final FlamingoCommand menuCommand : primaryMenuEntry
 					.getSecondaryGroupCommands(i)) {
 			    if (menuCommand.isToggle()) {
 			        throw new IllegalStateException("Secondary menu commands cannot be toggle");

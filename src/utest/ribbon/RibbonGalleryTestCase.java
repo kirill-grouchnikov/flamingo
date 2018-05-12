@@ -18,13 +18,13 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import org.pushingpixels.flamingo.api.common.FlamingoCommand;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand.FlamingoCommandBuilder;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.internal.ui.ribbon.JRibbonGallery;
@@ -38,7 +38,7 @@ import junit.framework.TestCase;
  * @author Kirill Grouchnikov
  */
 public class RibbonGalleryTestCase extends TestCase {
-    RibbonCommand[][] commands;
+    FlamingoCommand[][] commands;
 
     JRibbonGallery gallery;
 
@@ -50,11 +50,11 @@ public class RibbonGalleryTestCase extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        this.commands = new RibbonCommand[4][10];
+        this.commands = new FlamingoCommand[4][10];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 10; j++) {
                 final String id = "[" + i + ":" + j + "]";
-                this.commands[i][j] = new RibbonCommandBuilder().setTitle("Button " + id)
+                this.commands[i][j] = new FlamingoCommandBuilder().setTitle("Button " + id)
                         .setIcon(new EmptyResizableIcon(32))
                         .setAction((ActionEvent e) -> System.out.println("Selected " + id))
                         .setToggle().build();
@@ -70,14 +70,14 @@ public class RibbonGalleryTestCase extends TestCase {
         visibleButtonCounts.put(RibbonElementPriority.MEDIUM, 6);
         visibleButtonCounts.put(RibbonElementPriority.TOP, 10);
 
-        List<StringValuePair<List<RibbonCommand>>> galleryCommands = new ArrayList<StringValuePair<List<RibbonCommand>>>();
+        List<StringValuePair<List<FlamingoCommand>>> galleryCommands = new ArrayList<StringValuePair<List<FlamingoCommand>>>();
         for (int i = 0; i < 4; i++) {
-            List<RibbonCommand> galleryCommandsList = new ArrayList<RibbonCommand>();
+            List<FlamingoCommand> galleryCommandsList = new ArrayList<FlamingoCommand>();
             for (int j = 0; j < 10; j++) {
                 galleryCommandsList.add(this.commands[i][j]);
             }
             galleryCommands.add(
-                    new StringValuePair<List<RibbonCommand>>("Group " + i, galleryCommandsList));
+                    new StringValuePair<List<FlamingoCommand>>("Group " + i, galleryCommandsList));
         }
 
         this.ribbonBand.addRibbonGallery(GALLERY_NAME, galleryCommands, visibleButtonCounts, 6, 4,
@@ -91,7 +91,7 @@ public class RibbonGalleryTestCase extends TestCase {
         assertEquals(this.gallery.getCommandGroupCount(), 4);
         assertEquals(this.gallery.getCommandCount(), 40);
         for (int i = 0; i < this.gallery.getCommandGroupCount(); i++) {
-            List<RibbonCommand> commandGroup = this.gallery.getCommandGroup("Group " + i);
+            List<FlamingoCommand> commandGroup = this.gallery.getCommandGroup("Group " + i);
             assertEquals(commandGroup.size(), 10);
             for (int j = 0; j < 10; j++) {
                 assertEquals(commandGroup.get(j), this.commands[i][j]);
@@ -110,9 +110,9 @@ public class RibbonGalleryTestCase extends TestCase {
             this.ribbonBand.setSelectedRibbonGalleryCommand(GALLERY_NAME,
                     this.commands[selRow][selCol]);
             for (int i = 0; i < this.gallery.getCommandGroupCount(); i++) {
-                List<RibbonCommand> commandGroup = this.gallery.getCommandGroup("Group " + i);
+                List<FlamingoCommand> commandGroup = this.gallery.getCommandGroup("Group " + i);
                 for (int j = 0; j < 10; j++) {
-                    RibbonCommand command = commandGroup.get(j);
+                    FlamingoCommand command = commandGroup.get(j);
                     JCommandToggleButton button = this.gallery.getButtonForCommand(command);
                     if ((i == selRow) && (j == selCol))
                         assertTrue(button.getActionModel().isSelected());
@@ -159,7 +159,7 @@ public class RibbonGalleryTestCase extends TestCase {
 
                         for (int sel = 0; sel < toTest.length; sel++) {
                             int selCol = toTest[sel];
-                            final RibbonCommand commandToClick = commands[0][selCol];
+                            final FlamingoCommand commandToClick = commands[0][selCol];
                             JCommandToggleButton buttonToClick = gallery
                                     .getButtonForCommand(commandToClick);
                             Point buttonLeftTop = buttonToClick.getLocationOnScreen();
@@ -181,10 +181,10 @@ public class RibbonGalleryTestCase extends TestCase {
 
                                     int selectedCount = 0;
                                     for (int i = 0; i < gallery.getCommandGroupCount(); i++) {
-                                        List<RibbonCommand> commandGroup = gallery
+                                        List<FlamingoCommand> commandGroup = gallery
                                                 .getCommandGroup("Group " + i);
                                         for (int j = 0; j < commandGroup.size(); j++) {
-                                            RibbonCommand command = commandGroup.get(j);
+                                            FlamingoCommand command = commandGroup.get(j);
                                             JCommandToggleButton button = gallery
                                                     .getButtonForCommand(command);
                                             if (button.getActionModel().isSelected())
@@ -226,7 +226,7 @@ public class RibbonGalleryTestCase extends TestCase {
         assertEquals(this.gallery.getCommandGroupCount(), 4);
         assertEquals(this.gallery.getCommandCount(), 39);
         for (int i = 0; i < this.gallery.getCommandGroupCount(); i++) {
-            List<RibbonCommand> commandGroup = this.gallery.getCommandGroup("Group " + i);
+            List<FlamingoCommand> commandGroup = this.gallery.getCommandGroup("Group " + i);
             if (i == 0) {
                 assertEquals(commandGroup.size(), 9);
                 for (int j = 0; j < 9; j++) {
@@ -246,7 +246,7 @@ public class RibbonGalleryTestCase extends TestCase {
         assertEquals(this.gallery.getCommandGroupCount(), 4);
         assertEquals(this.gallery.getCommandCount(), 39);
         for (int i = 0; i < this.gallery.getCommandGroupCount(); i++) {
-            List<RibbonCommand> commandGroup = this.gallery.getCommandGroup("Group " + i);
+            List<FlamingoCommand> commandGroup = this.gallery.getCommandGroup("Group " + i);
             if (i == 1) {
                 assertEquals(commandGroup.size(), 9);
                 for (int j = 0; j < 5; j++) {
@@ -270,7 +270,7 @@ public class RibbonGalleryTestCase extends TestCase {
         assertEquals(this.gallery.getCommandGroupCount(), 4);
         assertEquals(this.gallery.getCommandCount(), 38);
         for (int i = 0; i < this.gallery.getCommandGroupCount(); i++) {
-            List<RibbonCommand> ribbonGroup = this.gallery.getCommandGroup("Group " + i);
+            List<FlamingoCommand> ribbonGroup = this.gallery.getCommandGroup("Group " + i);
             if ((i == 2) || (i == 1)) {
                 assertEquals(ribbonGroup.size(), 9);
                 for (int j = 0; j < 9; j++) {
@@ -352,9 +352,9 @@ public class RibbonGalleryTestCase extends TestCase {
                     this.commands[selRow][selCol]);
             this.ribbonBand.removeRibbonGalleryCommands(GALLERY_NAME, this.commands[selRow][selCol]);
             for (int i = 0; i < this.gallery.getCommandGroupCount(); i++) {
-                List<RibbonCommand> commandGroup = this.gallery.getCommandGroup("Group " + i);
+                List<FlamingoCommand> commandGroup = this.gallery.getCommandGroup("Group " + i);
                 for (int j = 0; j < commandGroup.size(); j++) {
-                    RibbonCommand command = commandGroup.get(j);
+                    FlamingoCommand command = commandGroup.get(j);
                     JCommandToggleButton button = this.gallery.getButtonForCommand(command);
                     assertFalse(button.getActionModel().isSelected());
                 }
@@ -363,7 +363,7 @@ public class RibbonGalleryTestCase extends TestCase {
     }
 
     public void testAddition() {
-        RibbonCommand newCommand = new RibbonCommandBuilder().setTitle("New")
+        FlamingoCommand newCommand = new FlamingoCommandBuilder().setTitle("New")
                 .setIcon(new EmptyResizableIcon(32))
                 .setAction((ActionEvent e) -> System.out.println("New"))
                 .setToggle().build();
@@ -376,7 +376,7 @@ public class RibbonGalleryTestCase extends TestCase {
         assertEquals(this.gallery.getCommandGroup("Group 2").size(), 10);
         assertEquals(this.gallery.getCommandGroup("Group 3").size(), 10);
 
-        RibbonCommand newCommand2 = new RibbonCommandBuilder().setTitle("New 2")
+        FlamingoCommand newCommand2 = new FlamingoCommandBuilder().setTitle("New 2")
                 .setIcon(new EmptyResizableIcon(32))
                 .setAction((ActionEvent e) -> System.out.println("New 2"))
                 .setToggle().build();
@@ -390,11 +390,11 @@ public class RibbonGalleryTestCase extends TestCase {
         assertEquals(this.gallery.getCommandGroup("Group 3").size(), 10);
         assertTrue(this.gallery.getCommandGroup("Group 0").contains(newCommand));
 
-        RibbonCommand newCommand3 = new RibbonCommandBuilder().setTitle("New 3")
+        FlamingoCommand newCommand3 = new FlamingoCommandBuilder().setTitle("New 3")
                 .setIcon(new EmptyResizableIcon(32))
                 .setAction((ActionEvent e) -> System.out.println("New 3"))
                 .setToggle().build();
-        RibbonCommand newCommand4 = new RibbonCommandBuilder().setTitle("New 4")
+        FlamingoCommand newCommand4 = new FlamingoCommandBuilder().setTitle("New 4")
                 .setIcon(new EmptyResizableIcon(32))
                 .setAction((ActionEvent e) -> System.out.println("New 4"))
                 .setToggle().build();

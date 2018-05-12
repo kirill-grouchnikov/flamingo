@@ -24,6 +24,7 @@ import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand.FlamingoCommandBuilder;
 import org.pushingpixels.flamingo.api.common.icon.DecoratedResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
@@ -34,7 +35,6 @@ import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.ribbon.JRibbon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
@@ -83,7 +83,8 @@ public class RibbonMinimizedTestCase extends TestCase {
                     jrb.addActionListener(
                             (ActionEvent e) -> System.out.println("Invoked action on " + index));
                     jrb.setActionRichTooltip(
-                            new RichTooltip("Index " + i, "Sample tooltip for " + i));
+                            new RichTooltip.RichTooltipBuilder().setTitle("Index " + i)
+                                    .addDescriptionSection("Sample tooltip for " + i).build());
                     this.addButtonToLastGroup(jrb);
                 }
             }
@@ -95,41 +96,40 @@ public class RibbonMinimizedTestCase extends TestCase {
         JRibbonBand clipboardBand = new JRibbonBand("Clipboard", new Edit_paste());
         clipboardBand.setExpandButtonKeyTip("FO");
 
-        RichTooltip mainRichTooltip = new RichTooltip();
-        mainRichTooltip.setTitle("Paste");
-        mainRichTooltip.addDescriptionSection("Paste the contents of the Clipboard");
+        clipboardBand
+                .addRibbonCommand(
+                        new FlamingoCommandBuilder().setTitle("Paste")
+                                .setIcon(Edit_paste.of(16, 16))
+                                .setAction((ActionEvent e) -> System.out.println("Pasted!"))
+                                .setActionRichTooltip(new RichTooltip.RichTooltipBuilder()
+                                        .setTitle("Paste")
+                                        .addDescriptionSection(
+                                                "Paste the contents of the Clipboard")
+                                        .build())
+                                .setPopupCallback(
+                                        (JCommandButton commandButton) -> new SamplePopupMenu(
+                                                commandButton.getComponentOrientation()))
+                                .setPopupRichTooltip(new RichTooltip.RichTooltipBuilder()
+                                        .setTitle("Paste")
+                                        .addDescriptionSection(
+                                                "Click here for more options such as pasting only the values or formatting")
+                                        .build())
+                                .setPopupKeyTip("V").setTitleClickAction().build(),
+                        RibbonElementPriority.TOP);
 
-        RichTooltip mainPopupRichTooltip = new RichTooltip();
-        mainPopupRichTooltip.setTitle("Paste");
-        mainPopupRichTooltip.addDescriptionSection(
-                "Click here for more options such as pasting only the values or formatting");
+        clipboardBand.addRibbonCommand(new FlamingoCommandBuilder().setTitle("Cut")
+                .setIcon(Edit_cut.of(16, 16))
+                .setAction((ActionEvent e) -> System.out.println("Cut!"))
+                .setActionRichTooltip(new RichTooltip.RichTooltipBuilder().setTitle("Cut")
+                        .addDescriptionSection(
+                                "Cut the selection from the document and put it on the Clipboard")
+                        .build())
+                .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
+                        commandButton.getComponentOrientation()))
+                .setPopupKeyTip("X").setTitleClickAction().build(), RibbonElementPriority.MEDIUM);
 
         clipboardBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle("Paste").setIcon(Edit_paste.of(16, 16))
-                        .setAction((ActionEvent e) -> System.out.println("Pasted!"))
-                        .setActionRichTooltip(mainRichTooltip)
-                        .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
-                                commandButton.getComponentOrientation()))
-                        .setPopupRichTooltip(mainPopupRichTooltip).setPopupKeyTip("V")
-                        .setTitleClickAction().build(),
-                RibbonElementPriority.TOP);
-
-        RichTooltip cutRichTooltip = new RichTooltip();
-        cutRichTooltip.setTitle("Cut");
-        cutRichTooltip.addDescriptionSection(
-                "Cut the selection from the document and put it on the Clipboard");
-
-        clipboardBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle("Cut").setIcon(Edit_cut.of(16, 16))
-                        .setAction((ActionEvent e) -> System.out.println("Cut!"))
-                        .setActionRichTooltip(cutRichTooltip)
-                        .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
-                                commandButton.getComponentOrientation()))
-                        .setPopupKeyTip("X").setTitleClickAction().build(),
-                RibbonElementPriority.MEDIUM);
-
-        clipboardBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle("Copy").setIcon(Edit_copy.of(16, 16))
+                new FlamingoCommandBuilder().setTitle("Copy").setIcon(Edit_copy.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Copy!"))
                         .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
                                 commandButton.getComponentOrientation()))
@@ -163,7 +163,7 @@ public class RibbonMinimizedTestCase extends TestCase {
         };
 
         clipboardBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle("Format").setIcon(Edit_paste.of(16, 16))
+                new FlamingoCommandBuilder().setTitle("Format").setIcon(Edit_paste.of(16, 16))
                         .setPopupCallback(formatButtonPopupCallback).setPopupKeyTip("FP").build(),
                 RibbonElementPriority.MEDIUM);
 

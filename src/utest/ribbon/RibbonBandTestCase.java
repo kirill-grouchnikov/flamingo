@@ -10,11 +10,11 @@ import org.fest.swing.edt.GuiActionRunner;
 import org.fest.swing.edt.GuiTask;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.Test;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand.FlamingoCommandBuilder;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
@@ -43,7 +43,7 @@ public class RibbonBandTestCase extends FestSwingJUnitTestCase {
             private JRibbonBand createBand(int buttonCount, String title, String titlePrefix) {
                 JRibbonBand result = new JRibbonBand(title, new EmptyResizableIcon(32));
                 for (int i = 0; i < buttonCount; i++) {
-                    result.addRibbonCommand(new RibbonCommandBuilder()
+                    result.addRibbonCommand(new FlamingoCommandBuilder()
                             .setTitle(titlePrefix + (i + 1)).setIcon(new EmptyResizableIcon(32))
                             .setAction((ActionEvent ae) -> System.out.println("Invoked")).build(),
                             RibbonElementPriority.TOP);

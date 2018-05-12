@@ -29,40 +29,34 @@
  */
 package org.pushingpixels.flamingo.api.ribbon;
 
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JPanel;
 
-import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
-import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand;
 
 /**
  * Metadata description for the primary menu entries of the {@link RibbonApplicationMenu}. The
- * primary menu entries at runtime are represented by command menu buttons placed in the left panel
+ * primary menu entries at runtime are represented by command menu buttons placed in the leading panel
  * of the application menu.
  * 
  * <p>
- * There are three different types of primary entries:
+ * There are two different types of primary entries:
  * </p>
  * 
  * <ul>
- * <li>Associated {@link ActionListener} passed to the
- * {@link RibbonApplicationMenuPrimaryCommand#RibbonApplicationMenuEntryPrimary(ResizableIcon, String, ActionListener, CommandButtonKind)}
- * . When this entry is armed (with mouse rollover or via keyboard navigation), the contents of the
- * secondary area are cleared. The <code>Quit</code> menu item is an example of such a primary menu
- * entry.</li>
  * <li>Associated {@link PrimaryRolloverCallback} set by the
  * {@link #setRolloverCallback(PrimaryRolloverCallback)} . When this entry is armed (with mouse
  * rollover or via keyboard navigation), the contents of the secondary area are populated by the
  * application callback implementation of
  * {@link PrimaryRolloverCallback#menuEntryActivated(javax.swing.JPanel)}. The <code>Open</code>
- * menu item is an example of such a primary menu entry, showing a list of recently opened
- * files.</li>
- * <li>Associated list of {@link RibbonCommand}s added with the
- * {@link #addSecondaryMenuGroup(String, RibbonCommand...)} API. When this entry is armed (with
+ * menu item is an example of such a primary menu entry, showing a list of recently opened files.
+ * For a primary entry that is action-only, pass {@link PrimaryClearRolloverCallback} as the primary
+ * rollover callback to clear the secondary area.</li>
+ * <li>Associated list of {@link FlamingoCommand}s added with the
+ * {@link #addSecondaryMenuGroup(String, FlamingoCommand...)} API. When this entry is armed (with
  * mouse rollover or via keyboard navigation), the secondary area shows menu buttons for the
  * registered secondary menu commands. The <code>Save As</code> menu item is an example of such a
  * primary menu item, showing a list of default save formats.</li>
@@ -70,7 +64,7 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
  * 
  * @author Kirill Grouchnikov
  */
-public class RibbonApplicationMenuPrimaryCommand extends RibbonCommand {
+public class RibbonApplicationMenuPrimaryCommand extends FlamingoCommand {
     /**
      * An optional rollover callback. It allows the application to place custom content in the
      * secondary panel of the {@link RibbonApplicationMenu} when this primary menu entry is
@@ -99,6 +93,15 @@ public class RibbonApplicationMenuPrimaryCommand extends RibbonCommand {
         public void menuEntryActivated(JPanel targetPanel);
     }
 
+    public static class PrimaryClearRolloverCallback implements PrimaryRolloverCallback {
+        @Override
+        public void menuEntryActivated(JPanel targetPanel) {
+            targetPanel.removeAll();
+            targetPanel.revalidate();
+            targetPanel.repaint();
+        }
+    }
+
     /**
      * List of titles for all menu groups.
      */
@@ -107,9 +110,9 @@ public class RibbonApplicationMenuPrimaryCommand extends RibbonCommand {
     /**
      * List of all menu groups.
      */
-    private List<List<RibbonCommand>> groupEntries;
+    private List<List<FlamingoCommand>> groupEntries;
 
-    private RibbonApplicationMenuPrimaryCommand() {
+    RibbonApplicationMenuPrimaryCommand() {
     }
 
     /**
@@ -145,7 +148,7 @@ public class RibbonApplicationMenuPrimaryCommand extends RibbonCommand {
      * @see #getSecondaryGroupCount()
      * @see #getSecondaryGroupTitleAt(int)
      */
-    public List<RibbonCommand> getSecondaryGroupCommands(int groupIndex) {
+    public List<FlamingoCommand> getSecondaryGroupCommands(int groupIndex) {
         return Collections.unmodifiableList(this.groupEntries.get(groupIndex));
     }
 
@@ -159,19 +162,19 @@ public class RibbonApplicationMenuPrimaryCommand extends RibbonCommand {
     public PrimaryRolloverCallback getRolloverCallback() {
         return rolloverCallback;
     }
-    
+
     @Override
     protected boolean hasAction() {
         return super.hasAction() || (this.getRolloverCallback() != null);
     }
-    
+
     @Override
     protected boolean hasPopup() {
         return super.hasPopup() || (this.getSecondaryGroupCount() > 0);
     }
 
     public static class RibbonApplicationMenuPrimaryCommandBuilder extends
-            BaseRibbonCommandBuilder<RibbonApplicationMenuPrimaryCommand, RibbonApplicationMenuPrimaryCommandBuilder> {
+            BaseFlamingoCommandBuilder<RibbonApplicationMenuPrimaryCommand, RibbonApplicationMenuPrimaryCommandBuilder> {
         /**
          * An optional rollover callback. It allows the application to place custom content in the
          * secondary panel of the {@link RibbonApplicationMenu} when this primary menu entry is
@@ -179,18 +182,18 @@ public class RibbonApplicationMenuPrimaryCommand extends RibbonCommand {
          * 
          * @see #setRolloverCallback(PrimaryRolloverCallback)
          */
-        protected PrimaryRolloverCallback rolloverCallback;
+        private PrimaryRolloverCallback rolloverCallback;
 
         /**
          * List of titles for all menu groups.
          */
-        protected List<String> groupTitles = new ArrayList<>();
+        private List<String> groupTitles = new ArrayList<>();
 
         /**
          * List of all menu groups.
          */
-        protected List<List<RibbonCommand>> groupEntries = new ArrayList<>();
-        
+        private List<List<FlamingoCommand>> groupEntries = new ArrayList<>();
+
         /**
          * Adds a titled group of secondary menu commands.
          * 
@@ -199,12 +202,12 @@ public class RibbonApplicationMenuPrimaryCommand extends RibbonCommand {
          * @param secondaryCommands
          *            The secondary menu commands belonging to this group.
          */
-        public synchronized RibbonApplicationMenuPrimaryCommandBuilder addSecondaryMenuGroup(String groupTitle,
-                RibbonCommand... secondaryCommands) {
+        public synchronized RibbonApplicationMenuPrimaryCommandBuilder addSecondaryMenuGroup(
+                String groupTitle, FlamingoCommand... secondaryCommands) {
             this.groupTitles.add(groupTitle);
-            List<RibbonCommand> entryList = new ArrayList<RibbonCommand>();
+            List<FlamingoCommand> entryList = new ArrayList<FlamingoCommand>();
             this.groupEntries.add(entryList);
-            for (RibbonCommand entry : secondaryCommands) {
+            for (FlamingoCommand entry : secondaryCommands) {
                 entryList.add(entry);
             }
             return this;
@@ -233,8 +236,8 @@ public class RibbonApplicationMenuPrimaryCommand extends RibbonCommand {
          * @param newTitle
          *            New title for the specified group.
          */
-        public synchronized RibbonApplicationMenuPrimaryCommandBuilder setSecondaryGroupTitle(int groupIndex,
-                String newTitle) {
+        public synchronized RibbonApplicationMenuPrimaryCommandBuilder setSecondaryGroupTitle(
+                int groupIndex, String newTitle) {
             this.groupTitles.set(groupIndex, newTitle);
             return this;
         }
@@ -242,13 +245,13 @@ public class RibbonApplicationMenuPrimaryCommand extends RibbonCommand {
         public RibbonApplicationMenuPrimaryCommand build() {
             RibbonApplicationMenuPrimaryCommand command = new RibbonApplicationMenuPrimaryCommand();
 
-            this.configureBaseRibbonCommand(command);
+            this.configureBaseCommand(command);
 
             command.groupTitles = this.groupTitles;
             command.groupEntries = this.groupEntries;
             command.rolloverCallback = this.rolloverCallback;
 
-            //command.checkConsistency();
+            // command.checkConsistency();
 
             return command;
         }

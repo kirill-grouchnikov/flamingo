@@ -27,28 +27,23 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
-package org.pushingpixels.flamingo.api.ribbon;
+package org.pushingpixels.flamingo.api.common;
 
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
-import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
-import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
-import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
-import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
-import org.pushingpixels.flamingo.api.common.JCommandToggleMenuButton;
-import org.pushingpixels.flamingo.api.common.RichTooltip;
+import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonPopupOrientationKind;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
+import org.pushingpixels.flamingo.api.ribbon.JRibbon;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 
 /**
- * Encapsulates metadata associated with a single ribbon command. Use a new instance of
- * {@link RibbonCommandBuilder} to configure a new command, and {@link RibbonCommandBuilder#build()}
- * to build a command.
+ * Encapsulates metadata associated with a single command. Use a new instance of
+ * {@link FlamingoCommandBuilder} to configure a new command, and
+ * {@link FlamingoCommandBuilder#build()} to build a command.
  * 
  * Note that while {@link #buildButton()} can be used to directly build the visual representation of
  * a command, commands represented by this class are passed to various APIs on the {@link JRibbon}
@@ -58,7 +53,7 @@ import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
  * 
  * @author Kirill Grouchnikov
  */
-public class RibbonCommand {
+public class FlamingoCommand {
     private String title;
     private ResizableIcon icon;
     private ResizableIcon disabledIcon;
@@ -68,25 +63,23 @@ public class RibbonCommand {
     private String actionKeyTip;
     private PopupPanelCallback popupCallback;
     private RichTooltip popupRichTooltip;
+    private CommandButtonPopupOrientationKind popupOrientationKind;
     private String popupKeyTip;
     private boolean isTitleClickAction;
     private boolean isTitleClickPopup;
     private boolean isEnabled;
     private boolean isToggle;
     private boolean isToggleSelected;
-    private RibbonCommandToggleGroup toggleGroup;
+    private FlamingoCommandToggleGroup toggleGroup;
+    private boolean isAutoRepeatAction;
+    private boolean hasAutoRepeatIntervalsSet;
+    private int autoRepeatInitialInterval;
+    private int autoRepeatSubsequentInterval;
+    private boolean isFireActionOnRollover;
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.removePropertyChangeListener(listener);
-    }
-
-    RibbonCommand() {
+    protected FlamingoCommand() {
     }
 
     protected void checkConsistency() {
@@ -189,6 +182,10 @@ public class RibbonCommand {
         return this.popupKeyTip;
     }
 
+    public CommandButtonPopupOrientationKind getPopupOrientationKind() {
+        return this.popupOrientationKind;
+    }
+
     public boolean isTitleClickAction() {
         return this.isTitleClickAction;
     }
@@ -216,8 +213,24 @@ public class RibbonCommand {
         return this.isToggleSelected;
     }
 
-    public RibbonCommandToggleGroup getToggleGroup() {
+    public FlamingoCommandToggleGroup getToggleGroup() {
         return this.toggleGroup;
+    }
+
+    public boolean isAutoRepeatAction() {
+        return this.isAutoRepeatAction;
+    }
+
+    public int getAutoRepeatInitialInterval() {
+        return this.hasAutoRepeatIntervalsSet ? this.autoRepeatInitialInterval : -1;
+    }
+
+    public int getAutoRepeatSubsequentInterval() {
+        return this.hasAutoRepeatIntervalsSet ? this.autoRepeatSubsequentInterval : -1;
+    }
+
+    public boolean isFireActionOnRollover() {
+        return this.isFireActionOnRollover;
     }
 
     private AbstractCommandButton createButton(boolean isMenu) {
@@ -227,15 +240,15 @@ public class RibbonCommand {
                 : (this.isToggle() ? new JCommandToggleButton(this.title, this.icon)
                         : new JCommandButton(this.title, this.icon));
     }
-    
+
     protected boolean hasAction() {
         return (this.getAction() != null);
     }
-    
+
     protected boolean hasPopup() {
         return (this.getPopupCallback() != null);
     }
-    
+
     private void populateButton(AbstractCommandButton button) {
         if (this.getDisabledIcon() != null) {
             button.setDisabledIcon(this.getDisabledIcon());
@@ -258,6 +271,7 @@ public class RibbonCommand {
                 jcb.setPopupCallback(this.getPopupCallback());
                 jcb.setPopupRichTooltip(this.getPopupRichTooltip());
                 jcb.setPopupKeyTip(this.getPopupKeyTip());
+                jcb.setPopupOrientationKind(this.getPopupOrientationKind());
             }
 
             if (hasAction && hasPopup) {
@@ -269,6 +283,16 @@ public class RibbonCommand {
             } else {
                 jcb.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
             }
+
+            if (this.isAutoRepeatAction()) {
+                jcb.setAutoRepeatAction(true);
+                if (this.hasAutoRepeatIntervalsSet) {
+                    jcb.setAutoRepeatActionIntervals(this.getAutoRepeatInitialInterval(),
+                            this.getAutoRepeatSubsequentInterval());
+                }
+            }
+            
+            jcb.setFireActionOnRollover(this.isFireActionOnRollover());
         }
 
         button.setEnabled(this.isEnabled());
@@ -281,7 +305,7 @@ public class RibbonCommand {
             button.getActionModel().setSelected(true);
         }
 
-        this.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+        this.pcs.addPropertyChangeListener((PropertyChangeEvent evt) -> {
             if ("enabled".equals(evt.getPropertyName())) {
                 button.setEnabled((Boolean) evt.getNewValue());
             }
@@ -300,11 +324,11 @@ public class RibbonCommand {
         return result;
     }
 
-    public static class RibbonCommandToggleGroup {
+    public static class FlamingoCommandToggleGroup {
         private CommandToggleButtonGroup toggleButtonGroup = new CommandToggleButtonGroup();
     }
 
-    protected abstract static class BaseRibbonCommandBuilder<T extends RibbonCommand, B extends BaseRibbonCommandBuilder> {
+    protected abstract static class BaseFlamingoCommandBuilder<T extends FlamingoCommand, B extends BaseFlamingoCommandBuilder> {
         protected String title;
         protected ResizableIcon icon;
         protected ResizableIcon disabledIcon;
@@ -315,14 +339,20 @@ public class RibbonCommand {
         protected PopupPanelCallback popupCallback;
         protected RichTooltip popupRichTooltip;
         protected String popupKeyTip;
+        protected CommandButtonPopupOrientationKind popupOrientationKind;
         protected boolean isTitleClickAction;
         protected boolean isTitleClickPopup;
         protected boolean isEnabled = true;
         protected boolean isToggle;
         protected boolean isToggleSelected;
-        protected RibbonCommandToggleGroup toggleGroup;
+        protected FlamingoCommandToggleGroup toggleGroup;
+        protected boolean isAutoRepeatAction;
+        protected boolean hasAutoRepeatIntervalsSet;
+        protected int autoRepeatInitialInterval;
+        protected int autoRepeatSubsequentInterval;
+        protected boolean isFireActionOnRollover;
 
-        protected void configureBaseRibbonCommand(RibbonCommand command) {
+        protected void configureBaseCommand(FlamingoCommand command) {
             command.title = this.title;
             command.icon = this.icon;
             command.disabledIcon = this.disabledIcon;
@@ -333,12 +363,18 @@ public class RibbonCommand {
             command.popupCallback = this.popupCallback;
             command.popupRichTooltip = this.popupRichTooltip;
             command.popupKeyTip = this.popupKeyTip;
+            command.popupOrientationKind = popupOrientationKind;
             command.isTitleClickAction = this.isTitleClickAction;
             command.isTitleClickPopup = this.isTitleClickPopup;
             command.isEnabled = this.isEnabled;
             command.isToggle = this.isToggle;
             command.isToggleSelected = this.isToggleSelected;
             command.toggleGroup = this.toggleGroup;
+            command.isAutoRepeatAction = this.isAutoRepeatAction;
+            command.hasAutoRepeatIntervalsSet = this.hasAutoRepeatIntervalsSet;
+            command.autoRepeatInitialInterval = this.autoRepeatInitialInterval;
+            command.autoRepeatSubsequentInterval = this.autoRepeatSubsequentInterval;
+            command.isFireActionOnRollover = this.isFireActionOnRollover;
         }
 
         public B setTitle(String title) {
@@ -391,6 +427,11 @@ public class RibbonCommand {
             return (B) this;
         }
 
+        public B setPopupOrientationKind(CommandButtonPopupOrientationKind popupOrientationKind) {
+            this.popupOrientationKind = popupOrientationKind;
+            return (B) this;
+        }
+
         public B setTitleClickAction() {
             this.isTitleClickAction = true;
             return (B) this;
@@ -417,20 +458,36 @@ public class RibbonCommand {
             return (B) this;
         }
 
-        public B inToggleGroup(RibbonCommandToggleGroup toggleGroup) {
+        public B inToggleGroup(FlamingoCommandToggleGroup toggleGroup) {
             this.toggleGroup = toggleGroup;
             return (B) this;
         }
-
+        
+        public B setAutoRepeatAction(boolean isAutoRepeatAction) {
+            this.isAutoRepeatAction = isAutoRepeatAction;
+            return (B) this;
+        }
+        
+        public B setAutoRepeatActionIntervals(int initial, int subsequent) {
+            this.hasAutoRepeatIntervalsSet = true;
+            this.autoRepeatInitialInterval = initial;
+            this.autoRepeatSubsequentInterval = subsequent;
+            return (B) this;
+        }
+        
+        public B setFireActionOnRollover(boolean isFireActionOnRollover) {
+            this.isFireActionOnRollover = isFireActionOnRollover;
+            return (B) this;
+        }
     }
 
-    public static class RibbonCommandBuilder
-            extends BaseRibbonCommandBuilder<RibbonCommand, RibbonCommandBuilder> {
+    public static class FlamingoCommandBuilder
+            extends BaseFlamingoCommandBuilder<FlamingoCommand, FlamingoCommandBuilder> {
 
-        public RibbonCommand build() {
-            RibbonCommand command = new RibbonCommand();
+        public FlamingoCommand build() {
+            FlamingoCommand command = new FlamingoCommand();
 
-            this.configureBaseRibbonCommand(command);
+            this.configureBaseCommand(command);
 
             command.checkConsistency();
 

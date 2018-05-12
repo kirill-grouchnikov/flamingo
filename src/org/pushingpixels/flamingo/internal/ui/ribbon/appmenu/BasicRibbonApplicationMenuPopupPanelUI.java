@@ -54,6 +54,7 @@ import javax.swing.plaf.ComponentUI;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonPopupOrientationKind;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
@@ -62,7 +63,6 @@ import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand.PrimaryRolloverCallback;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand;
 import org.pushingpixels.flamingo.internal.ui.common.popup.BasicPopupPanelUI;
 import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
@@ -308,7 +308,7 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
             }
         };
         if (ribbonAppMenu != null) {
-            for (RibbonCommand footerCommand : ribbonAppMenu.getFooterCommands()) {
+            for (FlamingoCommand footerCommand : ribbonAppMenu.getFooterCommands()) {
                 JCommandButton commandFooterButton = (JCommandButton) footerCommand.buildButton();
                 commandFooterButton.setDisplayState(CommandButtonDisplayState.MEDIUM);
                 commandFooterButton.setFlat(false);

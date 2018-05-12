@@ -15,10 +15,10 @@ import org.fest.swing.edt.GuiTask;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.Test;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand.FlamingoCommandBuilder;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
@@ -43,7 +43,7 @@ public class RibbonBandLayoutTestCase extends FestSwingJUnitTestCase {
 
                 findButton = findBand
                         .addRibbonCommand(
-                                new RibbonCommandBuilder().setTitle("Find")
+                                new FlamingoCommandBuilder().setTitle("Find")
                                         .setIcon(new EmptyResizableIcon(32))
                                         .setAction(
                                                 (ActionEvent ae) -> System.out.println("Invoked"))
@@ -52,7 +52,7 @@ public class RibbonBandLayoutTestCase extends FestSwingJUnitTestCase {
 
                 replaceButton = findBand
                         .addRibbonCommand(
-                                new RibbonCommandBuilder().setTitle("Replace")
+                                new FlamingoCommandBuilder().setTitle("Replace")
                                         .setIcon(new EmptyResizableIcon(32))
                                         .setAction(
                                                 (ActionEvent ae) -> System.out.println("Invoked"))
@@ -61,7 +61,7 @@ public class RibbonBandLayoutTestCase extends FestSwingJUnitTestCase {
 
                 findReplaceButton = findBand
                         .addRibbonCommand(
-                                new RibbonCommandBuilder().setTitle("Find replace")
+                                new FlamingoCommandBuilder().setTitle("Find replace")
                                         .setIcon(new EmptyResizableIcon(32))
                                         .setAction(
                                                 (ActionEvent ae) -> System.out.println("Invoked"))
@@ -70,7 +70,7 @@ public class RibbonBandLayoutTestCase extends FestSwingJUnitTestCase {
 
                 selectAllButton = findBand
                         .addRibbonCommand(
-                                new RibbonCommandBuilder().setTitle("Select all")
+                                new FlamingoCommandBuilder().setTitle("Select all")
                                         .setIcon(new EmptyResizableIcon(32))
                                         .setAction(
                                                 (ActionEvent ae) -> System.out.println("Invoked"))

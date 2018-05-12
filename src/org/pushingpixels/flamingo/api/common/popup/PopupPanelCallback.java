@@ -30,7 +30,7 @@
 package org.pushingpixels.flamingo.api.common.popup;
 
 import org.pushingpixels.flamingo.api.common.JCommandButton;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand.FlamingoCommandBuilder;
 
 /**
  * An application hook that allows associating a custom popup panel with a popup
@@ -38,7 +38,7 @@ import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
  * 
  * @author Kirill Grouchnikov
  * @see JCommandButton#setPopupCallback(PopupPanelCallback)
- * @see RibbonCommandBuilder#setPopupCallback(PopupPanelCallback)
+ * @see FlamingoCommandBuilder#setPopupCallback(PopupPanelCallback)
  */
 public interface PopupPanelCallback {
 	/**

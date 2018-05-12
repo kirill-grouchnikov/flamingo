@@ -29,7 +29,6 @@
  */
 package org.pushingpixels.flamingo.api.common;
 
-import java.awt.Dimension;
 import java.awt.Image;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -41,8 +40,8 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
  * Rich tooltip for command buttons.
  * 
  * <p>
- * In its most basic form, the rich tooltip has a title and one (possible
- * multiline) description text:
+ * In its most basic form, the rich tooltip has a title and one (possible multiline) description
+ * text:
  * </p>
  * 
  * <pre>
@@ -53,8 +52,8 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
  * </pre>
  * 
  * <p>
- * The {@link #addDescriptionSection(String)} can be used to add multiple
- * sections to the description:
+ * The {@link #addDescriptionSection(String)} can be used to add multiple sections to the
+ * description:
  * </p>
  * 
  * <pre>
@@ -72,8 +71,8 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
  * </pre>
  * 
  * <p>
- * The {@link #setMainImage(Image)} can be used to place an image below the
- * title and to the left of the description sections:
+ * The {@link #setMainImage(Image)} can be used to place an image below the title and to the left of
+ * the description sections:
  * </p>
  * 
  * <pre>
@@ -88,8 +87,8 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
  * </pre>
  * 
  * <p>
- * The {@link #addFooterSection(String)} can be used to add (possibly) multiple
- * footer sections that will be shown below a horizontal separator:
+ * The {@link #addFooterSection(String)} can be used to add (possibly) multiple footer sections that
+ * will be shown below a horizontal separator:
  * </p>
  * 
  * <pre>
@@ -107,8 +106,8 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
  * </pre>
  * 
  * <p>
- * The {@link #setFooterImage(Image)} can be used to place an image to the left
- * of the footer sections:
+ * The {@link #setFooterImage(Image)} can be used to place an image to the left of the footer
+ * sections:
  * </p>
  * 
  * <pre>
@@ -150,219 +149,150 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
  * @author Kirill Grouchnikov
  */
 public class RichTooltip {
-	/**
-	 * The main title of this tooltip.
-	 * 
-	 * @see #RichTooltip(String, String)
-	 * @see #setTitle(String)
-	 * @see #getTitle()
-	 */
-	protected String title;
+    /**
+     * The main title of this tooltip.
+     * 
+     * @see #getTitle()
+     */
+    private String title;
 
-	/**
-	 * The main image of this tooltip. Can be <code>null</code>.
-	 * 
-	 * @see #getMainImage()
-	 * @see #setMainImage(ResizableIcon, Dimension)
-	 */
-	protected ResizableIcon mainImage;
-	
-	/**
-	 * The dimension of the main image of this tooltip. Can be <code>null</code> only if 
-	 * {@link #mainImage} is null.
-	 * 
-	 * @see #getMainImage()
-	 * @see #setMainImage(Image)
-	 */
-	protected Dimension mainImageDimension;
+    /**
+     * The main icon of this tooltip. Can be <code>null</code>.
+     * 
+     * @see #getMainIcon()
+     */
+    private ResizableIcon mainIcon;
 
-	/**
-	 * The description sections of this tooltip.
-	 * 
-	 * @see #RichTooltip(String, String)
-	 * @see #addDescriptionSection(String)
-	 * @see #getDescriptionSections()
-	 */
-	protected List<String> descriptionSections;
+    /**
+     * The description sections of this tooltip.
+     * 
+     * @see #getDescriptionSections()
+     */
+    private List<String> descriptionSections;
 
-	/**
-	 * The footer image of this tooltip. Can be <code>null</code>.
-	 * 
-	 * @see #getFooterImage()
-	 * @see #setFooterIcon(ResizableIcon)
-	 */
-	protected ResizableIcon footerIcon;
+    /**
+     * The footer image of this tooltip. Can be <code>null</code>.
+     * 
+     * @see #getFooterImage()
+     */
+    private ResizableIcon footerIcon;
 
-	/**
-	 * The footer sections of this tooltip. Can be empty.
-	 * 
-	 * @see #addFooterSection(String)
-	 * @see #getFooterSections()
-	 */
-	protected List<String> footerSections;
+    /**
+     * The footer sections of this tooltip. Can be empty.
+     * 
+     * @see #getFooterSections()
+     */
+    private List<String> footerSections;
 
-	/**
-	 * Creates an empty tooltip.
-	 */
-	public RichTooltip() {
-	}
+    private RichTooltip() {
+    }
 
-	/**
-	 * Creates a tooltip with the specified title and description section.
-	 * 
-	 * @param title
-	 *            Tooltip title.
-	 * @param descriptionSection
-	 *            Tooltip main description section.
-	 */
-	public RichTooltip(String title, String descriptionSection) {
-		this.setTitle(title);
-		this.addDescriptionSection(descriptionSection);
-	}
+    /**
+     * Returns the main title of this tooltip.
+     * 
+     * @return The main title of this tooltip.
+     */
+    public String getTitle() {
+        return this.title;
+    }
 
-	/**
-	 * Sets the title for this tooltip.
-	 * 
-	 * @param title
-	 *            The new tooltip title.
-	 */
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    /**
+     * Returns the main icon of this tooltip. Can return <code>null</code>.
+     * 
+     * @return The main icon of this tooltip.
+     * @see #getDescriptionSections()
+     */
+    public ResizableIcon getMainIcon() {
+        return this.mainIcon;
+    }
 
-	/**
-	 * Sets the main image for this tooltip.
-	 * 
-	 * @param image
-	 *            The main image for this tooltip.
-	 * @see #getMainImage()
-	 * @see #getMainImageDimension()
-	 * @see #addDescriptionSection(String)
-	 */
-	public void setMainImage(ResizableIcon image, Dimension imageDimension) {
-		this.mainImage = image;
-		this.mainImageDimension = imageDimension;
-	}
+    /**
+     * Returns an unmodifiable list of description sections of this tooltip. Guaranteed to return a
+     * non-<code>null</code> list.
+     * 
+     * @return An unmodifiable list of description sections of this tooltip.
+     * @see #getTitle()
+     * @see #getMainIcon()
+     */
+    public List<String> getDescriptionSections() {
+        return this.descriptionSections;
+    }
 
-	/**
-	 * Adds the specified description section to this tooltip.
-	 * 
-	 * @param section
-	 *            The description section to add.
-	 * @see #getDescriptionSections()
-	 * @see #setMainImage(Image)
-	 * @see #setTitle(String)
-	 */
-	public void addDescriptionSection(String section) {
-		if (this.descriptionSections == null) {
-			this.descriptionSections = new LinkedList<String>();
-		}
-		this.descriptionSections.add(section);
-	}
+    /**
+     * Returns the footer icon of this tooltip. Can return <code>null</code>.
+     * 
+     * @return The footer icon of this tooltip.
+     * @see #getFooterSections()
+     */
+    public ResizableIcon getFooterIcon() {
+        return this.footerIcon;
+    }
 
-	/**
-	 * Sets the footer image for this tooltip.
-	 * 
-	 * @param image
-	 *            The footer image for this tooltip.
-	 * @see #getFooterImage()
-	 * @see #addFooterSection(String)
-	 */
-	public void setFooterIcon(ResizableIcon footerIcon) {
-		this.footerIcon = footerIcon;
-	}
+    /**
+     * Returns an unmodifiable list of footer sections of this tooltip. Guaranteed to return a
+     * non-<code>null</code> list.
+     * 
+     * @return An unmodifiable list of footer sections of this tooltip.
+     * @see #getFooterImage()
+     */
+    public List<String> getFooterSections() {
+        return this.footerSections;
+    }
 
-	/**
-	 * Adds the specified footer section to this tooltip.
-	 * 
-	 * @param section
-	 *            The footer section to add.
-	 * @see #getFooterSections()
-	 * @see #setFooterImage(Image)
-	 */
-	public void addFooterSection(String section) {
-		if (this.footerSections == null) {
-			this.footerSections = new LinkedList<String>();
-		}
-		this.footerSections.add(section);
-	}
+    public static class RichTooltipBuilder {
+        private String title;
+        private ResizableIcon mainIcon;
+        private List<String> descriptionSections;
+        private ResizableIcon footerIcon;
+        private List<String> footerSections;
 
-	/**
-	 * Returns the main title of this tooltip.
-	 * 
-	 * @return The main title of this tooltip.
-	 * @see #RichTooltip(String, String)
-	 * @see #setTitle(String)
-	 */
-	public String getTitle() {
-		return this.title;
-	}
+        @SuppressWarnings("unchecked")
+        public RichTooltip build() {
+            RichTooltip richTooltip = new RichTooltip();
 
-	/**
-	 * Returns the main image of this tooltip. Can return <code>null</code>.
-	 * 
-	 * @return The main image of this tooltip.
-	 * @see #setMainImage(Image)
-	 * @see #getMainImageDimension()
-	 * @see #getDescriptionSections()
-	 */
-	public ResizableIcon getMainImage() {
-		return this.mainImage;
-	}
-	
-	/**
-	 * Returns the main image of this tooltip. Can return <code>null</code> only if 
-	 * {@link #getMainImage()} returns <code>null</code>.
-	 * 
-	 * @return The dimension of the main image of this tooltip.
-	 * @see #setMainImage(ResizableIcon, Dimension)
-	 * @see #getMainImage()
-	 * @see #getDescriptionSections()
-	 */
-	public Dimension getMainImageDimension() {
-		return this.mainImageDimension;
-	}
+            richTooltip.title = this.title;
+            richTooltip.mainIcon = this.mainIcon;
+            richTooltip.descriptionSections = (this.descriptionSections != null)
+                    ? Collections.unmodifiableList(this.descriptionSections)
+                    : Collections.EMPTY_LIST;
+            richTooltip.footerIcon = this.footerIcon;
+            richTooltip.footerSections = (this.footerSections != null)
+                    ? Collections.unmodifiableList(this.footerSections)
+                    : Collections.EMPTY_LIST;
 
-	/**
-	 * Returns an unmodifiable list of description sections of this tooltip.
-	 * Guaranteed to return a non-<code>null</code> list.
-	 * 
-	 * @return An unmodifiable list of description sections of this tooltip.
-	 * @see #RichTooltip(String, String)
-	 * @see #addDescriptionSection(String)
-	 * @see #getTitle()
-	 * @see #getMainImage()
-	 */
-	@SuppressWarnings("unchecked")
-	public List<String> getDescriptionSections() {
-		if (this.descriptionSections == null)
-			return Collections.EMPTY_LIST;
-		return Collections.unmodifiableList(this.descriptionSections);
-	}
+            return richTooltip;
+        }
 
-	/**
-	 * Returns the footer icon of this tooltip. Can return <code>null</code>.
-	 * 
-	 * @return The footer icon of this tooltip.
-	 * @see #setFooterIcon(ResizableIcon)
-	 * @see #getFooterSections()
-	 */
-	public ResizableIcon getFooterIcon() {
-		return this.footerIcon;
-	}
+        public RichTooltipBuilder setTitle(String title) {
+            this.title = title;
+            return this;
+        }
 
-	/**
-	 * Returns an unmodifiable list of footer sections of this tooltip.
-	 * Guaranteed to return a non-<code>null</code> list.
-	 * 
-	 * @return An unmodifiable list of footer sections of this tooltip.
-	 * @see #addFooterSection(String)
-	 * @see #getFooterImage()
-	 */
-	@SuppressWarnings("unchecked")
-	public List<String> getFooterSections() {
-		if (this.footerSections == null)
-			return Collections.EMPTY_LIST;
-		return Collections.unmodifiableList(this.footerSections);
-	}
+        public RichTooltipBuilder setMainIcon(ResizableIcon mainIcon) {
+            this.mainIcon = mainIcon;
+            return this;
+        }
+
+        public RichTooltipBuilder addDescriptionSection(String section) {
+            if (this.descriptionSections == null) {
+                this.descriptionSections = new LinkedList<String>();
+            }
+            this.descriptionSections.add(section);
+            return this;
+        }
+
+        public RichTooltipBuilder setFooterIcon(ResizableIcon footerIcon) {
+            this.footerIcon = footerIcon;
+            return this;
+        }
+
+        public RichTooltipBuilder addFooterSection(String section) {
+            if (this.footerSections == null) {
+                this.footerSections = new LinkedList<String>();
+            }
+            this.footerSections.add(section);
+            return this;
+        }
+
+    }
 }

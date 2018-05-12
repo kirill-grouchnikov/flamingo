@@ -46,6 +46,7 @@ import javax.swing.event.ChangeListener;
 
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.internal.ui.ribbon.BasicRibbonUI;
@@ -139,9 +140,9 @@ public class JRibbon extends JComponent {
      */
     private ArrayList<Component> taskbarComponents;
 
-    private ArrayList<RibbonCommand> taskbarCommands;
+    private ArrayList<FlamingoCommand> taskbarCommands;
 
-    private Map<RibbonCommand, AbstractCommandButton> taskbarCommandMap;
+    private Map<FlamingoCommand, AbstractCommandButton> taskbarCommandMap;
 
     /**
      * Bands of the currently shown task.
@@ -157,10 +158,10 @@ public class JRibbon extends JComponent {
      * Commands anchored to the far edge of the task toggle strip (right under LTR and left under
      * RTL).
      * 
-     * @see #addAnchoredCommand(RibbonCommand)
+     * @see #addAnchoredCommand(FlamingoCommand)
      * @see #getAnchoredCommands()
      */
-    private ArrayList<RibbonCommand> anchoredCommands;
+    private ArrayList<FlamingoCommand> anchoredCommands;
 
     /**
      * Visibility status of the contextual task group. Must contain a value for each group in
@@ -250,12 +251,12 @@ public class JRibbon extends JComponent {
      * 
      * @param comp
      *            The taskbar command to add.
-     * @see #removeTaskbarCommand(RibbonCommand)
+     * @see #removeTaskbarCommand(FlamingoCommand)
      * @see #getTaskbarCommands()
      * @see #addTaskbarSeparator()
      * @see #clearTaskbar()
      */
-    public synchronized void addTaskbarCommand(RibbonCommand command) {
+    public synchronized void addTaskbarCommand(FlamingoCommand command) {
         AbstractCommandButton cb = command.buildButton();
 
         cb.setDisplayState(CommandButtonDisplayState.SMALL);
@@ -273,8 +274,8 @@ public class JRibbon extends JComponent {
     /**
      * Adds a taskbar separator to this ribbon.
      * 
-     * @see #addTaskbarCommand(RibbonCommand)
-     * @see #removeTaskbarCommand(RibbonCommand)
+     * @see #addTaskbarCommand(FlamingoCommand)
+     * @see #removeTaskbarCommand(FlamingoCommand)
      * @see #getTaskbarCommands()
      * @see #clearTaskbar()
      */
@@ -292,11 +293,11 @@ public class JRibbon extends JComponent {
      * 
      * @param command
      *            The taskbar command to remove.
-     * @see #addTaskbarCommand(RibbonCommand)
+     * @see #addTaskbarCommand(FlamingoCommand)
      * @see #getTaskbarCommands()
      * @see #clearTaskbar()
      */
-    public synchronized void removeTaskbarCommand(RibbonCommand command) {
+    public synchronized void removeTaskbarCommand(FlamingoCommand command) {
         AbstractCommandButton cb = this.taskbarCommandMap.get(command);
         if (cb != null) {
             this.taskbarComponents.remove(cb);
@@ -311,8 +312,8 @@ public class JRibbon extends JComponent {
      * 
      * @param command
      *            The taskbar command to remove.
-     * @see #addTaskbarCommand(RibbonCommand)
-     * @see #removeTaskbarCommand(RibbonCommand)
+     * @see #addTaskbarCommand(FlamingoCommand)
+     * @see #removeTaskbarCommand(FlamingoCommand)
      * @see #clearTaskbar()
      * @see #getTaskbarCommands()
      */
@@ -324,9 +325,9 @@ public class JRibbon extends JComponent {
     /**
      * Removes all taskbar content from this ribbon.
      * 
-     * @see #addTaskbarCommand(RibbonCommand)
+     * @see #addTaskbarCommand(FlamingoCommand)
      * @see #addTaskbarSeparator()
-     * @see #removeTaskbarCommand(RibbonCommand)
+     * @see #removeTaskbarCommand(FlamingoCommand)
      * @see #getTaskbarCommands()
      */
     public synchronized void clearTaskbar() {
@@ -365,9 +366,9 @@ public class JRibbon extends JComponent {
      *            Command to add.
      * 
      * @see #getAnchoredCommands()
-     * @see #removeAnchoredCommand(RibbonCommand)
+     * @see #removeAnchoredCommand(FlamingoCommand)
      */
-    public synchronized void addAnchoredCommand(RibbonCommand ribbonCommand) {
+    public synchronized void addAnchoredCommand(FlamingoCommand ribbonCommand) {
         this.anchoredCommands.add(ribbonCommand);
         this.fireStateChanged();
     }
@@ -380,9 +381,9 @@ public class JRibbon extends JComponent {
      *            Command to remove.
      * 
      * @see #getAnchoredCommands()
-     * @see #addAnchoredCommand(RibbonCommand)
+     * @see #addAnchoredCommand(FlamingoCommand)
      */
-    public synchronized void removeAnchoredCommand(RibbonCommand ribbonCommand) {
+    public synchronized void removeAnchoredCommand(FlamingoCommand ribbonCommand) {
         this.anchoredCommands.remove(ribbonCommand);
         this.fireStateChanged();
     }
@@ -392,10 +393,10 @@ public class JRibbon extends JComponent {
      * 
      * @return This ribbon's anchored commands.
      * 
-     * @see #addAnchoredCommand(RibbonCommand)
-     * @see #removeAnchoredCommand(RibbonCommand)
+     * @see #addAnchoredCommand(FlamingoCommand)
+     * @see #removeAnchoredCommand(FlamingoCommand)
      */
-    public synchronized List<RibbonCommand> getAnchoredCommands() {
+    public synchronized List<FlamingoCommand> getAnchoredCommands() {
         return Collections.unmodifiableList(this.anchoredCommands);
     }
 
@@ -570,10 +571,10 @@ public class JRibbon extends JComponent {
      * Gets an unmodifiable list of all taskbar commands of <code>this</code> ribbon.
      * 
      * @return All taskbar commands of <code>this</code> ribbon.
-     * @see #addTaskbarCommand(RibbonCommand)
-     * @see #removeTaskbarCommand(RibbonCommand)
+     * @see #addTaskbarCommand(FlamingoCommand)
+     * @see #removeTaskbarCommand(FlamingoCommand)
      */
-    public synchronized List<RibbonCommand> getTaskbarCommands() {
+    public synchronized List<FlamingoCommand> getTaskbarCommands() {
         return Collections.unmodifiableList(this.taskbarCommands);
     }
     

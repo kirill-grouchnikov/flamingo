@@ -88,6 +88,7 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JScrollablePanel;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
@@ -97,7 +98,6 @@ import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
 import org.pushingpixels.flamingo.api.ribbon.AbstractRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand;
 import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
@@ -1722,9 +1722,8 @@ public class BasicRibbonUI extends RibbonUI {
                         x -= (finalWidth + tabButtonGap);
                     }
                     // show the tooltip with the full title
-                    RichTooltip tooltip = new RichTooltip();
-                    tooltip.setTitle(task.getTitle());
-                    tabButton.setActionRichTooltip(tooltip);
+                    tabButton.setActionRichTooltip(
+                            new RichTooltip.RichTooltipBuilder().setTitle(task.getTitle()).build());
                 }
                 ((JComponent) c).putClientProperty(TaskToggleButtonsHostPanel.IS_SQUISHED,
                         Boolean.TRUE);
@@ -1963,11 +1962,11 @@ public class BasicRibbonUI extends RibbonUI {
             }
         }
 
-        List<RibbonCommand> anchoredCommands = this.ribbon.getAnchoredCommands();
+        List<FlamingoCommand> anchoredCommands = this.ribbon.getAnchoredCommands();
         if (anchoredCommands != null) {
             this.anchoredButtons = new Container();
             this.anchoredButtons.setLayout(new AnchoredButtonsPanelLayout());
-            for (RibbonCommand anchoredCommand : anchoredCommands) {
+            for (FlamingoCommand anchoredCommand : anchoredCommands) {
                 this.anchoredButtons.add(anchoredCommand.buildButton());
             }
             this.ribbon.add(this.anchoredButtons);

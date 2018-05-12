@@ -61,7 +61,10 @@ public class JCommandButton extends AbstractCommandButton {
 	 * The UI class ID string.
 	 */
 	public static final String uiClassID = "CommandButtonUI";
-
+	
+    public static final int DEFAULT_AUTO_REPEAT_INITIAL_INTERVAL_MS = 500;
+    public static final int DEFAULT_AUTO_REPEAT_SUBSEQUENT_INTERVAL_MS = 100;
+	
 	/**
 	 * Associated popup callback. May be <code>null</code>.
 	 * 
@@ -431,8 +434,8 @@ public class JCommandButton extends AbstractCommandButton {
 		this.popupOrientationKind = CommandButtonPopupOrientationKind.DOWNWARD;
 		// this.displayState = CommandButtonDisplayState.CUSTOM;
 		this.isAutoRepeatAction = false;
-		this.autoRepeatInitialInterval = 500;
-		this.autoRepeatSubsequentInterval = 100;
+		this.autoRepeatInitialInterval = DEFAULT_AUTO_REPEAT_INITIAL_INTERVAL_MS;
+		this.autoRepeatSubsequentInterval = DEFAULT_AUTO_REPEAT_SUBSEQUENT_INTERVAL_MS;
 
 		this.updateUI();
 	}

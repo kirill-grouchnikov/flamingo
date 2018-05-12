@@ -244,8 +244,8 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 			RichTooltip tooltipInfo = richTooltipPanel.getTooltipInfo();
 			FontRenderContext frc = new FontRenderContext(
 					new AffineTransform(), true, false);
-			if (tooltipInfo.getMainImage() != null) {
-				width += tooltipInfo.getMainImageDimension().width;
+			if (tooltipInfo.getMainIcon() != null) {
+				width += tooltipInfo.getMainIcon().getIconWidth();
 			}
 
 			int fontHeight = parent.getFontMetrics(font).getHeight();
@@ -300,9 +300,9 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 				descriptionTextHeight += gap;
 			}
 
-			if (tooltipInfo.getMainImage() != null) {
+			if (tooltipInfo.getMainIcon() != null) {
 				height += Math.max(descriptionTextHeight, 
-						tooltipInfo.getMainImageDimension().height);
+				        tooltipInfo.getMainIcon().getIconHeight());
 			} else {
 				height += descriptionTextHeight;
 			}
@@ -321,8 +321,8 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 				if (tooltipInfo.getFooterIcon() != null) {
 					availableWidth -= 16;
 				}
-				if (tooltipInfo.getMainImage() != null) {
-					availableWidth += tooltipInfo.getMainImageDimension().width;
+				if (tooltipInfo.getMainIcon() != null) {
+					availableWidth += tooltipInfo.getMainIcon().getIconWidth();
 				}
 				for (String footerText : tooltipInfo.getFooterSections()) {
 					AttributedString footerAttributedDescription = new AttributedString(
@@ -355,7 +355,7 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 
 			// special case for rich tooltips that only have titles
 			if (tooltipInfo.getDescriptionSections().isEmpty()
-					&& (tooltipInfo.getMainImage() == null)
+					&& (tooltipInfo.getMainIcon() == null)
 					&& tooltipInfo.getFooterSections().isEmpty()
 					&& (tooltipInfo.getFooterIcon() == null)) {
 				width = maxTitleLineWidth + 1 + ins.left + ins.right;
@@ -421,9 +421,8 @@ public class BasicRichTooltipPanelUI extends RichTooltipPanelUI {
 			
 			// The main image
 			int x = ltr ? ins.left : parent.getWidth() - ins.right;
-			ResizableIcon mainImage = tooltipInfo.getMainImage();
+			ResizableIcon mainImage = tooltipInfo.getMainIcon();
 			if (mainImage != null) {
-				mainImage.setDimension(tooltipInfo.getMainImageDimension());
 				mainImageLabel = new JLabel(mainImage);
 				richTooltipPanel.add(mainImageLabel);
 				int mainImageWidth = mainImageLabel.getPreferredSize().width;

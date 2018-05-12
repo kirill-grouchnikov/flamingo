@@ -39,6 +39,7 @@ import javax.swing.SwingConstants;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandButtonLayoutManager;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
@@ -54,7 +55,7 @@ import org.pushingpixels.flamingo.internal.ui.ribbon.JRibbonGallery;
  * 
  * <ul>
  * <li>Ribbon commands added with
- * {@link #addRibbonCommand(RibbonCommand, RibbonElementPriority)}.</li>
+ * {@link #addRibbonCommand(FlamingoCommand, RibbonElementPriority)}.</li>
  * <li>Wrapped core / 3rd party components added with {@link #addRibbonComponent(JRibbonComponent)}
  * or {@link #addRibbonComponent(JRibbonComponent, int)}.</li>
  * <li>Ribbon galleries added with
@@ -80,9 +81,9 @@ import org.pushingpixels.flamingo.internal.ui.ribbon.JRibbonGallery;
  * </p>
  * 
  * <ul>
- * <li>{@link #addRibbonGalleryCommands(String, String, RibbonCommand...)}</li>
- * <li>{@link #removeRibbonGalleryCommands(String, RibbonCommand...)}</li>
- * <li>{@link #setSelectedRibbonGalleryCommand(String, RibbonCommand)}</li>
+ * <li>{@link #addRibbonGalleryCommands(String, String, FlamingoCommand...)}</li>
+ * <li>{@link #removeRibbonGalleryCommands(String, FlamingoCommand...)}</li>
+ * <li>{@link #setSelectedRibbonGalleryCommand(String, FlamingoCommand)}</li>
  * <li>{@link #setRibbonGalleryExpandKeyTip(String, String)}</li>
  * <li>{@link #setRibbonGalleryPopupCallback(String, RibbonGalleryPopupCallback)}</li>
  * </ul>
@@ -174,7 +175,7 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
      * @param priority
      *            Priority of the command.
      */
-    public AbstractCommandButton addRibbonCommand(RibbonCommand ribbonCommand,
+    public AbstractCommandButton addRibbonCommand(FlamingoCommand ribbonCommand,
             RibbonElementPriority priority) {
         AbstractCommandButton commandButton = ribbonCommand.buildButton();
         commandButton.setHorizontalAlignment(SwingConstants.LEADING);
@@ -183,7 +184,7 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
     }
 
     public void addRibbonGallery(String galleryName,
-            List<StringValuePair<List<RibbonCommand>>> commands,
+            List<StringValuePair<List<FlamingoCommand>>> commands,
             Map<RibbonElementPriority, Integer> preferredVisibleCommandCounts,
             int preferredPopupMaxCommandColumns, int preferredPopupMaxVisibleCommandRows,
             RibbonElementPriority priority) {
@@ -208,12 +209,12 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
      *            gallery.
      * @param priority
      *            The initial ribbon gallery priority.
-     * @see #addRibbonGalleryCommands(String, String, RibbonCommand...)
-     * @see #removeRibbonGalleryCommands(String, RibbonCommand...)
-     * @see #setSelectedRibbonGalleryCommand(String, RibbonCommand)
+     * @see #addRibbonGalleryCommands(String, String, FlamingoCommand...)
+     * @see #removeRibbonGalleryCommands(String, FlamingoCommand...)
+     * @see #setSelectedRibbonGalleryCommand(String, FlamingoCommand)
      */
     public void addRibbonGallery(String galleryName,
-            List<StringValuePair<List<RibbonCommand>>> commands,
+            List<StringValuePair<List<FlamingoCommand>>> commands,
             Map<RibbonElementPriority, Integer> preferredVisibleCommandCounts,
             int preferredPopupMaxCommandColumns, int preferredPopupMaxVisibleCommandRows,
             CommandButtonDisplayState commandDisplayState, RibbonElementPriority priority) {
@@ -243,11 +244,11 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
      *            Commands to add.
      * @see #addRibbonGallery(String, List, Map, int, int, RibbonElementPriority)
      * @see #addRibbonGallery(String, List, Map, int, int, CommandButtonDisplayState, RibbonElementPriority)
-     * @see #removeRibbonGalleryCommands(String, RibbonCommand...)
-     * @see #setSelectedRibbonGalleryCommand(String, RibbonCommand)
+     * @see #removeRibbonGalleryCommands(String, FlamingoCommand...)
+     * @see #setSelectedRibbonGalleryCommand(String, FlamingoCommand)
      */
     public void addRibbonGalleryCommands(String galleryName, String commandGroupName,
-            RibbonCommand... commands) {
+            FlamingoCommand... commands) {
         JRibbonGallery gallery = this.controlPanel.getRibbonGallery(galleryName);
         if (gallery == null)
             return;
@@ -262,10 +263,10 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
      * @param commands
      *            Commands to remove.
      * @see #addRibbonGallery(String, List, Map, int, int, CommandButtonDisplayState, RibbonElementPriority)
-     * @see #addRibbonGalleryCommands(String, String, RibbonCommand...)
-     * @see #setSelectedRibbonGalleryCommand(String, RibbonCommand)
+     * @see #addRibbonGalleryCommands(String, String, FlamingoCommand...)
+     * @see #setSelectedRibbonGalleryCommand(String, FlamingoCommand)
      */
-    public void removeRibbonGalleryCommands(String galleryName, RibbonCommand... commands) {
+    public void removeRibbonGalleryCommands(String galleryName, FlamingoCommand... commands) {
         JRibbonGallery gallery = this.controlPanel.getRibbonGallery(galleryName);
         if (gallery == null)
             return;
@@ -281,11 +282,11 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
      *            Command to select.
      * @see #addRibbonGallery(String, List, Map, int, int, RibbonElementPriority)
      * @see #addRibbonGallery(String, List, Map, int, int, CommandButtonDisplayState, RibbonElementPriority)
-     * @see #addRibbonGalleryCommands(String, String, RibbonCommand...)
-     * @see #removeRibbonGalleryCommands(String, RibbonCommand...)
+     * @see #addRibbonGalleryCommands(String, String, FlamingoCommand...)
+     * @see #removeRibbonGalleryCommands(String, FlamingoCommand...)
      */
     public void setSelectedRibbonGalleryCommand(String galleryName,
-            RibbonCommand commandToSelect) {
+            FlamingoCommand commandToSelect) {
         JRibbonGallery gallery = this.controlPanel.getRibbonGallery(galleryName);
         if (gallery == null)
             return;

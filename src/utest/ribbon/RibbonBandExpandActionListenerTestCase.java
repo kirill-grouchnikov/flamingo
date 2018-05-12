@@ -18,9 +18,9 @@ import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.Test;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand.FlamingoCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
@@ -59,28 +59,28 @@ public class RibbonBandExpandActionListenerTestCase extends FestSwingJUnitTestCa
         JRibbonBand clipboardBand = new JRibbonBand("Clipboard", new Edit_paste(),
                 expandActionListener);
 
-        clipboardBand.addRibbonCommand(new RibbonCommandBuilder().setTitle("Paste")
+        clipboardBand.addRibbonCommand(new FlamingoCommandBuilder().setTitle("Paste")
                 .setIcon(Edit_paste.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Pasted!"))
                 .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
                         commandButton.getComponentOrientation()))
                 .setTitleClickAction().build(), RibbonElementPriority.TOP);
 
-        clipboardBand.addRibbonCommand(new RibbonCommandBuilder().setTitle("Cut")
+        clipboardBand.addRibbonCommand(new FlamingoCommandBuilder().setTitle("Cut")
                 .setIcon(Edit_cut.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Cut!"))
                 .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
                         commandButton.getComponentOrientation()))
                 .setTitleClickAction().build(), RibbonElementPriority.MEDIUM);
 
-        clipboardBand.addRibbonCommand(new RibbonCommandBuilder().setTitle("Copy")
+        clipboardBand.addRibbonCommand(new FlamingoCommandBuilder().setTitle("Copy")
                 .setIcon(Edit_copy.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Copy!"))
                 .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
                         commandButton.getComponentOrientation()))
                 .setTitleClickPopup().build(), RibbonElementPriority.MEDIUM);
 
-        clipboardBand.addRibbonCommand(new RibbonCommandBuilder().setTitle("Format")
+        clipboardBand.addRibbonCommand(new FlamingoCommandBuilder().setTitle("Format")
                 .setIcon(Edit_paste.of(16, 16))
                 .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu(
                         commandButton.getComponentOrientation()))
